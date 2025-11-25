@@ -1,0 +1,80 @@
+{
+  "hubs": [
+    {
+      "id": 1,
+      "name": "Downtown Distribution Hub",
+      "type": "hub",
+      "address": "123 Main St, New York, NY",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "inventory": {
+        "diesel": 15000,
+        "petrol": 12000
+      },
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "East Side Terminal",
+      "type": "terminal",
+      "address": "45 East St, New York, NY",
+      "lat": 40.7228,
+      "lng": -74.001,
+      "inventory": {
+        "diesel": 8000,
+        "petrol": 6000
+      },
+      "isActive": true
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Diesel",
+      "code": "DSL",
+      "unit": "liters",
+      "minStockThreshold": 5000,
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "Petrol",
+      "code": "PET",
+      "unit": "liters",
+      "minStockThreshold": 5000,
+      "isActive": true
+    }
+  ],
+  "drivers": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "license": "DL-123456",
+      "phone": "+1-555-0100",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "name": "Priya Patel",
+      "license": "DL-987654",
+      "phone": "+1-555-0101",
+      "status": "inactive"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": 1,
+      "registration": "TRK-101",
+      "capacity": 8000,
+      "type": "Tanker",
+      "status": "available"
+    },
+    {
+      "id": 2,
+      "registration": "TRK-205",
+      "capacity": 12000,
+      "type": "Trailer",
+      "status": "maintenance"
+    }
+  ]
+}
