@@ -23,6 +23,38 @@ const theme = extendTheme({
             }
         }
     },
+    components: {
+        Input: {
+            baseStyle: {
+                field: {
+                    color: "gray.800",
+                    _dark: {
+                        color: "gray.900"
+                    },
+                    _placeholder: {
+                        color: "gray.500",
+                        _dark: {
+                            color: "gray.500"
+                        }
+                    }
+                }
+            }
+        },
+        Textarea: {
+            baseStyle: {
+                color: "gray.800",
+                _dark: {
+                    color: "gray.900"
+                },
+                _placeholder: {
+                    color: "gray.500",
+                    _dark: {
+                        color: "gray.700"
+                    }
+                }
+            }
+        }
+    },
     colors: {
         brand: {
             500: "#667eea",
@@ -53,7 +85,7 @@ const theme = extendTheme({
                 _dark: "gray.800"
             },
             "bg.hover": {
-                _light: "gray.100",
+                _light: "gray.600",
                 _dark: "gray.700"
             },
             "bg.search": {
@@ -63,6 +95,10 @@ const theme = extendTheme({
             "bg.search.focus": {
                 _light: "gray.200",
                 _dark: "gray.600"
+            },
+            "bg.input": {
+                _light: "white",
+                _dark: "gray.300"
             },
             "bg.icon.light": {
                 _light: "green.50",
@@ -151,13 +187,11 @@ const theme = extendTheme({
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <ChakraProvider theme={theme}>
-                <BrowserRouter>
-                    <App />
-                </BrowserRouter>
-            </ChakraProvider>
-        </Provider>
-    </React.StrictMode>
+    <Provider store={store}>
+        <ChakraProvider theme={theme}>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </ChakraProvider>
+    </Provider>
 );

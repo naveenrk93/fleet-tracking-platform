@@ -1,80 +1,1004 @@
 {
   "hubs": [
     {
-      "id": 1,
       "name": "Downtown Distribution Hub",
       "type": "hub",
-      "address": "123 Main St, New York, NY",
-      "lat": 40.7128,
-      "lng": -74.006,
-      "inventory": {
-        "diesel": 15000,
-        "petrol": 12000
+      "address": "Naveen City",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
       },
-      "isActive": true
+      "products": [
+        {
+          "productId": "product-1",
+          "productName": "Premium Diesel",
+          "quantity": 10000
+        }
+      ],
+      "id": "hub-1"
     },
     {
-      "id": 2,
-      "name": "East Side Terminal",
-      "type": "terminal",
-      "address": "45 East St, New York, NY",
-      "lat": 40.7228,
-      "lng": -74.001,
-      "inventory": {
-        "diesel": 8000,
-        "petrol": 6000
+      "id": "hub-1764104602017",
+      "name": "New Hub",
+      "type": "hub",
+      "address": "Testing123",
+      "coordinates": {
+        "lat": 20,
+        "lng": 20
       },
-      "isActive": true
+      "products": []
+    },
+    {
+      "name": "New Test",
+      "type": "hub",
+      "address": "Test Address",
+      "coordinates": {
+        "lat": 12,
+        "lng": 23
+      },
+      "products": [
+        {
+          "productId": "product-1",
+          "productName": "Premium Diesel",
+          "quantity": 1
+        },
+        {
+          "productId": "product-2",
+          "productName": "Regular Petrol",
+          "quantity": 2
+        },
+        {
+          "productId": "product-3",
+          "productName": "Engine Oil",
+          "quantity": 3
+        },
+        {
+          "productId": "product-1764105817431",
+          "productName": "Liquid Hydrogen",
+          "quantity": 1
+        }
+      ],
+      "id": "7917"
+    },
+    {
+      "id": "hub-4",
+      "name": "East Side Storage Hub",
+      "type": "hub",
+      "address": "88 East Side Boulevard",
+      "coordinates": {
+        "lat": 40.756,
+        "lng": -73.969
+      },
+      "products": [
+        {
+          "productId": "product-2",
+          "productName": "Regular Petrol",
+          "quantity": 8500
+        },
+        {
+          "productId": "product-3",
+          "productName": "Engine Oil",
+          "quantity": 450
+        }
+      ]
+    },
+    {
+      "id": "hub-5",
+      "name": "West Coast Logistics Hub",
+      "type": "hub",
+      "address": "212 Western Avenue",
+      "coordinates": {
+        "lat": 40.698,
+        "lng": -74.115
+      },
+      "products": [
+        {
+          "productId": "product-1",
+          "productName": "Premium Diesel",
+          "quantity": 12000
+        }
+      ]
+    },
+    {
+      "id": "hub-6",
+      "name": "Central Warehouse",
+      "type": "hub",
+      "address": "555 Central Drive",
+      "coordinates": {
+        "lat": 40.735,
+        "lng": -73.998
+      },
+      "products": [
+        {
+          "productId": "product-2",
+          "productName": "Regular Petrol",
+          "quantity": 6000
+        },
+        {
+          "productId": "product-1764105817431",
+          "productName": "Liquid Hydrogen",
+          "quantity": 2500
+        }
+      ]
+    },
+    {
+      "id": "hub-7",
+      "name": "Riverside Distribution Center",
+      "type": "hub",
+      "address": "99 Riverside Road",
+      "coordinates": {
+        "lat": 40.678,
+        "lng": -74.025
+      },
+      "products": [
+        {
+          "productId": "product-1",
+          "productName": "Premium Diesel",
+          "quantity": 15000
+        },
+        {
+          "productId": "product-3",
+          "productName": "Engine Oil",
+          "quantity": 800
+        }
+      ]
+    },
+    {
+      "id": "hub-8",
+      "name": "North Industrial Hub",
+      "type": "hub",
+      "address": "321 Industrial Parkway",
+      "coordinates": {
+        "lat": 40.821,
+        "lng": -73.947
+      },
+      "products": [
+        {
+          "productId": "product-2",
+          "productName": "Regular Petrol",
+          "quantity": 9500
+        }
+      ]
+    },
+    {
+      "id": "hub-9",
+      "name": "South Bay Depot",
+      "type": "hub",
+      "address": "777 South Bay Street",
+      "coordinates": {
+        "lat": 40.643,
+        "lng": -74.082
+      },
+      "products": [
+        {
+          "productId": "product-1",
+          "productName": "Premium Diesel",
+          "quantity": 11000
+        },
+        {
+          "productId": "product-2",
+          "productName": "Regular Petrol",
+          "quantity": 7500
+        }
+      ]
+    },
+    {
+      "id": "hub-10",
+      "name": "Metropolitan Supply Hub",
+      "type": "hub",
+      "address": "444 Metro Boulevard",
+      "coordinates": {
+        "lat": 40.789,
+        "lng": -73.982
+      },
+      "products": [
+        {
+          "productId": "product-3",
+          "productName": "Engine Oil",
+          "quantity": 1200
+        },
+        {
+          "productId": "product-1764105817431",
+          "productName": "Liquid Hydrogen",
+          "quantity": 3000
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "terminal-1",
+      "name": "North Terminal",
+      "type": "terminal",
+      "address": "45 North Ave, City",
+      "coordinates": {
+        "lat": 40.745,
+        "lng": -74.01
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-1764104564485",
+      "name": "South Terminal",
+      "type": "terminal",
+      "address": "34 South Ave",
+      "coordinates": {
+        "lat": 30,
+        "lng": 40
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-3",
+      "name": "East End Terminal",
+      "type": "terminal",
+      "address": "156 East End Road",
+      "coordinates": {
+        "lat": 40.768,
+        "lng": -73.945
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-4",
+      "name": "West Side Terminal",
+      "type": "terminal",
+      "address": "298 West Side Highway",
+      "coordinates": {
+        "lat": 40.705,
+        "lng": -74.092
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-5",
+      "name": "Central Station Terminal",
+      "type": "terminal",
+      "address": "789 Central Station Plaza",
+      "coordinates": {
+        "lat": 40.728,
+        "lng": -73.985
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-6",
+      "name": "Harbor View Terminal",
+      "type": "terminal",
+      "address": "65 Harbor View Drive",
+      "coordinates": {
+        "lat": 40.659,
+        "lng": -74.055
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-7",
+      "name": "Airport Terminal Facility",
+      "type": "terminal",
+      "address": "432 Airport Access Road",
+      "coordinates": {
+        "lat": 40.776,
+        "lng": -73.872
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-8",
+      "name": "Industrial Park Terminal",
+      "type": "terminal",
+      "address": "901 Industrial Park Drive",
+      "coordinates": {
+        "lat": 40.811,
+        "lng": -73.925
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-9",
+      "name": "Coastal Terminal",
+      "type": "terminal",
+      "address": "234 Coastal Highway",
+      "coordinates": {
+        "lat": 40.625,
+        "lng": -74.11
+      },
+      "products": []
+    },
+    {
+      "id": "terminal-10",
+      "name": "Midtown Terminal",
+      "type": "terminal",
+      "address": "567 Midtown Avenue",
+      "coordinates": {
+        "lat": 40.752,
+        "lng": -73.978
+      },
+      "products": []
     }
   ],
   "products": [
     {
-      "id": 1,
-      "name": "Diesel",
-      "code": "DSL",
-      "unit": "liters",
-      "minStockThreshold": 5000,
-      "isActive": true
+      "id": "product-1",
+      "name": "Premium Diesel",
+      "sku": "PDSL-001",
+      "category": "Fuel",
+      "price": 1.45,
+      "unit": "liter",
+      "description": "High-quality premium diesel fuel for commercial vehicles",
+      "stockQuantity": 50000
     },
     {
-      "id": 2,
-      "name": "Petrol",
-      "code": "PET",
-      "unit": "liters",
-      "minStockThreshold": 5000,
-      "isActive": true
+      "id": "product-2",
+      "name": "Regular Petrol",
+      "sku": "RPTL-001",
+      "category": "Fuel",
+      "price": 1.32,
+      "unit": "liter",
+      "description": "Standard unleaded petrol for general use",
+      "stockQuantity": 35000
+    },
+    {
+      "id": "product-3",
+      "name": "Engine Oil",
+      "sku": "EOIL-001",
+      "category": "Lubricants",
+      "price": 8.5,
+      "unit": "liter",
+      "description": "Synthetic engine oil for heavy-duty vehicles",
+      "stockQuantity": 1500
+    },
+    {
+      "id": "product-1764105817431",
+      "name": "Liquid Hydrogen",
+      "sku": "LHYD-001",
+      "category": "Fuel",
+      "price": 50,
+      "unit": "liter",
+      "description": "Liquefied Hydrogen gas",
+      "stockQuantity": 50000
     }
   ],
   "drivers": [
     {
-      "id": 1,
+      "id": "driver-1",
       "name": "John Smith",
       "license": "DL-123456",
-      "phone": "+1-555-0100",
-      "status": "active"
+      "phone": "+1-555-0100"
     },
     {
-      "id": 2,
-      "name": "Priya Patel",
-      "license": "DL-987654",
-      "phone": "+1-555-0101",
-      "status": "inactive"
+      "id": "driver-2",
+      "name": "Sarah Johnson",
+      "license": "DL-234567",
+      "phone": "+1-555-0101"
+    },
+    {
+      "id": "driver-3",
+      "name": "Michael Brown",
+      "license": "DL-345678",
+      "phone": "+1-555-0102"
+    },
+    {
+      "id": "driver-4",
+      "name": "Emily Davis",
+      "license": "DL-456789",
+      "phone": "+1-555-0103"
+    },
+    {
+      "id": "driver-5",
+      "name": "David Wilson",
+      "license": "DL-567890",
+      "phone": "+1-555-0104"
+    },
+    {
+      "id": "driver-6",
+      "name": "Jessica Martinez",
+      "license": "DL-678901",
+      "phone": "+1-555-0105"
+    },
+    {
+      "id": "driver-7",
+      "name": "Robert Garcia",
+      "license": "DL-789012",
+      "phone": "+1-555-0106"
+    },
+    {
+      "id": "driver-8",
+      "name": "Amanda Rodriguez",
+      "license": "DL-890123",
+      "phone": "+1-555-0107"
+    },
+    {
+      "id": "driver-9",
+      "name": "Christopher Lee",
+      "license": "DL-901234",
+      "phone": "+1-555-0108"
+    },
+    {
+      "id": "driver-10",
+      "name": "Michelle Anderson",
+      "license": "DL-012345",
+      "phone": "+1-555-0109"
     }
   ],
   "vehicles": [
     {
-      "id": 1,
+      "id": "vehicle-1",
       "registration": "TRK-101",
       "capacity": 8000,
       "type": "Tanker",
-      "status": "available"
+      "currentLocation": {
+        "lat": 40.72,
+        "lng": -74
+      }
     },
     {
-      "id": 2,
-      "registration": "TRK-205",
-      "capacity": 12000,
-      "type": "Trailer",
-      "status": "maintenance"
+      "id": "vehicle-2",
+      "registration": "TRK-102",
+      "capacity": 10000,
+      "type": "Tanker",
+      "currentLocation": {
+        "lat": 40.755,
+        "lng": -73.992
+      }
+    },
+    {
+      "id": "vehicle-3",
+      "registration": "TRK-103",
+      "capacity": 7500,
+      "type": "Tanker",
+      "currentLocation": {
+        "lat": 40.688,
+        "lng": -74.045
+      }
+    },
+    {
+      "id": "vehicle-4",
+      "registration": "TRK-104",
+      "capacity": 9000,
+      "type": "Tanker",
+      "currentLocation": {
+        "lat": 40.802,
+        "lng": -73.965
+      }
+    },
+    {
+      "id": "vehicle-5",
+      "registration": "TRK-105",
+      "capacity": 8500,
+      "type": "Tanker",
+      "currentLocation": {
+        "lat": 40.641,
+        "lng": -74.098
+      }
+    },
+    {
+      "id": "vehicle-6",
+      "registration": "VAN-201",
+      "capacity": 3000,
+      "type": "Van",
+      "currentLocation": {
+        "lat": 40.735,
+        "lng": -74.012
+      }
+    },
+    {
+      "id": "vehicle-7",
+      "registration": "TRK-106",
+      "capacity": 11000,
+      "type": "Tanker",
+      "currentLocation": {
+        "lat": 40.768,
+        "lng": -73.918
+      }
+    },
+    {
+      "id": "vehicle-8",
+      "registration": "VAN-202",
+      "capacity": 3500,
+      "type": "Van",
+      "currentLocation": {
+        "lat": 40.715,
+        "lng": -74.078
+      }
+    },
+    {
+      "id": "vehicle-9",
+      "registration": "TRK-107",
+      "capacity": 9500,
+      "type": "Tanker",
+      "currentLocation": {
+        "lat": 40.792,
+        "lng": -73.951
+      }
+    },
+    {
+      "id": "vehicle-10",
+      "registration": "TRK-108",
+      "capacity": 8200,
+      "type": "Tanker",
+      "currentLocation": {
+        "lat": 40.656,
+        "lng": -74.062
+      }
+    }
+  ],
+  "orders": [
+    {
+      "id": "order-1",
+      "destinationId": "terminal-1",
+      "productId": "diesel",
+      "quantity": 5000,
+      "deliveryDate": "2025-11-24",
+      "assignedDriverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "status": "assigned"
+    },
+    {
+      "id": "order-2",
+      "destinationId": "terminal-3",
+      "productId": "product-2",
+      "quantity": 7500,
+      "deliveryDate": "2025-11-25",
+      "assignedDriverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "status": "in-transit"
+    },
+    {
+      "id": "order-3",
+      "destinationId": "terminal-4",
+      "productId": "product-1",
+      "quantity": 6000,
+      "deliveryDate": "2025-11-25",
+      "assignedDriverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "status": "pending"
+    },
+    {
+      "id": "order-4",
+      "destinationId": "terminal-5",
+      "productId": "product-3",
+      "quantity": 1500,
+      "deliveryDate": "2025-11-26",
+      "assignedDriverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "status": "assigned"
+    },
+    {
+      "id": "order-5",
+      "destinationId": "terminal-6",
+      "productId": "product-1",
+      "quantity": 8000,
+      "deliveryDate": "2025-11-26",
+      "assignedDriverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "status": "completed"
+    },
+    {
+      "id": "order-6",
+      "destinationId": "terminal-7",
+      "productId": "product-2",
+      "quantity": 5500,
+      "deliveryDate": "2025-11-27",
+      "assignedDriverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "status": "pending"
+    },
+    {
+      "id": "order-7",
+      "destinationId": "terminal-8",
+      "productId": "product-1764105817431",
+      "quantity": 4000,
+      "deliveryDate": "2025-11-27",
+      "assignedDriverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "status": "assigned"
+    },
+    {
+      "id": "order-8",
+      "destinationId": "terminal-9",
+      "productId": "product-1",
+      "quantity": 9000,
+      "deliveryDate": "2025-11-28",
+      "assignedDriverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "status": "in-transit"
+    },
+    {
+      "id": "order-9",
+      "destinationId": "terminal-10",
+      "productId": "product-2",
+      "quantity": 6500,
+      "deliveryDate": "2025-11-28",
+      "assignedDriverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "status": "pending"
+    },
+    {
+      "id": "order-10",
+      "destinationId": "terminal-1764104564485",
+      "productId": "product-1",
+      "quantity": 7000,
+      "deliveryDate": "2025-11-29",
+      "assignedDriverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "status": "assigned"
+    }
+  ],
+  "allocations": [
+    {
+      "id": "alloc-1",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-1",
+      "status": "allocated"
+    },
+    {
+      "id": "alloc-2",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-2",
+      "status": "allocated"
+    },
+    {
+      "id": "alloc-3",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-3",
+      "status": "allocated"
+    },
+    {
+      "id": "alloc-4",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-4",
+      "status": "allocated"
+    },
+    {
+      "id": "alloc-5",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-5",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-6",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-6",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-7",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-7",
+      "status": "allocated"
+    },
+    {
+      "id": "alloc-8",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-8",
+      "status": "allocated"
+    },
+    {
+      "id": "alloc-9",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-9",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-10",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-10",
+      "status": "allocated"
+    },
+    {
+      "id": "849a",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "status": "pending"
+    },
+    {
+      "id": "0742",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "status": "completed"
+    },
+    {
+      "id": "fbd7",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-3",
+      "status": "pending"
+    },
+    {
+      "id": "e34e",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-2",
+      "status": "pending"
+    }
+  ],
+  "shifts": [
+    {
+      "id": "shift-1",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-24",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-2",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-25",
+      "status": "active",
+      "startTime": "2025-11-25T08:00:00.000Z",
+      "endTime": null
+    },
+    {
+      "id": "shift-3",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-25",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-4",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-26",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-5",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-26",
+      "status": "completed",
+      "startTime": "2025-11-26T07:30:00.000Z",
+      "endTime": "2025-11-26T16:45:00.000Z"
+    },
+    {
+      "id": "shift-6",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-7",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-8",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-28",
+      "status": "active",
+      "startTime": "2025-11-28T09:00:00.000Z",
+      "endTime": null
+    },
+    {
+      "id": "shift-9",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-10",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    }
+  ],
+  "deliveries": [
+    {
+      "id": "delivery-1",
+      "shiftId": "shift-1",
+      "orderId": "order-1",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-2",
+      "shiftId": "shift-2",
+      "orderId": "order-2",
+      "status": "in-progress",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-3",
+      "shiftId": "shift-3",
+      "orderId": "order-3",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-4",
+      "shiftId": "shift-4",
+      "orderId": "order-4",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-5",
+      "shiftId": "shift-5",
+      "orderId": "order-5",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-6",
+      "shiftId": "shift-6",
+      "orderId": "order-6",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-7",
+      "shiftId": "shift-7",
+      "orderId": "order-7",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-8",
+      "shiftId": "shift-8",
+      "orderId": "order-8",
+      "status": "in-progress",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-9",
+      "shiftId": "shift-9",
+      "orderId": "order-9",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-10",
+      "shiftId": "shift-10",
+      "orderId": "order-10",
+      "status": "pending",
+      "failureReason": null
+    }
+  ],
+  "gpsUpdates": [
+    {
+      "id": "gps-1",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-24T10:00:00.000Z",
+      "coordinates": {
+        "lat": 40.721,
+        "lng": -74.002
+      }
+    },
+    {
+      "id": "gps-2",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "timestamp": "2025-11-25T10:15:00.000Z",
+      "coordinates": {
+        "lat": 40.756,
+        "lng": -73.991
+      }
+    },
+    {
+      "id": "gps-3",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "timestamp": "2025-11-25T09:30:00.000Z",
+      "coordinates": {
+        "lat": 40.689,
+        "lng": -74.044
+      }
+    },
+    {
+      "id": "gps-4",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "timestamp": "2025-11-26T11:20:00.000Z",
+      "coordinates": {
+        "lat": 40.803,
+        "lng": -73.964
+      }
+    },
+    {
+      "id": "gps-5",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "timestamp": "2025-11-26T14:45:00.000Z",
+      "coordinates": {
+        "lat": 40.642,
+        "lng": -74.097
+      }
+    },
+    {
+      "id": "gps-6",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "timestamp": "2025-11-27T08:50:00.000Z",
+      "coordinates": {
+        "lat": 40.736,
+        "lng": -74.013
+      }
+    },
+    {
+      "id": "gps-7",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-27T10:05:00.000Z",
+      "coordinates": {
+        "lat": 40.769,
+        "lng": -73.917
+      }
+    },
+    {
+      "id": "gps-8",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "timestamp": "2025-11-28T12:30:00.000Z",
+      "coordinates": {
+        "lat": 40.716,
+        "lng": -74.079
+      }
+    },
+    {
+      "id": "gps-9",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "timestamp": "2025-11-28T09:45:00.000Z",
+      "coordinates": {
+        "lat": 40.793,
+        "lng": -73.952
+      }
+    },
+    {
+      "id": "gps-10",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "timestamp": "2025-11-29T08:15:00.000Z",
+      "coordinates": {
+        "lat": 40.657,
+        "lng": -74.061
+      }
     }
   ]
 }

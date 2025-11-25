@@ -1,4 +1,4 @@
-import { Box, Text, VStack, HStack, Progress, Circle, useToken } from "@chakra-ui/react";
+import { Box, Text, VStack, HStack, Circle, useToken } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { type RootState } from "../../store";
 

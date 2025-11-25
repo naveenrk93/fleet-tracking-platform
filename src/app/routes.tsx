@@ -11,6 +11,7 @@ import { DriversPage } from "../pages/admin/MasterData/DriversPage";
 import { VehiclesPage } from "../pages/admin/MasterData/VehiclesPage";
 import { OrdersPage } from "../pages/admin/Orders/OrdersPage";
 import { OrderForm } from "../pages/admin/Orders/OrderForm";
+import { OrderDetailPage } from "../pages/admin/Orders/OrderDetailPage";
 import { VehicleAllocationPage } from "../pages/admin/VehicleAllocation/VehicleAllocationPage";
 import { InventoryDashboardPage } from "../pages/admin/Inventory/InventoryDashboardPage";
 import { LiveFleetMapPage } from "../pages/admin/LiveFleet/LiveFleetMapPage";
@@ -65,6 +66,10 @@ export const routes: RouteObject[] = [
     {
         path: "/admin/orders/new",
         element: <OrderForm />,
+    },
+    {
+        path: "/admin/orders/:id",
+        element: <OrderDetailPage />,
     },
     {
         path: "/admin/orders/edit/:id",

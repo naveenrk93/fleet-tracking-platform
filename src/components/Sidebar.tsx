@@ -1,7 +1,6 @@
-import { Box, VStack, HStack, Text, Icon, Flex, Collapse } from "@chakra-ui/react";
+import { Box, VStack, HStack, Text, Icon, Flex, Collapse, Image } from "@chakra-ui/react";
 import { 
-  MdDashboard, 
-  MdStorage,
+  MdDashboard,
   MdShoppingCart, 
   MdLocalShipping,
   MdInventory,
@@ -22,6 +21,7 @@ import { useSelector } from "react-redux";
 import { ROUTE_PATHS } from "../app/routes";
 import type { RootState } from "../store";
 import { useState } from "react";
+import fleetNitroLogo from "../assets/images/fleet-nitro-logo.png";
 
 interface SubMenuItem {
   label: string;
@@ -40,11 +40,7 @@ const adminMenuItems: MenuItem[] = [
   { 
     label: "Admin Dashboard", 
     icon: MdDashboard, 
-    path: ROUTE_PATHS.ADMIN.DASHBOARD 
-  },
-  { 
-    label: "Master Data", 
-    icon: MdStorage,
+    path: ROUTE_PATHS.ADMIN.DASHBOARD,
     subItems: [
       { label: "Hubs", path: ROUTE_PATHS.ADMIN.MASTER_DATA.HUBS },
       { label: "Terminals", path: ROUTE_PATHS.ADMIN.MASTER_DATA.TERMINALS },
@@ -113,7 +109,7 @@ export const Sidebar = () => {
   const location = useLocation();
   const { role } = useSelector((state: RootState) => state.user);
   const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({
-    "Master Data": true, // Open by default
+    "Admin Dashboard": true, // Open by default
   });
 
   const menuItems = role === "admin" ? adminMenuItems : driverMenuItems;
@@ -159,23 +155,16 @@ export const Sidebar = () => {
       }}
     >
       {/* Logo */}
-      <Flex px={6} py={5} align="center" gap={2}>
-        <Box
-          w="32px"
-          h="32px"
-          bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-          borderRadius="8px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          color="white"
-          fontWeight="bold"
-          fontSize="lg"
-        >
-          F
-        </Box>
+      <Flex px={6} py={1} align="center" gap={2}>
+        <Image
+          src={fleetNitroLogo}
+          alt="Fleet Nitro Logo"
+          w="64px"
+          h="64px"
+          objectFit="contain"
+        />
         <Text fontSize="xl" fontWeight="bold" color="text.primary">
-          FleetTrack
+          Fleet Nitro
         </Text>
       </Flex>
 
@@ -189,7 +178,55 @@ export const Sidebar = () => {
           return (
             <Box key={item.label}>
               {/* Main Menu Item */}
-              {hasSubItems ? (
+              {hasSubItems && item.path ? (
+                // Item with both path and subitems (Admin Dashboard)
+                <HStack
+                  px={3}
+                  py={2.5}
+                  borderRadius="md"
+                  bg={isActive ? "purple.500" : "transparent"}
+                  color={isActive ? "white" : "text.menu"}
+                  _hover={{
+                    bg: isActive ? "purple.600" : "bg.hover",
+                    color: "white",
+                  }}
+                  cursor="pointer"
+                  transition="all 0.2s"
+                  justify="space-between"
+                >
+                  <Link 
+                    to={item.path} 
+                    style={{ textDecoration: "none", flex: 1 }}
+                    onClick={() => {
+                      if (!isExpanded) {
+                        toggleExpand(item.label);
+                      }
+                    }}
+                  >
+                    <HStack spacing={3}>
+                      <Icon as={item.icon} boxSize={5} />
+                      <Text fontSize="sm" fontWeight="medium">
+                        {item.label}
+                      </Text>
+                    </HStack>
+                  </Link>
+                  <Flex
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleExpand(item.label);
+                    }}
+                    width={"32px"}
+                    height={"32px"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    borderRadius="md"
+                    _hover={{ bg: "whiteAlpha.200" }}
+                  >
+                    <Icon as={isExpanded ? MdExpandLess : MdExpandMore} boxSize={5} />
+                  </Flex>
+                </HStack>
+              ) : hasSubItems ? (
+                // Item with only subitems (no path)
                 <HStack
                   px={3}
                   py={2.5}
@@ -214,6 +251,7 @@ export const Sidebar = () => {
                   <Icon as={isExpanded ? MdExpandLess : MdExpandMore} boxSize={5} />
                 </HStack>
               ) : (
+                // Item with only path (no subitems)
                 <Link to={item.path!} style={{ textDecoration: "none" }}>
                   <HStack
                     px={3}
@@ -256,7 +294,7 @@ export const Sidebar = () => {
 
               {/* Sub Menu Items */}
               {hasSubItems && (
-                <Collapse in={isExpanded} animateOpacity>
+                <Collapse in={isExpanded} animateOpacity unmountOnExit>
                   <VStack spacing={1} align="stretch" pl={3} mt={1}>
                     {item.subItems!.map((subItem) => {
                       const isSubActive = isPathActive(subItem.path);
