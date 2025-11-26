@@ -31,7 +31,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks.ts";
 import {
   getShiftDeliveriesWithDetails,
   completeDelivery,
@@ -39,14 +39,14 @@ import {
   endShift,
   getShifts,
   type Shift,
-} from "../../services/api";
+} from "../../../services/api.ts";
 import {
   setDeliveries,
   updateDeliveryStatus,
   setDeliveriesLoading,
   setDeliveriesError,
   type DeliveryWithDetails,
-} from "../../store/index";
+} from "../../../store/index";
 import { FaCheck, FaTimes, FaBox, FaMapMarkerAlt, FaCalendar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 

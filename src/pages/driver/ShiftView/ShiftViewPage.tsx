@@ -23,7 +23,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "../../store";
+import { RootState } from "../../../store.ts";
 import {
   getShifts,
   updateShift,
@@ -38,7 +38,7 @@ import {
   type Order,
   type Terminal,
   type Product,
-} from "../../services/api";
+} from "../../../services/api.ts";
 import { FaTruck, FaPlayCircle, FaBox, FaMapMarkerAlt, FaClock, FaMap } from "react-icons/fa";
 
 interface DeliveryWithDetails extends Delivery {

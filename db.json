@@ -4315,6 +4315,26 @@
         "lat": 40.712,
         "lng": -74.006
       }
+    },
+    {
+      "id": "gps-1764195019884",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T22:10:19.884Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764195392382",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T22:16:32.382Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
     }
   ]
 }

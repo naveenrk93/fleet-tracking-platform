@@ -22,7 +22,7 @@ import {
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import {useSelector} from "react-redux";
-import {RootState} from "../../store";
+import {RootState} from "../../../store.ts";
 import {
     getShifts,
     getDeliveries,
@@ -37,8 +37,8 @@ import {
     type Terminal,
     type Order,
     type Vehicle,
-} from "../../services/api";
-import {MapErrorBoundary} from "../../components/MapErrorBoundary";
+} from "../../../services/api.ts";
+import {MapErrorBoundary} from "../../../components/MapErrorBoundary.tsx";
 
 const MAPBOX_TOKEN = "pk.eyJ1IjoibmF2ZWVucms5MyIsImEiOiJjbWUzcDd3OW4wODdwMmpzOHhrMjhleHM3In0.QNzeHbwZHUucsrXymelg0A";
 const ROUTE_COLOR = "#007FFF";

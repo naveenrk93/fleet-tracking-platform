@@ -113,60 +113,92 @@ export const DriverModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleCancel} size="xl">
+    <Modal 
+      isOpen={isOpen} 
+      onClose={handleCancel} 
+      size={{ base: "full", sm: "md", md: "xl" }}
+      scrollBehavior={{ base: "inside", md: "outside" }}
+    >
       <ModalOverlay />
-      <ModalContent bg="bg.card" borderColor="border.default">
+      <ModalContent 
+        bg="bg.card" 
+        borderColor="border.default"
+        mx={{ base: 0, sm: 4 }}
+        my={{ base: 0, sm: 16 }}
+      >
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalHeader color="text.primary">
+          <ModalHeader color="text.primary" fontSize={{ base: "lg", md: "xl" }}>
             {mode === "create" ? "Add New Driver" : "Edit Driver"}
           </ModalHeader>
           <ModalCloseButton />
           
-          <ModalBody>
-            <VStack spacing={4} align="stretch">
+          <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
+            <VStack spacing={{ base: 3, md: 4 }} align="stretch">
               {/* Driver Name */}
               <FormControl isInvalid={!!errors.name}>
-                <FormLabel color="text.secondary">Driver Name</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  Driver Name
+                </FormLabel>
                 <Input
                   {...register("name")}
                   placeholder="e.g., John Smith"
                   bg="bg.input"
+                  size={{ base: "md", md: "md" }}
                 />
-                <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.name?.message}</FormErrorMessage>
               </FormControl>
 
               {/* License Number */}
               <FormControl isInvalid={!!errors.license}>
-                <FormLabel color="text.secondary">License Number</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  License Number
+                </FormLabel>
                 <Input
                   {...register("license")}
                   placeholder="e.g., DL-123456"
                   bg="bg.input"
+                  size={{ base: "md", md: "md" }}
                 />
-                <FormErrorMessage>{errors.license?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.license?.message}</FormErrorMessage>
               </FormControl>
 
               {/* Phone Number */}
               <FormControl isInvalid={!!errors.phone}>
-                <FormLabel color="text.secondary">Phone Number</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  Phone Number
+                </FormLabel>
                 <Input
                   {...register("phone")}
                   placeholder="e.g., +1-555-0100"
                   bg="bg.input"
+                  size={{ base: "md", md: "md" }}
                 />
-                <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.phone?.message}</FormErrorMessage>
               </FormControl>
             </VStack>
           </ModalBody>
 
-          <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={handleCancel}>
+          <ModalFooter 
+            px={{ base: 4, md: 6 }} 
+            py={{ base: 3, md: 4 }}
+            flexDirection={{ base: "column", sm: "row" }}
+            gap={{ base: 2, sm: 0 }}
+          >
+            <Button 
+              variant="ghost" 
+              mr={{ base: 0, sm: 3 }} 
+              onClick={handleCancel}
+              width={{ base: "full", sm: "auto" }}
+              size={{ base: "md", md: "md" }}
+            >
               Cancel
             </Button>
             <Button
               colorScheme="purple"
               type="submit"
               isLoading={isSubmitting}
+              width={{ base: "full", sm: "auto" }}
+              size={{ base: "md", md: "md" }}
             >
               {mode === "create" ? "Create Driver" : "Update Driver"}
             </Button>

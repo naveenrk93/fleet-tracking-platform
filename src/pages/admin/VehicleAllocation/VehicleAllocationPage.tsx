@@ -19,12 +19,12 @@ import {
   useToast,
   Spinner,
   Center,
-  Flex,
+  ButtonGroup,
   Select,
-  Input,
 } from "@chakra-ui/react";
 import { MdAdd, MdDelete, MdEdit, MdRefresh, MdChevronLeft, MdChevronRight } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { 
   getAllocations, 
   getDrivers, 
@@ -46,9 +46,13 @@ export const VehicleAllocationPage = () => {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [filterVehicle, setFilterVehicle] = useState<string>('');
   const [filterDriver, setFilterDriver] = useState<string>('');
+  const [expandedCalendarDates, setExpandedCalendarDates] = useState<Set<string>>(new Set());
   
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+
+  // Ref for virtualization container
+  const tableContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchData();
@@ -252,7 +256,34 @@ export const VehicleAllocationPage = () => {
     return date.getMonth() === currentDate.getMonth();
   };
 
+  const handleToggleCalendarCard = (date: Date) => {
+    const dateStr = formatDate(date);
+    const newExpanded = new Set(expandedCalendarDates);
+    if (newExpanded.has(dateStr)) {
+      newExpanded.delete(dateStr);
+    } else {
+      newExpanded.add(dateStr);
+    }
+    setExpandedCalendarDates(newExpanded);
+  };
+
   const dates = viewMode === 'week' ? getWeekDates(currentDate) : getMonthDates(currentDate);
+  
+  // Max allocations to show in calendar cell before "show more"
+  const MAX_VISIBLE_ALLOCATIONS = viewMode === 'week' ? 3 : 2;
+
+  // Get sorted allocations for table display
+  const sortedAllocations = [...allocations].sort(
+    (a, b) => new Date(b.date + 'T00:00:00').getTime() - new Date(a.date + 'T00:00:00').getTime()
+  );
+
+  // TanStack Virtual setup
+  const rowVirtualizer = useVirtualizer({
+    count: sortedAllocations.length,
+    getScrollElement: () => tableContainerRef.current,
+    estimateSize: () => 45, // Estimated row height in pixels
+    overscan: 5, // Number of items to render outside of the visible area
+  });
 
   if (loading) {
     return (
@@ -264,22 +295,21 @@ export const VehicleAllocationPage = () => {
 
   return (
     <Box>
-      <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
         {/* Page Header */}
-        <HStack justify="space-between">
-          <Heading size="lg" color="text.primary">
+        <HStack justify="space-between" flexWrap={{ base: "wrap", sm: "nowrap" }} gap={{ base: 3, md: 0 }}>
+          <Heading size={{ base: "md", md: "lg" }} color="text.primary">
             Vehicle Allocation
           </Heading>
-          <HStack>
-            <Button
-              colorScheme="purple"
-              leftIcon={<MdAdd />}
-              size="md"
-              onClick={handleAddNew}
-            >
-              New Allocation
-            </Button>
-          </HStack>
+          <Button
+            colorScheme="purple"
+            leftIcon={<MdAdd />}
+            size={{ base: "sm", md: "md" }}
+            onClick={handleAddNew}
+            width={{ base: "full", sm: "auto" }}
+          >
+            New Allocation
+          </Button>
         </HStack>
 
         {/* Calendar Controls */}
@@ -288,53 +318,75 @@ export const VehicleAllocationPage = () => {
           borderRadius="lg"
           border="1px solid"
           borderColor="border.default"
-          p={4}
+          p={{ base: 3, md: 4 }}
         >
-          <HStack justify="space-between" mb={4} flexWrap="wrap" gap={4}>
-            <HStack>
+          <HStack justify="space-between" mb={4} flexWrap="wrap" gap={2}>
+            <HStack spacing={{ base: 1, md: 2 }}>
               <IconButton
                 aria-label="Previous"
                 icon={<MdChevronLeft />}
                 onClick={navigatePrevious}
                 variant="ghost"
+                size={{ base: "sm", md: "md" }}
               />
-              <Button onClick={navigateToday} variant="ghost">
-                Today
+              <Button 
+                onClick={navigateToday} 
+                variant="ghost" 
+                size={{ base: "sm", md: "md" }}
+              >
+                <Text 
+                  fontWeight="semibold" 
+                  fontSize={{ base: "sm", md: "md" }} 
+                  color="text.primary"
+                >
+                  {viewMode === 'week' 
+                    ? `Week of ${currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
+                    : currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                  }
+                </Text>
               </Button>
               <IconButton
                 aria-label="Next"
                 icon={<MdChevronRight />}
                 onClick={navigateNext}
                 variant="ghost"
+                size={{ base: "sm", md: "md" }}
               />
-              <Text fontWeight="semibold" fontSize="lg" ml={4} color="text.primary">
-                {viewMode === 'week' 
-                  ? `Week of ${currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
-                  : currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-                }
-              </Text>
             </HStack>
             
-            <HStack>
-              <Select
-                value={viewMode}
-                onChange={(e) => setViewMode(e.target.value as 'week' | 'month')}
-                w="150px"
-                size="sm"
+            <ButtonGroup size="sm" isAttached variant="outline">
+              <Button
+                colorScheme={viewMode === 'week' ? 'purple' : 'gray'}
+                onClick={() => setViewMode('week')}
+                bg={viewMode === 'week' ? 'purple.500' : 'transparent'}
+                color={viewMode === 'week' ? 'white' : 'text.primary'}
+                _hover={{
+                  bg: viewMode === 'week' ? 'purple.600' : 'bg.hover',
+                }}
               >
-                <option value="week">Week View</option>
-                <option value="month">Month View</option>
-              </Select>
-            </HStack>
+                Week
+              </Button>
+              <Button
+                colorScheme={viewMode === 'month' ? 'purple' : 'gray'}
+                onClick={() => setViewMode('month')}
+                bg={viewMode === 'month' ? 'purple.500' : 'transparent'}
+                color={viewMode === 'month' ? 'white' : 'text.primary'}
+                _hover={{
+                  bg: viewMode === 'month' ? 'purple.600' : 'bg.hover',
+                }}
+              >
+                Month
+              </Button>
+            </ButtonGroup>
           </HStack>
 
           {/* Filters */}
-          <HStack mb={4} spacing={4}>
+          <HStack mb={4} spacing={4} flexWrap="wrap">
             <Select
               placeholder="All Vehicles"
               value={filterVehicle}
               onChange={(e) => setFilterVehicle(e.target.value)}
-              w="200px"
+              w={{ base: "full", sm: "200px" }}
               size="sm"
             >
               {vehicles.map((vehicle) => (
@@ -348,7 +400,7 @@ export const VehicleAllocationPage = () => {
               placeholder="All Drivers"
               value={filterDriver}
               onChange={(e) => setFilterDriver(e.target.value)}
-              w="200px"
+              w={{ base: "full", sm: "200px" }}
               size="sm"
             >
               {drivers.map((driver) => (
@@ -373,60 +425,100 @@ export const VehicleAllocationPage = () => {
           </HStack>
 
           {/* Calendar Grid */}
-          <Grid 
-            templateColumns={viewMode === 'week' ? 'repeat(7, 1fr)' : 'repeat(7, 1fr)'} 
-            gap={2}
-          >
-            {/* Day headers */}
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-              <GridItem key={day}>
-                <Text 
-                  textAlign="center" 
-                  fontWeight="bold" 
-                  py={2}
-                  color="text.secondary"
-                  fontSize="sm"
-                >
-                  {day}
-                </Text>
-              </GridItem>
-            ))}
+          <Box overflowX={{ base: "auto", md: "visible" }} pb={2}>
+            <Grid 
+              templateColumns={viewMode === 'week' ? 'repeat(7, 1fr)' : 'repeat(7, 1fr)'} 
+              gap={{ base: 1, md: 2 }}
+              minW={{ base: "700px", md: "auto" }}
+            >
+              {/* Day headers */}
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                <GridItem key={day}>
+                  <Text 
+                    textAlign="center" 
+                    fontWeight="bold" 
+                    py={{ base: 1, md: 2 }}
+                    color="text.secondary"
+                    fontSize={{ base: "xs", md: "sm" }}
+                  >
+                    {day}
+                  </Text>
+                </GridItem>
+              ))}
             
-            {/* Date cells */}
-            {dates.map((date, index) => {
-              const dayAllocations = getAllocationsForDate(date);
-              const today = isToday(date);
-              const currentMonth = isCurrentMonth(date);
-              
-              return (
-                <GridItem key={index}>
-                  <Box
-                    border="1px solid"
-                    borderColor={today ? "purple.500" : "border.default"}
-                    bg={today ? "purple.50" : "bg.surface"}
-                    borderRadius="md"
-                    minH={viewMode === 'week' ? "150px" : "100px"}
-                    p={2}
+              {/* Date cells */}
+              {dates.map((date, index) => {
+                const dayAllocations = getAllocationsForDate(date);
+                const today = isToday(date);
+                const currentMonth = isCurrentMonth(date);
+                const dateStr = formatDate(date);
+                const isExpanded = expandedCalendarDates.has(dateStr);
+                const remainingCount = dayAllocations.length - MAX_VISIBLE_ALLOCATIONS;
+                
+                // Calculate heights for animation
+                const ALLOCATION_HEIGHT = 42; // Approximate height of each allocation item in px
+                const collapsedHeight = 94; // Fixed max height for collapsed state
+                const expandedHeight = 430; // Fixed max height for expanded state
+                
+                return (
+                  <GridItem key={index}>
+                    <Box
+                      border="1px solid"
+                      borderColor={today ? "purple.500" : "border.default"}
+                      bg={today ? "purple.50" : "bg.surface"}
+                      borderRadius="md"
+                      minH={viewMode === 'week' ? { base: "140px", md: "180px" } : { base: "100px", md: "120px" }}
+                      p={{ base: 2, md: 3 }}
                     opacity={viewMode === 'month' && !currentMonth ? 0.5 : 1}
-                    _hover={{ borderColor: "purple.300", cursor: "pointer" }}
+                    display="flex"
+                    flexDirection="column"
+                    cursor="pointer"
+                    transition="box-shadow 0.2s"
+                    _hover={{ borderColor: "purple.300", boxShadow: "md" }}
                     _dark={{
-                      bg: "purple.900",
+                      bg: today ? "purple.900" : "bg.surface",
                       borderColor: today ? "purple.400" : "whiteAlpha.300",
                     }}
-                  >
-                    <Text 
-                      fontSize="sm" 
-                      fontWeight={today ? "bold" : "normal"}
-                      color={today ? "purple.600" : "text.secondary"}
-                      mb={1}
-                      _dark={{
-                        color: today ? "purple.300" : "whiteAlpha.800",
+                      onClick={() => handleToggleCalendarCard(date)}
+                    >
+                      <HStack justify="space-between" align="flex-start" mb={{ base: 1, md: 2 }} pb={{ base: 1, md: 2 }}>
+                        <Text 
+                          fontSize={{ base: "xs", md: "sm" }}
+                          fontWeight={today ? "bold" : "normal"}
+                          color={today ? "purple.600" : "text.secondary"}
+                          _dark={{
+                            color: today ? "purple.300" : "whiteAlpha.800",
+                          }}
+                        >
+                          {date.getDate()}
+                        </Text>
+                        {dayAllocations.length > 0 && (
+                          <Badge fontSize="2xs" colorScheme="purple" flexShrink={0} display={{ base: "none", sm: "inline-flex" }}>
+                            {dayAllocations.length}
+                          </Badge>
+                        )}
+                      </HStack>
+                    
+                    <VStack 
+                      align="stretch" 
+                      spacing={1} 
+                      flex="1"
+                      maxH={isExpanded ? `${expandedHeight}px` : `${collapsedHeight}px`}
+                      overflowY={isExpanded && (dayAllocations.length * ALLOCATION_HEIGHT > expandedHeight) ? "auto" : "hidden"}
+                      transition="max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                      sx={{
+                        '&::-webkit-scrollbar': {
+                          width: '4px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          background: 'transparent',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          background: 'purple.300',
+                          borderRadius: '2px',
+                        },
                       }}
                     >
-                      {date.getDate()}
-                    </Text>
-                    
-                    <VStack align="stretch" spacing={1}>
                       {dayAllocations.map((allocation) => (
                         <Box
                           key={allocation.id}
@@ -436,6 +528,7 @@ export const VehicleAllocationPage = () => {
                           p={1}
                           fontSize="xs"
                           borderRadius="sm"
+                          cursor="pointer"
                           _hover={{ bg: `${getStatusColor(allocation.status)}.200` }}
                           _dark={{
                             bg: `${getStatusColor(allocation.status)}.800`,
@@ -467,13 +560,28 @@ export const VehicleAllocationPage = () => {
                             {getDriverName(allocation.driverId)}
                           </Text>
                         </Box>
-                      ))}
-                    </VStack>
-                  </Box>
-                </GridItem>
-              );
-            })}
-          </Grid>
+                        ))}
+                      </VStack>
+                      
+                      {!isExpanded && remainingCount > 0 && (
+                        <Box
+                          mt={{ base: 1, md: 2 }}
+                          pt={1}
+                          fontSize={{ base: "2xs", md: "xs" }}
+                          color="purple.600"
+                          fontWeight="semibold"
+                          textAlign="center"
+                          _dark={{ color: "purple.300" }}
+                        >
+                          +{remainingCount} more
+                        </Box>
+                      )}
+                    </Box>
+                  </GridItem>
+                );
+              })}
+            </Grid>
+          </Box>
         </Box>
 
         {/* Allocations List */}
@@ -482,10 +590,10 @@ export const VehicleAllocationPage = () => {
           borderRadius="lg"
           border="1px solid"
           borderColor="border.default"
-          p={6}
+          p={{ base: 3, md: 6 }}
         >
-          <HStack justify="space-between" mb={4}>
-            <Text fontSize="lg" fontWeight="semibold" color="text.primary">
+          <HStack justify="space-between" mb={4} flexWrap="wrap" gap={2}>
+            <Text fontSize={{ base: "md", md: "lg" }} fontWeight="semibold" color="text.primary">
               All Allocations
             </Text>
             <Button
@@ -498,63 +606,162 @@ export const VehicleAllocationPage = () => {
             </Button>
           </HStack>
 
-          <Box overflowX="auto">
-            <Table variant="simple" size="sm">
-              <Thead>
-                <Tr>
-                  <Th>Date</Th>
-                  <Th>Vehicle</Th>
-                  <Th>Driver</Th>
-                  <Th>Status</Th>
-                  <Th>Actions</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {allocations.length === 0 ? (
+          {/* Desktop Table View */}
+          <Box 
+            ref={tableContainerRef}
+            overflowY="auto"
+            overflowX="auto"
+            maxH="600px"
+            position="relative"
+            display={{ base: "none", md: "block" }}
+          >
+            {sortedAllocations.length === 0 ? (
+              <Center py={8}>
+                <Text color="text.secondary">No allocations found</Text>
+              </Center>
+            ) : (
+              <Table variant="simple" size="sm" style={{ tableLayout: 'fixed' }} w="100%">
+                <Thead 
+                  position="sticky" 
+                  top={0} 
+                  bg="bg.card" 
+                  zIndex={1}
+                  _dark={{ bg: "gray.800" }}
+                >
                   <Tr>
-                    <Td colSpan={5} textAlign="center" py={8}>
-                      <Text color="text.secondary">No allocations found</Text>
+                    <Th width="15%">Date</Th>
+                    <Th width="20%">Vehicle</Th>
+                    <Th width="25%">Driver</Th>
+                    <Th width="20%">Status</Th>
+                    <Th width="20%">Actions</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td colSpan={5} p={0} border="none">
+                      <Box
+                        position="relative"
+                        h={`${rowVirtualizer.getTotalSize()}px`}
+                      >
+                        {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                          const allocation = sortedAllocations[virtualRow.index];
+                          return (
+                            <Box
+                              key={allocation.id}
+                              position="absolute"
+                              top={0}
+                              left={0}
+                              w="100%"
+                              h={`${virtualRow.size}px`}
+                              transform={`translateY(${virtualRow.start}px)`}
+                            >
+                              <Table variant="simple" size="sm" style={{ tableLayout: 'fixed' }} w="100%">
+                                <Tbody>
+                                  <Tr>
+                                    <Td width="15%">{formatDateString(allocation.date)}</Td>
+                                    <Td width="20%">{getVehicleRegistration(allocation.vehicleId)}</Td>
+                                    <Td width="25%">{getDriverName(allocation.driverId)}</Td>
+                                    <Td width="20%">
+                                      <Badge colorScheme={getStatusColor(allocation.status)}>
+                                        {allocation.status}
+                                      </Badge>
+                                    </Td>
+                                    <Td width="20%">
+                                      <HStack spacing={2}>
+                                        <IconButton
+                                          aria-label="Edit"
+                                          icon={<MdEdit />}
+                                          size="sm"
+                                          variant="ghost"
+                                          colorScheme="blue"
+                                          onClick={() => handleEdit(allocation)}
+                                        />
+                                        <IconButton
+                                          aria-label="Delete"
+                                          icon={<MdDelete />}
+                                          size="sm"
+                                          variant="ghost"
+                                          colorScheme="red"
+                                          onClick={() => handleDelete(allocation.id)}
+                                        />
+                                      </HStack>
+                                    </Td>
+                                  </Tr>
+                                </Tbody>
+                              </Table>
+                            </Box>
+                          );
+                        })}
+                      </Box>
                     </Td>
                   </Tr>
-                ) : (
-                  allocations
-                    .sort((a, b) => new Date(b.date + 'T00:00:00').getTime() - new Date(a.date + 'T00:00:00').getTime())
-                    .map((allocation) => (
-                      <Tr key={allocation.id}>
-                        <Td>{formatDateString(allocation.date)}</Td>
-                        <Td>{getVehicleRegistration(allocation.vehicleId)}</Td>
-                        <Td>{getDriverName(allocation.driverId)}</Td>
-                        <Td>
+                </Tbody>
+              </Table>
+            )}
+          </Box>
+
+          {/* Mobile Card View */}
+          <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
+            {sortedAllocations.length === 0 ? (
+              <Center py={8}>
+                <Text color="text.secondary">No allocations found</Text>
+              </Center>
+            ) : (
+              sortedAllocations.map((allocation) => (
+                <Box
+                  key={allocation.id}
+                  p={4}
+                  borderRadius="md"
+                  border="1px solid"
+                  borderColor="border.default"
+                  bg="bg.surface"
+                >
+                  <VStack align="stretch" spacing={3}>
+                    <HStack justify="space-between" align="flex-start">
+                      <Box flex="1">
+                        <HStack spacing={2} mb={1} flexWrap="wrap">
+                          <Text fontWeight="bold" color="text.primary" fontSize="md">
+                            {getVehicleRegistration(allocation.vehicleId)}
+                          </Text>
                           <Badge colorScheme={getStatusColor(allocation.status)}>
                             {allocation.status}
                           </Badge>
-                        </Td>
-                        <Td>
-                          <HStack spacing={2}>
-                            <IconButton
-                              aria-label="Edit"
-                              icon={<MdEdit />}
-                              size="sm"
-                              variant="ghost"
-                              colorScheme="blue"
-                              onClick={() => handleEdit(allocation)}
-                            />
-                            <IconButton
-                              aria-label="Delete"
-                              icon={<MdDelete />}
-                              size="sm"
-                              variant="ghost"
-                              colorScheme="red"
-                              onClick={() => handleDelete(allocation.id)}
-                            />
-                          </HStack>
-                        </Td>
-                      </Tr>
-                    ))
-                )}
-              </Tbody>
-            </Table>
-          </Box>
+                        </HStack>
+                        <Text fontSize="sm" color="text.secondary">
+                          {getDriverName(allocation.driverId)}
+                        </Text>
+                      </Box>
+                      <HStack spacing={1}>
+                        <IconButton
+                          aria-label="Edit"
+                          icon={<MdEdit size={"18px"} />}
+                          size="sm"
+                          variant="ghost"
+                          colorScheme="blue"
+                          onClick={() => handleEdit(allocation)}
+                        />
+                        <IconButton
+                          aria-label="Delete"
+                          icon={<MdDelete size={"18px"} />}
+                          size="sm"
+                          variant="ghost"
+                          colorScheme="red"
+                          onClick={() => handleDelete(allocation.id)}
+                        />
+                      </HStack>
+                    </HStack>
+                    
+                    <Box>
+                      <Text color="text.secondary" fontSize="xs">Date</Text>
+                      <Text color="text.primary" fontSize="sm">
+                        {formatDateString(allocation.date)}
+                      </Text>
+                    </Box>
+                  </VStack>
+                </Box>
+              ))
+            )}
+          </VStack>
         </Box>
       </VStack>
 
@@ -568,6 +775,7 @@ export const VehicleAllocationPage = () => {
         vehicles={vehicles}
         existingAllocations={allocations}
       />
+
     </Box>
   );
 };

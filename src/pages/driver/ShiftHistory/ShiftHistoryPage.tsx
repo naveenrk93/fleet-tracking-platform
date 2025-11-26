@@ -22,15 +22,15 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../../store.ts";
 import {
   getShifts,
   getVehicle,
   getShiftDeliveriesWithDetails,
   type Shift,
   type Vehicle,
-} from "../../services/api";
-import { DeliveryWithDetails } from "../../store/deliveriesSlice";
+} from "../../../services/api.ts";
+import { DeliveryWithDetails } from "../../../store/deliveriesSlice.ts";
 import { FiCalendar, FiClock, FiTruck, FiPackage, FiCheckCircle, FiXCircle, FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 interface ShiftWithDetails extends Shift {

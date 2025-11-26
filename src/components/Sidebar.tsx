@@ -1,4 +1,19 @@
-import { Box, VStack, HStack, Text, Icon, Flex, Collapse, Image } from "@chakra-ui/react";
+import { 
+  Box, 
+  VStack, 
+  HStack, 
+  Text, 
+  Icon, 
+  Flex, 
+  Collapse, 
+  Image,
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { 
   MdDashboard,
   MdShoppingCart, 
@@ -105,12 +120,18 @@ const getSubMenuIcon = (label: string) => {
   }
 };
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const location = useLocation();
   const { role } = useSelector((state: RootState) => state.user);
   const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({
     "Admin Dashboard": true, // Open by default
   });
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const menuItems = role === "admin" ? adminMenuItems : driverMenuItems;
 
@@ -130,30 +151,8 @@ export const Sidebar = () => {
     return subItems.some(item => location.pathname === item.path);
   };
 
-  return (
-    <Box
-      w="260px"
-      bg="bg.sidebar"
-      h="100vh"
-      position="fixed"
-      left={0}
-      top={0}
-      overflowY="auto"
-      borderRight="1px solid"
-      borderColor="border.default"
-      css={{
-        '&::-webkit-scrollbar': {
-          width: '4px',
-        },
-        '&::-webkit-scrollbar-track': {
-          width: '6px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          background: 'var(--chakra-colors-scrollbar-thumb)',
-          borderRadius: '24px',
-        },
-      }}
-    >
+  const sidebarContent = (
+    <>
       {/* Logo */}
       <Flex px={6} py={1} align="center" gap={2}>
         <Image
@@ -179,7 +178,7 @@ export const Sidebar = () => {
             <Box key={item.label}>
               {/* Main Menu Item */}
               {hasSubItems && item.path ? (
-                // Item with both path and subitems (Admin Dashboard)
+                  // Item with both path and subitems (Admin Dashboard)
                 <HStack
                   px={3}
                   py={2.5}
@@ -201,6 +200,7 @@ export const Sidebar = () => {
                       if (!isExpanded) {
                         toggleExpand(item.label);
                       }
+                      if (isMobile) onClose();
                     }}
                   >
                     <HStack spacing={3}>
@@ -252,7 +252,11 @@ export const Sidebar = () => {
                 </HStack>
               ) : (
                 // Item with only path (no subitems)
-                <Link to={item.path!} style={{ textDecoration: "none" }}>
+                <Link 
+                  to={item.path!} 
+                  style={{ textDecoration: "none" }}
+                  onClick={() => isMobile && onClose()}
+                >
                   <HStack
                     px={3}
                     py={2.5}
@@ -299,7 +303,12 @@ export const Sidebar = () => {
                     {item.subItems!.map((subItem) => {
                       const isSubActive = isPathActive(subItem.path);
                       return (
-                        <Link key={subItem.path} to={subItem.path} style={{ textDecoration: "none" }}>
+                        <Link 
+                          key={subItem.path} 
+                          to={subItem.path} 
+                          style={{ textDecoration: "none" }}
+                          onClick={() => isMobile && onClose()}
+                        >
                           <HStack
                             px={3}
                             py={2}
@@ -329,6 +338,56 @@ export const Sidebar = () => {
           );
         })}
       </VStack>
+    </>
+  );
+
+  // Mobile: Render as Drawer
+  if (isMobile) {
+    return (
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        size="xs"
+      >
+        <DrawerOverlay />
+        <DrawerContent bg="bg.sidebar">
+          <DrawerCloseButton color="text.primary" />
+          <DrawerBody p={0} overflowY="auto">
+            {sidebarContent}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  // Desktop: Render as fixed sidebar
+  return (
+    <Box
+      w="260px"
+      bg="bg.sidebar"
+      h="100vh"
+      position="fixed"
+      left={0}
+      top={0}
+      overflowY="auto"
+      borderRight="1px solid"
+      borderColor="border.default"
+      display={{ base: "none", lg: "block" }}
+      css={{
+        '&::-webkit-scrollbar': {
+          width: '4px',
+        },
+        '&::-webkit-scrollbar-track': {
+          width: '6px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: 'var(--chakra-colors-scrollbar-thumb)',
+          borderRadius: '24px',
+        },
+      }}
+    >
+      {sidebarContent}
     </Box>
   );
 };

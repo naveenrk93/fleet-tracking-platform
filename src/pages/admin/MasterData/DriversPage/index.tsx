@@ -148,30 +148,31 @@ export const DriversPage = () => {
 
   return (
     <Box>
-      <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
         {/* Page Header */}
-        <HStack justify="space-between">
-          <Heading size="lg" color="text.primary">
+        <HStack justify="space-between" flexWrap={{ base: "wrap", sm: "nowrap" }} gap={{ base: 3, md: 0 }}>
+          <Heading size={{ base: "md", md: "lg" }} color="text.primary">
             Drivers Management
           </Heading>
           <Button
             colorScheme="purple"
             leftIcon={<MdAdd />}
-            size="md"
+            size={{ base: "sm", md: "md" }}
             onClick={handleAddNew}
+            width={{ base: "full", sm: "auto" }}
           >
             Add Driver
           </Button>
         </HStack>
 
         {/* Search Bar and Filters */}
-        <HStack spacing={4} justifyContent="space-between">
-          <InputGroup flex={1} maxW="600px" minW="300px">
+        <HStack spacing={4} justifyContent="space-between" flexDirection={{ base: "column", md: "row" }} align="stretch">
+          <InputGroup flex={{ base: "1", md: "1" }} maxW={{ md: "600px" }} minW={{ md: "300px" }}>
             <InputLeftElement pointerEvents="none">
               <MdSearch color="gray" size="20px" />
             </InputLeftElement>
             <Input
-              placeholder="Search drivers by name, license, phone, email, or status..."
+              placeholder="Search drivers by name, license, phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               bg="bg.card"
@@ -187,7 +188,7 @@ export const DriversPage = () => {
             borderColor="border.default"
             _hover={{ borderColor: "purple.400" }}
             _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
-            width="200px"
+            width={{ base: "100%", md: "200px" }}
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -201,7 +202,7 @@ export const DriversPage = () => {
           borderRadius="lg"
           border="1px solid"
           borderColor="border.default"
-          p={6}
+          p={{ base: 3, md: 6 }}
           minH="400px"
         >
           {loading ? (
@@ -210,60 +211,126 @@ export const DriversPage = () => {
             </Box>
           ) : filteredDrivers.length === 0 ? (
             <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Text color="text.secondary">
+              <Text color="text.secondary" textAlign="center" px={4}>
                 {searchQuery ? "No drivers found matching your search." : "No drivers found. Add your first driver!"}
               </Text>
             </Box>
           ) : (
-            <TableContainer>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th color="text.secondary">Name</Th>
-                    <Th color="text.secondary">License</Th>
-                    <Th color="text.secondary">Phone</Th>
-                    <Th color="text.secondary">Email</Th>
-                    <Th color="text.secondary">Status</Th>
-                    <Th color="text.secondary">Actions</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {filteredDrivers.map((driver) => (
-                    <Tr key={driver.id}>
-                      <Td color="text.primary" fontWeight="medium">{driver.name}</Td>
-                      <Td color="text.primary">{driver.license}</Td>
-                      <Td color="text.primary">{driver.phone}</Td>
-                      <Td color="text.primary">{driver.email || "N/A"}</Td>
-                      <Td>
-                        <Badge colorScheme={(driver.status || "active") === "active" ? "green" : "gray"}>
-                          {driver.status || "active"}
-                        </Badge>
-                      </Td>
-                      <Td>
-                        <HStack spacing={2}>
+            <>
+              {/* Desktop Table View */}
+              <Box display={{ base: "none", md: "block" }}>
+                <TableContainer>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th color="text.secondary">Name</Th>
+                        <Th color="text.secondary">License</Th>
+                        <Th color="text.secondary">Phone</Th>
+                        <Th color="text.secondary">Email</Th>
+                        <Th color="text.secondary">Status</Th>
+                        <Th color="text.secondary">Actions</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {filteredDrivers.map((driver) => (
+                        <Tr key={driver.id}>
+                          <Td color="text.primary" fontWeight="medium">{driver.name}</Td>
+                          <Td color="text.primary">{driver.license}</Td>
+                          <Td color="text.primary">{driver.phone}</Td>
+                          <Td color="text.primary">{driver.email || "N/A"}</Td>
+                          <Td>
+                            <Badge colorScheme={(driver.status || "active") === "active" ? "green" : "gray"}>
+                              {driver.status || "active"}
+                            </Badge>
+                          </Td>
+                          <Td>
+                            <HStack spacing={2}>
+                              <IconButton
+                                aria-label="Edit driver"
+                                icon={<MdEdit size={"20px"}/>}
+                                size="md"
+                                colorScheme="blue"
+                                variant="ghost"
+                                onClick={() => handleEdit(driver)}
+                              />
+                              <IconButton
+                                aria-label="Delete driver"
+                                icon={<MdDelete size={"20px"}/>}
+                                size="sm"
+                                colorScheme="red"
+                                variant="ghost"
+                                onClick={() => handleDelete(driver.id)}
+                              />
+                            </HStack>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Box>
+
+              {/* Mobile Card View */}
+              <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
+                {filteredDrivers.map((driver) => (
+                  <Box
+                    key={driver.id}
+                    p={4}
+                    borderRadius="md"
+                    border="1px solid"
+                    borderColor="border.default"
+                    bg="bg.surface"
+                  >
+                    <VStack align="stretch" spacing={3}>
+                      <HStack justify="space-between" align="flex-start">
+                        <Box flex="1">
+                          <HStack spacing={2} mb={1}>
+                            <Text fontWeight="bold" color="text.primary" fontSize="md">
+                              {driver.name}
+                            </Text>
+                            <Badge colorScheme={(driver.status || "active") === "active" ? "green" : "gray"}>
+                              {driver.status || "active"}
+                            </Badge>
+                          </HStack>
+                          <Text fontSize="sm" color="text.secondary">
+                            License: {driver.license}
+                          </Text>
+                        </Box>
+                        <HStack spacing={1}>
                           <IconButton
                             aria-label="Edit driver"
-                            icon={<MdEdit size={"20px"}/>}
-                            size="md"
+                            icon={<MdEdit size={"18px"}/>}
+                            size="sm"
                             colorScheme="blue"
                             variant="ghost"
                             onClick={() => handleEdit(driver)}
                           />
                           <IconButton
                             aria-label="Delete driver"
-                            icon={<MdDelete size={"20px"}/>}
+                            icon={<MdDelete size={"18px"}/>}
                             size="sm"
                             colorScheme="red"
                             variant="ghost"
                             onClick={() => handleDelete(driver.id)}
                           />
                         </HStack>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
+                      </HStack>
+                      
+                      <VStack align="stretch" fontSize="sm" spacing={1}>
+                        <HStack>
+                          <Text color="text.secondary" fontSize="xs" minW="60px">Phone:</Text>
+                          <Text color="text.primary">{driver.phone}</Text>
+                        </HStack>
+                        <HStack>
+                          <Text color="text.secondary" fontSize="xs" minW="60px">Email:</Text>
+                          <Text color="text.primary">{driver.email || "N/A"}</Text>
+                        </HStack>
+                      </VStack>
+                    </VStack>
+                  </Box>
+                ))}
+              </VStack>
+            </>
           )}
         </Box>
       </VStack>

@@ -3,7 +3,7 @@ import { DashboardPage } from "../pages/DashboardPage";
 import { RoleBasedRedirect } from "../components/RoleBasedRedirect";
 
 // Admin Pages
-import { AdminDashboard } from "../pages/admin/Dashboard";
+import { AdminDashboard } from "../pages/admin/Dashboard/Dashboard.tsx";
 import { HubsPage } from "../pages/admin/MasterData/HubsPage";
 import { TerminalsPage } from "../pages/admin/MasterData/TerminalsPage";
 import { ProductsPage } from "../pages/admin/MasterData/ProductsPage";
@@ -17,10 +17,10 @@ import { InventoryDashboardPage } from "../pages/admin/Inventory/InventoryDashbo
 import { LiveFleetMapPage } from "../pages/admin/LiveFleet/LiveFleetMapPage";
 
 // Driver Pages
-import { ShiftViewPage } from "../pages/driver/ShiftViewPage";
-import { DriverLiveMapPage } from "../pages/driver/DriverLiveMapPage";
-import { DeliveryManagementPage } from "../pages/driver/DeliveryManagementPage";
-import { ShiftHistoryPage } from "../pages/driver/ShiftHistoryPage";
+import { ShiftViewPage } from "../pages/driver/ShiftView/ShiftViewPage.tsx";
+import { DriverLiveMapPage } from "../pages/driver/DriverLiveMap/DriverLiveMapPage.tsx";
+import { DeliveryManagementPage } from "../pages/driver/DeliveryManagement/DeliveryManagementPage.tsx";
+import { ShiftHistoryPage } from "../pages/driver/ShiftHistory/ShiftHistoryPage.tsx";
 
 // Route configuration
 export const routes: RouteObject[] = [

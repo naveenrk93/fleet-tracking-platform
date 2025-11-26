@@ -232,26 +232,39 @@ export const HubModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleCancel} size="xl">
+    <Modal 
+      isOpen={isOpen} 
+      onClose={handleCancel} 
+      size={{ base: "full", sm: "md", md: "xl" }}
+      scrollBehavior={{ base: "inside", md: "outside" }}
+    >
       <ModalOverlay />
-      <ModalContent bg="bg.card" borderColor="border.default">
+      <ModalContent 
+        bg="bg.card" 
+        borderColor="border.default"
+        mx={{ base: 0, sm: 4 }}
+        my={{ base: 0, sm: 16 }}
+      >
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalHeader color="text.primary">
+          <ModalHeader color="text.primary" fontSize={{ base: "lg", md: "xl" }}>
             {mode === "create" ? "Add New Hub" : "Edit Hub"}
           </ModalHeader>
           <ModalCloseButton />
           
-          <ModalBody>
-            <VStack spacing={4} align="stretch">
+          <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
+            <VStack spacing={{ base: 3, md: 4 }} align="stretch">
               {/* Hub Name */}
               <FormControl isInvalid={!!errors.name}>
-                <FormLabel color="text.secondary">Hub Name</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  Hub Name
+                </FormLabel>
                 <Input
                   {...register("name")}
                   placeholder="e.g., Downtown Distribution Hub"
                   bg="bg.input"
+                  size={{ base: "md", md: "md" }}
                 />
-                <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.name?.message}</FormErrorMessage>
               </FormControl>
 
               {/* Type - Hidden field, always "hub" */}
@@ -259,50 +272,61 @@ export const HubModal = ({
 
               {/* Address */}
               <FormControl isInvalid={!!errors.address}>
-                <FormLabel color="text.secondary">Address</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  Address
+                </FormLabel>
                 <Textarea
                   {...register("address")}
                   placeholder="e.g., 123 Main St, City"
                   bg="bg.input"
-                  rows={3}
+                  rows={{ base: 2, md: 3 }}
+                  size={{ base: "sm", md: "md" }}
                 />
-                <FormErrorMessage>{errors.address?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.address?.message}</FormErrorMessage>
               </FormControl>
 
               {/* Coordinates */}
-              <FormControl isInvalid={!!errors.coordinates?.lat}>
-                <FormLabel color="text.secondary">Latitude</FormLabel>
-                <Input
-                  {...register("coordinates.lat", { valueAsNumber: true })}
-                  type="number"
-                  step="any"
-                  placeholder="e.g., 40.7128"
-                  bg="bg.input"
-                />
-                <FormErrorMessage>{errors.coordinates?.lat?.message}</FormErrorMessage>
-              </FormControl>
+              <HStack spacing={{ base: 2, md: 3 }} align="flex-start">
+                <FormControl isInvalid={!!errors.coordinates?.lat} flex="1">
+                  <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                    Latitude
+                  </FormLabel>
+                  <Input
+                    {...register("coordinates.lat", { valueAsNumber: true })}
+                    type="number"
+                    step="any"
+                    placeholder="e.g., 40.7128"
+                    bg="bg.input"
+                    size={{ base: "md", md: "md" }}
+                  />
+                  <FormErrorMessage fontSize="xs">{errors.coordinates?.lat?.message}</FormErrorMessage>
+                </FormControl>
 
-              <FormControl isInvalid={!!errors.coordinates?.lng}>
-                <FormLabel color="text.secondary">Longitude</FormLabel>
-                <Input
-                  {...register("coordinates.lng", { valueAsNumber: true })}
-                  type="number"
-                  step="any"
-                  placeholder="e.g., -74.0060"
-                  bg="bg.input"
-                />
-                <FormErrorMessage>{errors.coordinates?.lng?.message}</FormErrorMessage>
-              </FormControl>
+                <FormControl isInvalid={!!errors.coordinates?.lng} flex="1">
+                  <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                    Longitude
+                  </FormLabel>
+                  <Input
+                    {...register("coordinates.lng", { valueAsNumber: true })}
+                    type="number"
+                    step="any"
+                    placeholder="e.g., -74.0060"
+                    bg="bg.input"
+                    size={{ base: "md", md: "md" }}
+                  />
+                  <FormErrorMessage fontSize="xs">{errors.coordinates?.lng?.message}</FormErrorMessage>
+                </FormControl>
+              </HStack>
 
               {/* Products Section */}
-              <Divider my={4} />
+              <Divider my={{ base: 2, md: 4 }} />
               
-              <Heading size="sm" color="text.primary" mb={3}>
+              <Heading size={{ base: "xs", md: "sm" }} color="text.primary" mb={{ base: 2, md: 3 }}>
                 Hub Products
               </Heading>
 
               {/* Product Rows */}
-              <VStack align="stretch" spacing={3}>
+              <VStack align="stretch" spacing={{ base: 2, md: 3 }}>
                 {(() => {
                   const availableProductsForNew = products.filter(
                     p => !hubProducts.some(hp => hp.productId === p.id)
@@ -319,7 +343,65 @@ export const HubModal = ({
                     );
 
                     return (
-                    <HStack key={index} spacing={2}>
+                    <VStack key={index} spacing={2} align="stretch" display={{ base: "flex", sm: "none" }}>
+                      {/* Mobile: Stacked Layout */}
+                      <FormControl>
+                        {index === 0 && (
+                          <FormLabel color="text.secondary" fontSize="xs" mb={1}>
+                            Product
+                          </FormLabel>
+                        )}
+                        <Select
+                          placeholder="Select a product"
+                          value={product.productId}
+                          onChange={(e) => handleProductSelect(index, e.target.value)}
+                          bg="bg.input"
+                          isDisabled={loadingProducts}
+                          size="sm"
+                        >
+                          {availableProducts.map((p) => (
+                            <option key={p.id} value={p.id}>
+                              {p.name} ({p.sku})
+                            </option>
+                          ))}
+                        </Select>
+                      </FormControl>
+
+                      <HStack spacing={2}>
+                        <FormControl flex="1">
+                          {index === 0 && (
+                            <FormLabel color="text.secondary" fontSize="xs" mb={1}>
+                              Quantity
+                            </FormLabel>
+                          )}
+                          <Input
+                            type="number"
+                            min="0"
+                            value={product.quantity || ""}
+                            onChange={(e) => handleQuantityChange(index, Number(e.target.value))}
+                            placeholder="0"
+                            bg="bg.input"
+                            isDisabled={!product.productId}
+                            size="sm"
+                          />
+                        </FormControl>
+                        {!isLastRow && (
+                          <IconButton
+                            aria-label="Remove product"
+                            icon={<MdDelete />}
+                            size="sm"
+                            colorScheme="red"
+                            variant="ghost"
+                            onClick={() => handleRemoveProduct(index)}
+                            type="button"
+                            mt={index === 0 ? 5 : 0}
+                          />
+                        )}
+                      </HStack>
+                    </VStack>
+                    ) || (
+                    <HStack key={index} spacing={2} display={{ base: "none", sm: "flex" }}>
+                      {/* Desktop: Horizontal Layout */}
                       <FormControl flex="2">
                         {index === 0 && (
                           <FormLabel color="text.secondary" fontSize="sm" mb={1}>
@@ -385,14 +467,27 @@ export const HubModal = ({
               </VStack>
             </VStack>
           </ModalBody>
-          <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={handleCancel}>
+          <ModalFooter 
+            px={{ base: 4, md: 6 }} 
+            py={{ base: 3, md: 4 }}
+            flexDirection={{ base: "column", sm: "row" }}
+            gap={{ base: 2, sm: 0 }}
+          >
+            <Button 
+              variant="ghost" 
+              mr={{ base: 0, sm: 3 }} 
+              onClick={handleCancel}
+              width={{ base: "full", sm: "auto" }}
+              size={{ base: "md", md: "md" }}
+            >
               Cancel
             </Button>
             <Button
               colorScheme="purple"
               type="submit"
               isLoading={isSubmitting}
+              width={{ base: "full", sm: "auto" }}
+              size={{ base: "md", md: "md" }}
             >
               {mode === "create" ? "Create Hub" : "Update Hub"}
             </Button>

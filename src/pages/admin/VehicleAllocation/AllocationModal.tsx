@@ -194,15 +194,23 @@ export const AllocationModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md">
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      size={{ base: "full", sm: "md" }}
+      scrollBehavior={{ base: "inside", md: "outside" }}
+    >
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
+      <ModalContent
+        mx={{ base: 0, sm: 4 }}
+        my={{ base: 0, sm: 16 }}
+      >
+        <ModalHeader fontSize={{ base: "lg", md: "xl" }}>
           {allocation ? "Edit Allocation" : "New Allocation"}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <VStack spacing={4}>
+        <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
+          <VStack spacing={{ base: 3, md: 4 }}>
 
             {conflictingVehicleAllocation && (
               <Alert status="warning" borderRadius="md">
@@ -220,13 +228,14 @@ export const AllocationModal = ({
             )}
 
             <FormControl isRequired>
-              <FormLabel>Date</FormLabel>
+              <FormLabel fontSize={{ base: "sm", md: "md" }}>Date</FormLabel>
               <Input
                 type="date"
                 value={formData.date}
                 onChange={(e) => handleChange("date", e.target.value)}
                 min={getLocalDateString()}
                 color="text.primary"
+                size={{ base: "md", md: "md" }}
                 _dark={{
                   color: "white",
                   bg: "whiteAlpha.100",
@@ -272,11 +281,12 @@ export const AllocationModal = ({
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel>Vehicle</FormLabel>
+              <FormLabel fontSize={{ base: "sm", md: "md" }}>Vehicle</FormLabel>
               <Select
                 placeholder="Select vehicle"
                 value={formData.vehicleId}
                 onChange={(e) => handleChange("vehicleId", e.target.value)}
+                size={{ base: "md", md: "md" }}
               >
                 {vehicles.map((vehicle) => (
                   <option key={vehicle.id} value={vehicle.id}>
@@ -287,11 +297,12 @@ export const AllocationModal = ({
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel>Driver</FormLabel>
+              <FormLabel fontSize={{ base: "sm", md: "md" }}>Driver</FormLabel>
               <Select
                 placeholder="Select driver"
                 value={formData.driverId}
                 onChange={(e) => handleChange("driverId", e.target.value)}
+                size={{ base: "md", md: "md" }}
               >
                 {drivers.map((driver) => (
                   <option key={driver.id} value={driver.id}>
@@ -302,10 +313,11 @@ export const AllocationModal = ({
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel>Status</FormLabel>
+              <FormLabel fontSize={{ base: "sm", md: "md" }}>Status</FormLabel>
               <Select
                 value={formData.status}
                 onChange={(e) => handleChange("status", e.target.value)}
+                size={{ base: "md", md: "md" }}
               >
                 <option value="pending">Pending</option>
                 <option value="allocated">Allocated</option>
@@ -353,8 +365,19 @@ export const AllocationModal = ({
           </VStack>
         </ModalBody>
 
-        <ModalFooter>
-          <Button variant="ghost" mr={3} onClick={onClose}>
+        <ModalFooter
+          px={{ base: 4, md: 6 }} 
+          py={{ base: 3, md: 4 }}
+          flexDirection={{ base: "column", sm: "row" }}
+          gap={{ base: 2, sm: 0 }}
+        >
+          <Button 
+            variant="ghost" 
+            mr={{ base: 0, sm: 3 }} 
+            onClick={onClose}
+            width={{ base: "full", sm: "auto" }}
+            size={{ base: "md", md: "md" }}
+          >
             Cancel
           </Button>
           <Button
@@ -362,6 +385,8 @@ export const AllocationModal = ({
             onClick={handleSubmit}
             isLoading={loading}
             isDisabled={!!validationError}
+            width={{ base: "full", sm: "auto" }}
+            size={{ base: "md", md: "md" }}
           >
             {allocation ? "Update" : "Create"}
           </Button>

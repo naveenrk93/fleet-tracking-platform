@@ -147,25 +147,26 @@ export const VehiclesPage = () => {
 
   return (
     <Box>
-      <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
         {/* Page Header */}
-        <HStack justify="space-between">
-          <Heading size="lg" color="text.primary">
+        <HStack justify="space-between" flexWrap={{ base: "wrap", sm: "nowrap" }} gap={{ base: 3, md: 0 }}>
+          <Heading size={{ base: "md", md: "lg" }} color="text.primary">
             Vehicles Management
           </Heading>
           <Button
             colorScheme="purple"
             leftIcon={<MdAdd />}
-            size="md"
+            size={{ base: "sm", md: "md" }}
             onClick={handleAddNew}
+            width={{ base: "full", sm: "auto" }}
           >
             Add Vehicle
           </Button>
         </HStack>
 
         {/* Search Bar and Filters */}
-        <HStack spacing={4} justifyContent="space-between">
-          <InputGroup flex={1} maxW="600px" minW="300px">
+        <HStack spacing={4} justifyContent="space-between" flexDirection={{ base: "column", md: "row" }} align="stretch">
+          <InputGroup flex={{ base: "1", md: "1" }} maxW={{ md: "600px" }} minW={{ md: "300px" }}>
             <InputLeftElement pointerEvents="none">
               <MdSearch color="gray" size="20px" />
             </InputLeftElement>
@@ -186,7 +187,7 @@ export const VehiclesPage = () => {
             borderColor="border.default"
             _hover={{ borderColor: "purple.400" }}
             _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
-            width="200px"
+            width={{ base: "100%", md: "200px" }}
           >
             <option value="all">All Types</option>
             {vehicleTypes.map((type) => (
@@ -201,7 +202,7 @@ export const VehiclesPage = () => {
           borderRadius="lg"
           border="1px solid"
           borderColor="border.default"
-          p={6}
+          p={{ base: 3, md: 6 }}
           minH="400px"
         >
           {loading ? (
@@ -210,61 +211,127 @@ export const VehiclesPage = () => {
             </Box>
           ) : filteredVehicles.length === 0 ? (
             <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Text color="text.secondary">
+              <Text color="text.secondary" textAlign="center" px={4}>
                 {searchQuery ? "No vehicles found matching your search." : "No vehicles found. Add your first vehicle!"}
               </Text>
             </Box>
           ) : (
-            <TableContainer>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th color="text.secondary">Registration</Th>
-                    <Th color="text.secondary">Type</Th>
-                    <Th color="text.secondary">Capacity (L)</Th>
-                    <Th color="text.secondary">Location</Th>
-                    <Th color="text.secondary">Actions</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {filteredVehicles.map((vehicle) => (
-                    <Tr key={vehicle.id}>
-                      <Td color="text.primary" fontWeight="medium">{vehicle.registration}</Td>
-                      <Td>
-                        <Badge colorScheme="purple">{vehicle.type}</Badge>
-                      </Td>
-                      <Td color="text.primary">{vehicle.capacity.toLocaleString()}</Td>
-                      <Td color="text.primary" fontSize="sm">
-                        {vehicle.currentLocation ? 
-                          `${vehicle.currentLocation.lat.toFixed(4)}, ${vehicle.currentLocation.lng.toFixed(4)}` : 
-                          "N/A"
-                        }
-                      </Td>
-                      <Td>
-                        <HStack spacing={2}>
+            <>
+              {/* Desktop Table View */}
+              <Box display={{ base: "none", md: "block" }}>
+                <TableContainer>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th color="text.secondary">Registration</Th>
+                        <Th color="text.secondary">Type</Th>
+                        <Th color="text.secondary">Capacity (L)</Th>
+                        <Th color="text.secondary">Location</Th>
+                        <Th color="text.secondary">Actions</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {filteredVehicles.map((vehicle) => (
+                        <Tr key={vehicle.id}>
+                          <Td color="text.primary" fontWeight="medium">{vehicle.registration}</Td>
+                          <Td>
+                            <Badge colorScheme="purple">{vehicle.type}</Badge>
+                          </Td>
+                          <Td color="text.primary">{vehicle.capacity.toLocaleString()}</Td>
+                          <Td color="text.primary" fontSize="sm">
+                            {vehicle.currentLocation ? 
+                              `${vehicle.currentLocation.lat.toFixed(4)}, ${vehicle.currentLocation.lng.toFixed(4)}` : 
+                              "N/A"
+                            }
+                          </Td>
+                          <Td>
+                            <HStack spacing={2}>
+                              <IconButton
+                                aria-label="Edit vehicle"
+                                icon={<MdEdit size={"20px"}/>}
+                                size="md"
+                                colorScheme="blue"
+                                variant="ghost"
+                                onClick={() => handleEdit(vehicle)}
+                              />
+                              <IconButton
+                                aria-label="Delete vehicle"
+                                icon={<MdDelete size={"20px"}/>}
+                                size="sm"
+                                colorScheme="red"
+                                variant="ghost"
+                                onClick={() => handleDelete(vehicle.id)}
+                              />
+                            </HStack>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Box>
+
+              {/* Mobile Card View */}
+              <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
+                {filteredVehicles.map((vehicle) => (
+                  <Box
+                    key={vehicle.id}
+                    p={4}
+                    borderRadius="md"
+                    border="1px solid"
+                    borderColor="border.default"
+                    bg="bg.surface"
+                  >
+                    <VStack align="stretch" spacing={3}>
+                      <HStack justify="space-between" align="flex-start">
+                        <Box flex="1">
+                          <Text fontWeight="bold" color="text.primary" fontSize="md">
+                            {vehicle.registration}
+                          </Text>
+                          <Badge colorScheme="purple" mt={1}>
+                            {vehicle.type}
+                          </Badge>
+                        </Box>
+                        <HStack spacing={1}>
                           <IconButton
                             aria-label="Edit vehicle"
-                            icon={<MdEdit size={"20px"}/>}
-                            size="md"
+                            icon={<MdEdit size={"18px"}/>}
+                            size="sm"
                             colorScheme="blue"
                             variant="ghost"
                             onClick={() => handleEdit(vehicle)}
                           />
                           <IconButton
                             aria-label="Delete vehicle"
-                            icon={<MdDelete size={"20px"}/>}
+                            icon={<MdDelete size={"18px"}/>}
                             size="sm"
                             colorScheme="red"
                             variant="ghost"
                             onClick={() => handleDelete(vehicle.id)}
                           />
                         </HStack>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
+                      </HStack>
+                      
+                      <HStack spacing={4} fontSize="sm">
+                        <Box>
+                          <Text color="text.secondary" fontSize="xs">Capacity</Text>
+                          <Text color="text.primary">{vehicle.capacity.toLocaleString()} L</Text>
+                        </Box>
+                        <Box>
+                          <Text color="text.secondary" fontSize="xs">Location</Text>
+                          <Text color="text.primary">
+                            {vehicle.currentLocation 
+                              ? `${vehicle.currentLocation.lat.toFixed(2)}, ${vehicle.currentLocation.lng.toFixed(2)}`
+                              : 'N/A'
+                            }
+                          </Text>
+                        </Box>
+                      </HStack>
+                    </VStack>
+                  </Box>
+                ))}
+              </VStack>
+            </>
           )}
         </Box>
       </VStack>

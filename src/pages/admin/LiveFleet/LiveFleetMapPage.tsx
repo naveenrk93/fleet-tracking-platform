@@ -99,7 +99,7 @@ export const LiveFleetMapPage = () => {
   const hubMarkers = useRef<mapboxgl.Marker[]>([]);
   const terminalMarkers = useRef<mapboxgl.Marker[]>([]);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [enable3D, setEnable3D] = useState(true);
+  const [enable3D, setEnable3D] = useState(false);
   const [selectedVehicleRoute, setSelectedVehicleRoute] = useState<string | null>(null);
   const activePopup = useRef<mapboxgl.Popup | null>(null);
   const animationFrame = useRef<number | null>(null);
@@ -953,8 +953,8 @@ export const LiveFleetMapPage = () => {
           borderColor="border.default"
           p={4}
         >
-          <VStack spacing={4}>
-            <HStack spacing={4} flexWrap="wrap" w="100%">
+          <Flex spacing={4} flexWrap="wrap" w="100%" gap={4} alignItems="center">
+            <HStack spacing={4} flexWrap="wrap" flex="1">
               <Text fontWeight="600" color="text.primary" minW="80px">
                 Filters:
               </Text>
@@ -998,8 +998,13 @@ export const LiveFleetMapPage = () => {
               <Button size="sm" variant="ghost" onClick={handleClearFilters}>
                 Clear Filters
               </Button>
+              {selectedVehicleRoute && (
+                <Button size="sm" colorScheme="red" onClick={clearRoute}>
+                  Clear Route
+                </Button>
+              )}
             </HStack>
-            <HStack spacing={2} w="100%">
+            <HStack spacing={2}>
               <Tooltip label="Refresh Now">
                 <IconButton
                   aria-label="Refresh"
@@ -1017,14 +1022,51 @@ export const LiveFleetMapPage = () => {
               >
                 Auto-Refresh: {autoRefresh ? "ON" : "OFF"}
               </Button>
-              {selectedVehicleRoute && (
-                <Button size="sm" colorScheme="red" onClick={clearRoute}>
-                  Clear Route
-                </Button>
-              )}
             </HStack>
-          </VStack>
+          </Flex>
         </Box>
+
+        {/* Map Container */}
+        <MapErrorBoundary>
+          <Box
+            bg="bg.card"
+            borderRadius="lg"
+            border="1px solid"
+            borderColor="border.default"
+            overflow="hidden"
+            position="relative"
+          >
+            <div
+              ref={mapContainer}
+              style={{
+                height: "700px",
+                width: "100%",
+              }}
+            />
+            {!mapLoaded && (
+              <Box
+                position="absolute"
+                top="0"
+                left="0"
+                right="0"
+                bottom="0"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                bg="bg.card"
+              >
+                <VStack spacing={4}>
+                  <Text fontSize="xl" color="text.primary">
+                    🗺️ Loading 3D Map...
+                  </Text>
+                  <Text fontSize="sm" color="text.secondary">
+                    Initializing Mapbox GL with 3D features
+                  </Text>
+                </VStack>
+              </Box>
+            )}
+          </Box>
+        </MapErrorBoundary>
 
         {/* Legend */}
         <Box
@@ -1076,48 +1118,6 @@ export const LiveFleetMapPage = () => {
             </HStack>
           </HStack>
         </Box>
-
-        {/* Map Container */}
-        <MapErrorBoundary>
-          <Box
-            bg="bg.card"
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="border.default"
-            overflow="hidden"
-            position="relative"
-          >
-            <div
-              ref={mapContainer}
-              style={{
-                height: "700px",
-                width: "100%",
-              }}
-            />
-            {!mapLoaded && (
-              <Box
-                position="absolute"
-                top="0"
-                left="0"
-                right="0"
-                bottom="0"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                bg="bg.card"
-              >
-                <VStack spacing={4}>
-                  <Text fontSize="xl" color="text.primary">
-                    🗺️ Loading 3D Map...
-                  </Text>
-                  <Text fontSize="sm" color="text.secondary">
-                    Initializing Mapbox GL with 3D features
-                  </Text>
-                </VStack>
-              </Box>
-            )}
-          </Box>
-        </MapErrorBoundary>
       </VStack>
     </Box>
   );

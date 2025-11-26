@@ -1,9 +1,6 @@
 import {
     Flex,
     HStack,
-    InputGroup,
-    InputLeftElement,
-    Input,
     Avatar,
     Box,
     Icon,
@@ -19,10 +16,10 @@ import {
     Switch,
     Select,
     FormLabel,
-    VStack
+    VStack,
+    IconButton,
 } from "@chakra-ui/react";
 import {
-    MdSearch,
     MdLightMode,
     MdDarkMode,
     MdPerson,
@@ -30,7 +27,8 @@ import {
     MdLogout,
     MdSwapHoriz,
     MdAdminPanelSettings,
-    MdLocalShipping
+    MdLocalShipping,
+    MdMenu,
 } from "react-icons/md";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
@@ -41,7 +39,11 @@ import type {RootState} from "../store";
 import {useState, useEffect} from "react";
 import {getDrivers, type Driver} from "../services/api";
 
-export const Header = () => {
+interface HeaderProps {
+    onMenuClick: () => void;
+}
+
+export const Header = ({ onMenuClick }: HeaderProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {colorMode, toggleColorMode} = useColorMode();
@@ -85,7 +87,7 @@ export const Header = () => {
         <Flex
             as="header"
             h="72px"
-            px={6}
+            px={{ base: 4, md: 6 }}
             align="center"
             justify="space-between"
             bg="bg.header"
@@ -95,27 +97,25 @@ export const Header = () => {
             top={0}
             zIndex={10}
         >
-            {/* Search Bar */}
-            <InputGroup maxW="400px">
-                <InputLeftElement pointerEvents="none">
-                    <Icon as={MdSearch} color="gray.400"/>
-                </InputLeftElement>
-                <Input
-                    placeholder="Search (Ctrl+/)"
-                    bg="bg.search"
-                    border="none"
-                    _placeholder={{color: "gray.400"}}
-                    _focus={{bg: "bg.search.focus"}}
+            <HStack spacing={3}>
+                {/* Hamburger Menu Button - Only on Mobile */}
+                <IconButton
+                    aria-label="Open menu"
+                    icon={<MdMenu />}
+                    variant="ghost"
+                    size="lg"
+                    display={{ base: "flex", lg: "none" }}
+                    onClick={onMenuClick}
                 />
-            </InputGroup>
+            </HStack>
 
             {/* Right Side Icons */}
-            <HStack spacing={4}>
+            <HStack spacing={{ base: 2, md: 4 }}>
                 {/* Role Badge */}
                 <Badge
                     colorScheme={role === "admin" ? "purple" : "blue"}
-                    fontSize="sm"
-                    px={4}
+                    fontSize={{ base: "xs", md: "sm" }}
+                    px={{ base: 2, md: 4 }}
                     py={1}
                     borderRadius="4px"
                     textTransform="uppercase"
@@ -126,15 +126,18 @@ export const Header = () => {
                     border="2px solid"
                     borderColor={role === "admin" ? "purple.600" : "blue.600"}
                 >
-                    <Icon as={role === "admin" ? MdAdminPanelSettings : MdLocalShipping} boxSize={4}
-                          marginRight={"6px"}/>
-                    {role}
+                    <Icon 
+                        as={role === "admin" ? MdAdminPanelSettings : MdLocalShipping} 
+                        boxSize={{ base: 3, md: 4 }}
+                        marginRight={{ base: "2px", md: "6px" }}
+                    />
+                    <Text display={{ base: "none", sm: "inline" }}>{role}</Text>
                 </Badge>
 
                 <Menu>
                     <MenuButton>
                         <Avatar
-                            size="md"
+                            size={{ base: "sm", md: "md" }}
                             name={name}
                             src="https://bit.ly/broken-link"
                             bg="purple.500"

@@ -114,67 +114,99 @@ export const VehicleModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleCancel} size="xl">
+    <Modal 
+      isOpen={isOpen} 
+      onClose={handleCancel} 
+      size={{ base: "full", sm: "md", md: "xl" }}
+      scrollBehavior={{ base: "inside", md: "outside" }}
+    >
       <ModalOverlay />
-      <ModalContent bg="bg.card" borderColor="border.default">
+      <ModalContent 
+        bg="bg.card" 
+        borderColor="border.default"
+        mx={{ base: 0, sm: 4 }}
+        my={{ base: 0, sm: 16 }}
+      >
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalHeader color="text.primary">
+          <ModalHeader color="text.primary" fontSize={{ base: "lg", md: "xl" }}>
             {mode === "create" ? "Add New Vehicle" : "Edit Vehicle"}
           </ModalHeader>
           <ModalCloseButton />
           
-          <ModalBody>
-            <VStack spacing={4} align="stretch">
+          <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
+            <VStack spacing={{ base: 3, md: 4 }} align="stretch">
               {/* Registration Number */}
               <FormControl isInvalid={!!errors.registration}>
-                <FormLabel color="text.secondary">Registration Number</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  Registration Number
+                </FormLabel>
                 <Input
                   {...register("registration")}
                   placeholder="e.g., TRK-101"
                   bg="bg.input"
+                  size={{ base: "md", md: "md" }}
                 />
-                <FormErrorMessage>{errors.registration?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.registration?.message}</FormErrorMessage>
               </FormControl>
 
               {/* Capacity */}
               <FormControl isInvalid={!!errors.capacity}>
-                <FormLabel color="text.secondary">Capacity (Liters)</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  Capacity (Liters)
+                </FormLabel>
                 <Input
                   {...register("capacity", { valueAsNumber: true })}
                   type="number"
                   min="1"
                   placeholder="e.g., 8000"
                   bg="bg.input"
+                  size={{ base: "md", md: "md" }}
                 />
-                <FormErrorMessage>{errors.capacity?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.capacity?.message}</FormErrorMessage>
               </FormControl>
 
               {/* Vehicle Type */}
               <FormControl isInvalid={!!errors.type}>
-                <FormLabel color="text.secondary">Vehicle Type</FormLabel>
+                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+                  Vehicle Type
+                </FormLabel>
                 <Select
                   {...register("type")}
                   placeholder="Select vehicle type"
                   bg="bg.input"
+                  size={{ base: "md", md: "md" }}
                 >
                   <option value="Tanker">Tanker</option>
                   <option value="Truck">Truck</option>
                   <option value="Van">Van</option>
                   <option value="Pickup">Pickup</option>
                 </Select>
-                <FormErrorMessage>{errors.type?.message}</FormErrorMessage>
+                <FormErrorMessage fontSize="sm">{errors.type?.message}</FormErrorMessage>
               </FormControl>
             </VStack>
           </ModalBody>
 
-          <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={handleCancel}>
+          <ModalFooter 
+            px={{ base: 4, md: 6 }} 
+            py={{ base: 3, md: 4 }}
+            flexDirection={{ base: "column", sm: "row" }}
+            gap={{ base: 2, sm: 0 }}
+          >
+            <Button 
+              variant="ghost" 
+              mr={{ base: 0, sm: 3 }} 
+              onClick={handleCancel}
+              width={{ base: "full", sm: "auto" }}
+              size={{ base: "md", md: "md" }}
+            >
               Cancel
             </Button>
             <Button
               colorScheme="purple"
               type="submit"
               isLoading={isSubmitting}
+              width={{ base: "full", sm: "auto" }}
+              size={{ base: "md", md: "md" }}
             >
               {mode === "create" ? "Create Vehicle" : "Update Vehicle"}
             </Button>

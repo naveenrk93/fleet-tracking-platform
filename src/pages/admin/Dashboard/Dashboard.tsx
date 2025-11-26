@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem, Heading, VStack } from "@chakra-ui/react";
 import { MdDirectionsCar, MdLocalShipping, MdInventory, MdMap } from "react-icons/md";
-import { StatCard } from "../../components/dashboard/StatCard";
+import { StatCard } from "../../../components/dashboard/StatCard.tsx";
 
 export const AdminDashboard = () => {
   return (
