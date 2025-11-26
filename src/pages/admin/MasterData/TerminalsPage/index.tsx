@@ -134,8 +134,8 @@ export const TerminalsPage = () => {
   const filteredTerminals = terminals.filter((terminal) => {
     const query = searchQuery.toLowerCase();
     const matchesSearch = (
-      terminal.name.toLowerCase().includes(query) ||
-      terminal.address.toLowerCase().includes(query)
+      terminal.name?.toLowerCase().includes(query) ||
+      terminal.address?.toLowerCase().includes(query)
     );
     
     let matchesProducts = true;

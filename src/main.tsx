@@ -5,10 +5,11 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import App from "./app/App";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const theme = extendTheme({
     config: {
-        initialColorMode: "dark",
+        initialColorMode: "light",
         useSystemColorMode: false
     },
     styles: {
@@ -187,11 +188,15 @@ const theme = extendTheme({
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <Provider store={store}>
-        <ChakraProvider theme={theme}>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </ChakraProvider>
-    </Provider>
+    <ErrorBoundary fallbackType="page">
+        <Provider store={store}>
+            <ChakraProvider theme={theme}>
+                <BrowserRouter>
+                    <ErrorBoundary fallbackType="page">
+                        <App />
+                    </ErrorBoundary>
+                </BrowserRouter>
+            </ChakraProvider>
+        </Provider>
+    </ErrorBoundary>
 );

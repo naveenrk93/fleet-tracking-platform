@@ -5,7 +5,7 @@ interface ThemeState {
 }
 
 const initialState: ThemeState = {
-    colorMode: (localStorage.getItem("chakra-ui-color-mode") as "light" | "dark") || "dark",
+    colorMode: (localStorage.getItem("chakra-ui-color-mode") as "light" | "dark") || "light",
 };
 
 const themeSlice = createSlice({

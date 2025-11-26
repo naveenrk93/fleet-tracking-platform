@@ -56,7 +56,6 @@ export const AllocationModal = ({
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState<string>("");
   const [conflictingVehicleAllocation, setConflictingVehicleAllocation] = useState<Allocation | null>(null);
-  const [conflictingDriverAllocation, setConflictingDriverAllocation] = useState<Allocation | null>(null);
   const toast = useToast();
 
   // Helper function to get local date string in YYYY-MM-DD format
@@ -86,7 +85,6 @@ export const AllocationModal = ({
     }
     setValidationError("");
     setConflictingVehicleAllocation(null);
-    setConflictingDriverAllocation(null);
   }, [allocation, isOpen]);
 
   const checkVehicleDoubleBooking = (vehicleId: string, date: string, currentAllocationId?: string): boolean => {
@@ -107,24 +105,6 @@ export const AllocationModal = ({
     return false;
   };
 
-  const checkDriverDoubleBooking = (driverId: string, date: string, currentAllocationId?: string): boolean => {
-    const conflict = existingAllocations.find(
-      (a) => 
-        a.driverId === driverId && 
-        a.date === date && 
-        a.id !== currentAllocationId &&
-        a.status !== 'cancelled' // Don't consider cancelled allocations as conflicts
-    );
-
-    if (conflict) {
-      setConflictingDriverAllocation(conflict);
-      return true;
-    }
-
-    setConflictingDriverAllocation(null);
-    return false;
-  };
-
   const handleChange = (field: string, value: string) => {
     const newFormData = { ...formData, [field]: value };
     setFormData(newFormData);
@@ -135,15 +115,6 @@ export const AllocationModal = ({
       const hasVehicleConflict = checkVehicleDoubleBooking(newFormData.vehicleId, newFormData.date, allocation?.id);
       if (hasVehicleConflict) {
         setValidationError(`Vehicle is already allocated on this date`);
-        return;
-      }
-    }
-
-    // Check for driver double booking when driver or date changes
-    if ((field === 'driverId' || field === 'date') && newFormData.driverId && newFormData.date) {
-      const hasDriverConflict = checkDriverDoubleBooking(newFormData.driverId, newFormData.date, allocation?.id);
-      if (hasDriverConflict) {
-        setValidationError(`Driver is already allocated on this date`);
         return;
       }
     }
@@ -168,12 +139,6 @@ export const AllocationModal = ({
     // Check for vehicle double booking
     if (checkVehicleDoubleBooking(formData.vehicleId, formData.date, allocation?.id)) {
       setValidationError("This vehicle is already allocated on this date. Please choose a different vehicle or date.");
-      return false;
-    }
-
-    // Check for driver double booking
-    if (checkDriverDoubleBooking(formData.driverId, formData.date, allocation?.id)) {
-      setValidationError("This driver is already allocated on this date. Please choose a different driver or date.");
       return false;
     }
 
@@ -248,21 +213,6 @@ export const AllocationModal = ({
                     <Text>
                       <strong>{getVehicleRegistration(conflictingVehicleAllocation.vehicleId)}</strong> is already allocated to{" "}
                       <strong>{getDriverName(conflictingVehicleAllocation.driverId)}</strong> on this date.
-                    </Text>
-                  </AlertDescription>
-                </VStack>
-              </Alert>
-            )}
-
-            {conflictingDriverAllocation && (
-              <Alert status="warning" borderRadius="md">
-                <AlertIcon />
-                <VStack align="start" spacing={1} flex="1">
-                  <AlertTitle fontSize="sm">Driver Double Booking Detected!</AlertTitle>
-                  <AlertDescription fontSize="xs">
-                    <Text>
-                      <strong>{getDriverName(conflictingDriverAllocation.driverId)}</strong> is already allocated to vehicle{" "}
-                      <strong>{getVehicleRegistration(conflictingDriverAllocation.vehicleId)}</strong> on this date.
                     </Text>
                   </AlertDescription>
                 </VStack>

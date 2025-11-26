@@ -15,7 +15,11 @@ import {
     Text,
     useColorMode,
     Badge,
-    Button
+    Button,
+    Switch,
+    Select,
+    FormLabel,
+    VStack
 } from "@chakra-ui/react";
 import {
     MdSearch,
@@ -31,15 +35,31 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {toggleColorMode as toggleColorModeRedux} from "../store/themeSlice";
-import {toggleUserRole} from "../store/userSlice";
+import {toggleUserRole, setUserId} from "../store/userSlice";
 import {ROUTE_PATHS} from "../app/routes";
 import type {RootState} from "../store";
+import {useState, useEffect} from "react";
+import {getDrivers, type Driver} from "../services/api";
 
 export const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {colorMode, toggleColorMode} = useColorMode();
-    const {role, name, email} = useSelector((state: RootState) => state.user);
+    const {role, name, email, userId} = useSelector((state: RootState) => state.user);
+    const [drivers, setDrivers] = useState<Driver[]>([]);
+
+    useEffect(() => {
+        // Fetch drivers for the dropdown
+        const fetchDrivers = async () => {
+            try {
+                const driversData = await getDrivers();
+                setDrivers(driversData);
+            } catch (error) {
+                console.error("Failed to fetch drivers:", error);
+            }
+        };
+        fetchDrivers();
+    }, []);
 
     const handleToggleTheme = () => {
         toggleColorMode();
@@ -54,6 +74,11 @@ export const Header = () => {
         } else {
             navigate(ROUTE_PATHS.ADMIN.DASHBOARD);
         }
+    };
+
+    const handleDriverChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const newDriverId = event.target.value;
+        dispatch(setUserId(newDriverId));
     };
 
     return (
@@ -121,8 +146,38 @@ export const Header = () => {
                             <Text fontWeight="bold">{name}</Text>
                             <Text fontSize="sm" color="gray.500">{email}</Text>
                         </Box>
-                        <Box px={3} py={2}>
 
+                        {/* Driver ID Selector - shown only in driver role */}
+                        {role === "driver" && (
+                            <Box px={4} py={2}>
+                                <VStack align="stretch" spacing={2}>
+                                    <FormLabel fontSize="sm" mb={0} fontWeight="medium">
+                                        Driver ID
+                                    </FormLabel>
+                                    <Select
+                                        size="sm"
+                                        value={userId || ""}
+                                        onChange={handleDriverChange}
+                                        bg="bg.surface"
+                                        borderColor="border.default"
+                                    >
+                                        <option value="">Select Driver</option>
+                                        {drivers.map((driver) => (
+                                            <option key={driver.id} value={driver.id}>
+                                                {driver.name} ({driver.id})
+                                            </option>
+                                        ))}
+                                    </Select>
+                                    <Text fontSize="xs" color="gray.500">
+                                        Current: {userId || "None"}
+                                    </Text>
+                                </VStack>
+                            </Box>
+                        )}
+                        
+                        <MenuDivider/>
+                        
+                        <Box px={3} py={2}>
                             <Button
                                 leftIcon={<MdSwapHoriz/>}
                                 size="sm"
@@ -132,7 +187,6 @@ export const Header = () => {
                             >
                                 Switch to {role === "admin" ? "Driver" : "Admin"}
                             </Button>
-
                         </Box>
                         <MenuDivider/>
                         <MenuItem icon={<MdPerson/>} bg="bg.surface" _hover={{bg: "bg.hover"}}>
@@ -142,16 +196,26 @@ export const Header = () => {
                             Settings
                         </MenuItem>
                         <MenuDivider/>
-
-                        <MenuDivider/>
-                        <MenuItem
-                            icon={colorMode === "dark" ? <MdLightMode/> : <MdDarkMode/>}
-                            onClick={handleToggleTheme}
-                            bg="bg.surface"
-                            _hover={{bg: "bg.hover"}}
-                        >
-                            {colorMode === "dark" ? "Light Mode" : "Dark Mode"}
-                        </MenuItem>
+                        <Box px={4} py={3}>
+                            <Flex align="center" justify="space-between">
+                                <HStack spacing={2}>
+                                    <Icon 
+                                        as={MdDarkMode} 
+                                        boxSize={5}
+                                        color="gray.500"
+                                    />
+                                    <Text fontSize="sm" fontWeight="medium">
+                                        Dark Mode
+                                    </Text>
+                                </HStack>
+                                <Switch
+                                    isChecked={colorMode === "dark"}
+                                    onChange={handleToggleTheme}
+                                    colorScheme="purple"
+                                    size="md"
+                                />
+                            </Flex>
+                        </Box>
                         <MenuDivider/>
                         <MenuItem icon={<MdLogout/>} color="red.500" bg="bg.surface" _hover={{bg: "bg.hover"}}>
                             Logout

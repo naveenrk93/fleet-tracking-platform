@@ -1,0 +1,65 @@
+import { ReactElement } from 'react';
+import { render, RenderOptions } from '@testing-library/react';
+import { ChakraProvider } from '@chakra-ui/react';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { configureStore, PreloadedState } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+import dashboardReducer from '../store/dashboardSlice';
+import themeReducer from '../store/themeSlice';
+import userReducer from '../store/userSlice';
+import ordersReducer from '../store/ordersSlice';
+import hubsReducer from '../store/hubsSlice';
+import terminalsReducer from '../store/terminalsSlice';
+import productsReducer from '../store/productsSlice';
+import driversReducer from '../store/driversSlice';
+import vehiclesReducer from '../store/vehiclesSlice';
+import vehicleAllocationsReducer from '../store/vehicleAllocationsSlice';
+import fleetTrackingReducer from '../store/fleetTrackingSlice';
+import deliveriesReducer from '../store/deliveriesSlice';
+
+interface ExtendedRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+  preloadedState?: PreloadedState<RootState>;
+  store?: ReturnType<typeof configureStore>;
+}
+
+export function renderWithProviders(
+  ui: ReactElement,
+  {
+    preloadedState = {},
+    store = configureStore({
+      reducer: {
+        dashboard: dashboardReducer,
+        theme: themeReducer,
+        user: userReducer,
+        orders: ordersReducer,
+        hubs: hubsReducer,
+        terminals: terminalsReducer,
+        products: productsReducer,
+        drivers: driversReducer,
+        vehicles: vehiclesReducer,
+        vehicleAllocations: vehicleAllocationsReducer,
+        fleetTracking: fleetTrackingReducer,
+        deliveries: deliveriesReducer,
+      },
+      preloadedState,
+    }),
+    ...renderOptions
+  }: ExtendedRenderOptions = {}
+) {
+  function Wrapper({ children }: { children: React.ReactNode }) {
+    return (
+      <Provider store={store}>
+        <ChakraProvider>
+          <BrowserRouter>{children}</BrowserRouter>
+        </ChakraProvider>
+      </Provider>
+    );
+  }
+
+  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+}
+
+export * from '@testing-library/react';
+export { renderWithProviders as render };
+

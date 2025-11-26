@@ -23,8 +23,8 @@
       "type": "hub",
       "address": "Testing123",
       "coordinates": {
-        "lat": 20,
-        "lng": 20
+        "lat": 40.722,
+        "lng": -73.988
       },
       "products": []
     },
@@ -33,8 +33,8 @@
       "type": "hub",
       "address": "Test Address",
       "coordinates": {
-        "lat": 12,
-        "lng": 23
+        "lat": 40.748,
+        "lng": -73.952
       },
       "products": [
         {
@@ -207,15 +207,14 @@
   ],
   "terminals": [
     {
-      "id": "terminal-1",
-      "name": "North Terminal",
-      "type": "terminal",
-      "address": "45 North Ave, City",
-      "coordinates": {
-        "lat": 40.745,
-        "lng": -74.01
-      },
-      "products": []
+      "products": [
+        {
+          "productId": "product-1",
+          "productName": "Premium Diesel",
+          "quantity": 5000
+        }
+      ],
+      "id": "terminal-1"
     },
     {
       "id": "terminal-1764104564485",
@@ -223,8 +222,8 @@
       "type": "terminal",
       "address": "34 South Ave",
       "coordinates": {
-        "lat": 30,
-        "lng": 40
+        "lat": 40.695,
+        "lng": -74.018
       },
       "products": []
     },
@@ -428,8 +427,8 @@
       "capacity": 8000,
       "type": "Tanker",
       "currentLocation": {
-        "lat": 40.72,
-        "lng": -74
+        "lat": 40.712,
+        "lng": -74.006
       }
     },
     {
@@ -438,8 +437,8 @@
       "capacity": 10000,
       "type": "Tanker",
       "currentLocation": {
-        "lat": 40.755,
-        "lng": -73.992
+        "lat": 40.712,
+        "lng": -74.006
       }
     },
     {
@@ -488,8 +487,8 @@
       "capacity": 11000,
       "type": "Tanker",
       "currentLocation": {
-        "lat": 40.768,
-        "lng": -73.918
+        "lat": 40.712,
+        "lng": -74.006
       }
     },
     {
@@ -527,12 +526,12 @@
     {
       "id": "order-1",
       "destinationId": "terminal-1",
-      "productId": "diesel",
+      "productId": "product-1",
       "quantity": 5000,
       "deliveryDate": "2025-11-24",
       "assignedDriverId": "driver-1",
       "vehicleId": "vehicle-1",
-      "status": "assigned"
+      "status": "completed"
     },
     {
       "id": "order-2",
@@ -623,32 +622,690 @@
       "assignedDriverId": "driver-10",
       "vehicleId": "vehicle-10",
       "status": "assigned"
+    },
+    {
+      "id": "order-1764172631618",
+      "destinationId": "7917",
+      "productId": "product-3",
+      "quantity": 2,
+      "deliveryDate": "2025-11-26",
+      "assignedDriverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "status": "pending"
     }
   ],
   "allocations": [
     {
-      "id": "alloc-1",
-      "date": "2025-11-24",
-      "vehicleId": "vehicle-1",
-      "driverId": "driver-1",
-      "shiftId": "shift-1",
-      "status": "allocated"
+      "id": "alloc-past-2000",
+      "date": "2025-11-16",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1000",
+      "status": "completed"
     },
     {
-      "id": "alloc-2",
+      "id": "alloc-past-2001",
+      "date": "2025-11-16",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1001",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2002",
+      "date": "2025-11-16",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1002",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2003",
+      "date": "2025-11-16",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1003",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2004",
+      "date": "2025-11-16",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1004",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2005",
+      "date": "2025-11-16",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-past-1005",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2006",
+      "date": "2025-11-16",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1006",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2007",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1007",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2008",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-past-1008",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2009",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1009",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2010",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1010",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2011",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1011",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2012",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1012",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2013",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-past-1013",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2014",
+      "date": "2025-11-17",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1014",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2015",
+      "date": "2025-11-18",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1015",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2016",
+      "date": "2025-11-18",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-past-1016",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2017",
+      "date": "2025-11-18",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1017",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2018",
+      "date": "2025-11-18",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1018",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2019",
+      "date": "2025-11-18",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1019",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2020",
+      "date": "2025-11-18",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1020",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2021",
+      "date": "2025-11-18",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1021",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2022",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1022",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2023",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-past-1023",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2024",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1024",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2025",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1025",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2026",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-past-1026",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2027",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1027",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2028",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1028",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2029",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1029",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2030",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-past-1030",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2031",
+      "date": "2025-11-19",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1031",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2032",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1032",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2033",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-past-1033",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2034",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1034",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2035",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1035",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2036",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-past-1036",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2037",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1037",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2038",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1038",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2039",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1039",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2040",
+      "date": "2025-11-20",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1040",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2041",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1041",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2042",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1042",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2043",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1043",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2044",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-past-1044",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2045",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1045",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2046",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1046",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2047",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1047",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2048",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-past-1048",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2049",
+      "date": "2025-11-21",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1049",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2050",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1050",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2051",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-past-1051",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2052",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1052",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2053",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1053",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2054",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-past-1054",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2055",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1055",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2056",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1056",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2057",
+      "date": "2025-11-22",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1057",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2058",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1058",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2059",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-past-1059",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2060",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1060",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2061",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1061",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2062",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-past-1062",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2063",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1063",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2064",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1064",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2065",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1065",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2066",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-past-1066",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2067",
+      "date": "2025-11-23",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1067",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2068",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-past-1068",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2069",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-past-1069",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2070",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1070",
+      "status": "cancelled"
+    },
+    {
+      "id": "alloc-past-2071",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-past-1071",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2072",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1072",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2073",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1073",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2074",
+      "date": "2025-11-24",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1074",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2075",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-past-1075",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2076",
       "date": "2025-11-25",
       "vehicleId": "vehicle-2",
       "driverId": "driver-2",
-      "shiftId": "shift-2",
-      "status": "allocated"
+      "shiftId": "shift-past-1076",
+      "status": "completed"
     },
     {
-      "id": "alloc-3",
+      "id": "alloc-past-2077",
       "date": "2025-11-25",
       "vehicleId": "vehicle-3",
       "driverId": "driver-3",
-      "shiftId": "shift-3",
-      "status": "allocated"
+      "shiftId": "shift-past-1077",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2078",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-past-1078",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2079",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-past-1079",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2080",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-past-1080",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2081",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-past-1081",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2082",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-past-1082",
+      "status": "completed"
+    },
+    {
+      "id": "alloc-past-2083",
+      "date": "2025-11-25",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-past-1083",
+      "status": "completed"
     },
     {
       "id": "alloc-4",
@@ -667,6 +1324,46 @@
       "status": "completed"
     },
     {
+      "id": "849a",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "status": "allocated",
+      "shiftId": "shift-11"
+    },
+    {
+      "id": "0742",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "status": "allocated",
+      "shiftId": "shift-12"
+    },
+    {
+      "id": "e34e",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "status": "allocated",
+      "shiftId": "shift-13"
+    },
+    {
+      "id": "alloc-new-1",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "status": "allocated",
+      "shiftId": "shift-new-1"
+    },
+    {
+      "id": "alloc-new-2",
+      "date": "2025-11-26",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "status": "allocated",
+      "shiftId": "shift-new-2"
+    },
+    {
       "id": "alloc-6",
       "date": "2025-11-27",
       "vehicleId": "vehicle-6",
@@ -681,6 +1378,78 @@
       "driverId": "driver-7",
       "shiftId": "shift-7",
       "status": "allocated"
+    },
+    {
+      "id": "alloc-future-2084",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-future-1084",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2085",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1085",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2086",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1086",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2087",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1087",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2088",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1088",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2089",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1089",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2090",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1090",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2091",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1091",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2092",
+      "date": "2025-11-27",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1092",
+      "status": "pending"
     },
     {
       "id": "alloc-8",
@@ -699,6 +1468,70 @@
       "status": "pending"
     },
     {
+      "id": "alloc-future-2093",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1093",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2094",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-future-1094",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2095",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1095",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2096",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1096",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2097",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1097",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2098",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1098",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2099",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1099",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2100",
+      "date": "2025-11-28",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1100",
+      "status": "pending"
+    },
+    {
       "id": "alloc-10",
       "date": "2025-11-29",
       "vehicleId": "vehicle-10",
@@ -707,18 +1540,148 @@
       "status": "allocated"
     },
     {
-      "id": "849a",
-      "date": "2025-11-26",
-      "vehicleId": "vehicle-2",
-      "driverId": "driver-2",
+      "id": "alloc-future-2101",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1101",
       "status": "pending"
     },
     {
-      "id": "0742",
-      "date": "2025-11-26",
+      "id": "alloc-future-2102",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-future-1102",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2103",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1103",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2104",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1104",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2105",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1105",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2106",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1106",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2107",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1107",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2108",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1108",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2109",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1109",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2110",
+      "date": "2025-11-29",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1110",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2111",
+      "date": "2025-11-30",
       "vehicleId": "vehicle-1",
       "driverId": "driver-1",
-      "status": "completed"
+      "shiftId": "shift-future-1111",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2112",
+      "date": "2025-11-30",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-future-1112",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2113",
+      "date": "2025-11-30",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1113",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2114",
+      "date": "2025-11-30",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1114",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2115",
+      "date": "2025-11-30",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1115",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2116",
+      "date": "2025-11-30",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1116",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2117",
+      "date": "2025-11-30",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1117",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2118",
+      "date": "2025-11-30",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1118",
+      "status": "pending"
     },
     {
       "id": "fbd7",
@@ -728,40 +1691,1194 @@
       "status": "pending"
     },
     {
-      "id": "e34e",
-      "date": "2025-11-26",
-      "vehicleId": "vehicle-3",
+      "id": "alloc-future-2119",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1119",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2120",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-2",
       "driverId": "driver-2",
+      "shiftId": "shift-future-1120",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2121",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1121",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2122",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1122",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2123",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1123",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2124",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1124",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2125",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1125",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2126",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1126",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2127",
+      "date": "2025-12-01",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1127",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2128",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1128",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2129",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1129",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2130",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1130",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2131",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1131",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2132",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1132",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2133",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1133",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2134",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1134",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2135",
+      "date": "2025-12-02",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1135",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2136",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1136",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2137",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-future-1137",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2138",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1138",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2139",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1139",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2140",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1140",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2141",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1141",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2142",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1142",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2143",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1143",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2144",
+      "date": "2025-12-03",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1144",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2145",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1145",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2146",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1146",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2147",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1147",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2148",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1148",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2149",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1149",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2150",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1150",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2151",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1151",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2152",
+      "date": "2025-12-04",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1152",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2153",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1153",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2154",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-future-1154",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2155",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1155",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2156",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1156",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2157",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1157",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2158",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1158",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2159",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1159",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2160",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1160",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2161",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1161",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2162",
+      "date": "2025-12-05",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1162",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2163",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "shiftId": "shift-future-1163",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2164",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "shiftId": "shift-future-1164",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2165",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-3",
+      "driverId": "driver-3",
+      "shiftId": "shift-future-1165",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2166",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-4",
+      "driverId": "driver-4",
+      "shiftId": "shift-future-1166",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2167",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-5",
+      "driverId": "driver-5",
+      "shiftId": "shift-future-1167",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2168",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-6",
+      "driverId": "driver-6",
+      "shiftId": "shift-future-1168",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2169",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "shiftId": "shift-future-1169",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2170",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-8",
+      "driverId": "driver-8",
+      "shiftId": "shift-future-1170",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2171",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-9",
+      "driverId": "driver-9",
+      "shiftId": "shift-future-1171",
+      "status": "pending"
+    },
+    {
+      "id": "alloc-future-2172",
+      "date": "2025-12-06",
+      "vehicleId": "vehicle-10",
+      "driverId": "driver-10",
+      "shiftId": "shift-future-1172",
       "status": "pending"
     }
   ],
   "shifts": [
     {
-      "id": "shift-1",
-      "driverId": "driver-1",
-      "vehicleId": "vehicle-1",
-      "date": "2025-11-24",
-      "status": "pending",
+      "id": "shift-past-1000",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-16",
+      "status": "completed",
+      "startTime": "2025-11-16T08:02:00.000Z",
+      "endTime": "2025-11-16T15:34:00.000Z"
+    },
+    {
+      "id": "shift-past-1001",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-16",
+      "status": "completed",
+      "startTime": "2025-11-16T07:26:00.000Z",
+      "endTime": "2025-11-16T16:43:00.000Z"
+    },
+    {
+      "id": "shift-past-1002",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-16",
+      "status": "completed",
+      "startTime": "2025-11-16T09:47:00.000Z",
+      "endTime": "2025-11-16T17:08:00.000Z"
+    },
+    {
+      "id": "shift-past-1003",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-16",
+      "status": "completed",
+      "startTime": "2025-11-16T08:01:00.000Z",
+      "endTime": "2025-11-16T17:26:00.000Z"
+    },
+    {
+      "id": "shift-past-1004",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-16",
+      "status": "cancelled",
       "startTime": null,
       "endTime": null
     },
     {
-      "id": "shift-2",
+      "id": "shift-past-1005",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-16",
+      "status": "completed",
+      "startTime": "2025-11-16T07:26:00.000Z",
+      "endTime": "2025-11-16T17:22:00.000Z"
+    },
+    {
+      "id": "shift-past-1006",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-16",
+      "status": "completed",
+      "startTime": "2025-11-16T07:46:00.000Z",
+      "endTime": "2025-11-16T15:44:00.000Z"
+    },
+    {
+      "id": "shift-past-1007",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-17",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1008",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-17",
+      "status": "completed",
+      "startTime": "2025-11-17T09:43:00.000Z",
+      "endTime": "2025-11-17T19:15:00.000Z"
+    },
+    {
+      "id": "shift-past-1009",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-17",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1010",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-17",
+      "status": "completed",
+      "startTime": "2025-11-17T08:35:00.000Z",
+      "endTime": "2025-11-17T17:36:00.000Z"
+    },
+    {
+      "id": "shift-past-1011",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-17",
+      "status": "completed",
+      "startTime": "2025-11-17T09:53:00.000Z",
+      "endTime": "2025-11-17T19:08:00.000Z"
+    },
+    {
+      "id": "shift-past-1012",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-17",
+      "status": "completed",
+      "startTime": "2025-11-17T09:16:00.000Z",
+      "endTime": "2025-11-17T17:35:00.000Z"
+    },
+    {
+      "id": "shift-past-1013",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-17",
+      "status": "completed",
+      "startTime": "2025-11-17T07:49:00.000Z",
+      "endTime": "2025-11-17T15:49:00.000Z"
+    },
+    {
+      "id": "shift-past-1014",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-17",
+      "status": "completed",
+      "startTime": "2025-11-17T08:14:00.000Z",
+      "endTime": "2025-11-17T15:46:00.000Z"
+    },
+    {
+      "id": "shift-past-1015",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-18",
+      "status": "completed",
+      "startTime": "2025-11-18T08:04:00.000Z",
+      "endTime": "2025-11-18T17:01:00.000Z"
+    },
+    {
+      "id": "shift-past-1016",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-18",
+      "status": "completed",
+      "startTime": "2025-11-18T07:05:00.000Z",
+      "endTime": "2025-11-18T14:35:00.000Z"
+    },
+    {
+      "id": "shift-past-1017",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-18",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1018",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-18",
+      "status": "completed",
+      "startTime": "2025-11-18T09:24:00.000Z",
+      "endTime": "2025-11-18T18:42:00.000Z"
+    },
+    {
+      "id": "shift-past-1019",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-18",
+      "status": "completed",
+      "startTime": "2025-11-18T09:40:00.000Z",
+      "endTime": "2025-11-18T17:56:00.000Z"
+    },
+    {
+      "id": "shift-past-1020",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-18",
+      "status": "completed",
+      "startTime": "2025-11-18T07:28:00.000Z",
+      "endTime": "2025-11-18T16:28:00.000Z"
+    },
+    {
+      "id": "shift-past-1021",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-18",
+      "status": "completed",
+      "startTime": "2025-11-18T07:58:00.000Z",
+      "endTime": "2025-11-18T15:54:00.000Z"
+    },
+    {
+      "id": "shift-past-1022",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T07:41:00.000Z",
+      "endTime": "2025-11-19T17:32:00.000Z"
+    },
+    {
+      "id": "shift-past-1023",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T09:43:00.000Z",
+      "endTime": "2025-11-19T18:40:00.000Z"
+    },
+    {
+      "id": "shift-past-1024",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T09:26:00.000Z",
+      "endTime": "2025-11-19T17:38:00.000Z"
+    },
+    {
+      "id": "shift-past-1025",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T07:49:00.000Z",
+      "endTime": "2025-11-19T16:40:00.000Z"
+    },
+    {
+      "id": "shift-past-1026",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-19",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1027",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T07:25:00.000Z",
+      "endTime": "2025-11-19T16:06:00.000Z"
+    },
+    {
+      "id": "shift-past-1028",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T09:08:00.000Z",
+      "endTime": "2025-11-19T17:31:00.000Z"
+    },
+    {
+      "id": "shift-past-1029",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T09:15:00.000Z",
+      "endTime": "2025-11-19T17:55:00.000Z"
+    },
+    {
+      "id": "shift-past-1030",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T07:22:00.000Z",
+      "endTime": "2025-11-19T16:03:00.000Z"
+    },
+    {
+      "id": "shift-past-1031",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-19",
+      "status": "completed",
+      "startTime": "2025-11-19T07:05:00.000Z",
+      "endTime": "2025-11-19T14:14:00.000Z"
+    },
+    {
+      "id": "shift-past-1032",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-20",
+      "status": "completed",
+      "startTime": "2025-11-20T09:04:00.000Z",
+      "endTime": "2025-11-20T19:01:00.000Z"
+    },
+    {
+      "id": "shift-past-1033",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-20",
+      "status": "completed",
+      "startTime": "2025-11-20T08:01:00.000Z",
+      "endTime": "2025-11-20T15:49:00.000Z"
+    },
+    {
+      "id": "shift-past-1034",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-20",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1035",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-20",
+      "status": "completed",
+      "startTime": "2025-11-20T08:46:00.000Z",
+      "endTime": "2025-11-20T16:40:00.000Z"
+    },
+    {
+      "id": "shift-past-1036",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-20",
+      "status": "completed",
+      "startTime": "2025-11-20T09:19:00.000Z",
+      "endTime": "2025-11-20T18:17:00.000Z"
+    },
+    {
+      "id": "shift-past-1037",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-20",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1038",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-20",
+      "status": "completed",
+      "startTime": "2025-11-20T07:50:00.000Z",
+      "endTime": "2025-11-20T16:58:00.000Z"
+    },
+    {
+      "id": "shift-past-1039",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-20",
+      "status": "completed",
+      "startTime": "2025-11-20T09:51:00.000Z",
+      "endTime": "2025-11-20T17:14:00.000Z"
+    },
+    {
+      "id": "shift-past-1040",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-20",
+      "status": "completed",
+      "startTime": "2025-11-20T07:11:00.000Z",
+      "endTime": "2025-11-20T16:43:00.000Z"
+    },
+    {
+      "id": "shift-past-1041",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T09:06:00.000Z",
+      "endTime": "2025-11-21T17:24:00.000Z"
+    },
+    {
+      "id": "shift-past-1042",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T09:09:00.000Z",
+      "endTime": "2025-11-21T18:25:00.000Z"
+    },
+    {
+      "id": "shift-past-1043",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T07:58:00.000Z",
+      "endTime": "2025-11-21T16:28:00.000Z"
+    },
+    {
+      "id": "shift-past-1044",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T09:27:00.000Z",
+      "endTime": "2025-11-21T17:00:00.000Z"
+    },
+    {
+      "id": "shift-past-1045",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T09:54:00.000Z",
+      "endTime": "2025-11-21T18:08:00.000Z"
+    },
+    {
+      "id": "shift-past-1046",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T07:09:00.000Z",
+      "endTime": "2025-11-21T15:34:00.000Z"
+    },
+    {
+      "id": "shift-past-1047",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T09:40:00.000Z",
+      "endTime": "2025-11-21T17:42:00.000Z"
+    },
+    {
+      "id": "shift-past-1048",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T09:16:00.000Z",
+      "endTime": "2025-11-21T17:26:00.000Z"
+    },
+    {
+      "id": "shift-past-1049",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-21",
+      "status": "completed",
+      "startTime": "2025-11-21T08:57:00.000Z",
+      "endTime": "2025-11-21T16:36:00.000Z"
+    },
+    {
+      "id": "shift-past-1050",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-22",
+      "status": "completed",
+      "startTime": "2025-11-22T09:04:00.000Z",
+      "endTime": "2025-11-22T16:57:00.000Z"
+    },
+    {
+      "id": "shift-past-1051",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-22",
+      "status": "completed",
+      "startTime": "2025-11-22T09:44:00.000Z",
+      "endTime": "2025-11-22T19:07:00.000Z"
+    },
+    {
+      "id": "shift-past-1052",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-22",
+      "status": "completed",
+      "startTime": "2025-11-22T08:38:00.000Z",
+      "endTime": "2025-11-22T16:49:00.000Z"
+    },
+    {
+      "id": "shift-past-1053",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-22",
+      "status": "completed",
+      "startTime": "2025-11-22T07:23:00.000Z",
+      "endTime": "2025-11-22T15:07:00.000Z"
+    },
+    {
+      "id": "shift-past-1054",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-22",
+      "status": "completed",
+      "startTime": "2025-11-22T09:22:00.000Z",
+      "endTime": "2025-11-22T17:23:00.000Z"
+    },
+    {
+      "id": "shift-past-1055",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-22",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1056",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-22",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1057",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-22",
+      "status": "completed",
+      "startTime": "2025-11-22T08:14:00.000Z",
+      "endTime": "2025-11-22T17:04:00.000Z"
+    },
+    {
+      "id": "shift-past-1058",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T07:24:00.000Z",
+      "endTime": "2025-11-23T14:26:00.000Z"
+    },
+    {
+      "id": "shift-past-1059",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-23",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1060",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T07:24:00.000Z",
+      "endTime": "2025-11-23T16:01:00.000Z"
+    },
+    {
+      "id": "shift-past-1061",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T09:55:00.000Z",
+      "endTime": "2025-11-23T19:45:00.000Z"
+    },
+    {
+      "id": "shift-past-1062",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T08:06:00.000Z",
+      "endTime": "2025-11-23T17:10:00.000Z"
+    },
+    {
+      "id": "shift-past-1063",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T09:23:00.000Z",
+      "endTime": "2025-11-23T18:41:00.000Z"
+    },
+    {
+      "id": "shift-past-1064",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T08:39:00.000Z",
+      "endTime": "2025-11-23T15:54:00.000Z"
+    },
+    {
+      "id": "shift-past-1065",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T07:03:00.000Z",
+      "endTime": "2025-11-23T15:05:00.000Z"
+    },
+    {
+      "id": "shift-past-1066",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-23",
+      "status": "completed",
+      "startTime": "2025-11-23T09:04:00.000Z",
+      "endTime": "2025-11-23T16:57:00.000Z"
+    },
+    {
+      "id": "shift-past-1067",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-23",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1068",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-24",
+      "status": "completed",
+      "startTime": "2025-11-24T09:37:00.000Z",
+      "endTime": "2025-11-24T18:14:00.000Z"
+    },
+    {
+      "id": "shift-past-1069",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-24",
+      "status": "completed",
+      "startTime": "2025-11-24T09:49:00.000Z",
+      "endTime": "2025-11-24T18:01:00.000Z"
+    },
+    {
+      "id": "shift-past-1070",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-24",
+      "status": "cancelled",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-past-1071",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-24",
+      "status": "completed",
+      "startTime": "2025-11-24T07:10:00.000Z",
+      "endTime": "2025-11-24T14:28:00.000Z"
+    },
+    {
+      "id": "shift-past-1072",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-24",
+      "status": "completed",
+      "startTime": "2025-11-24T07:05:00.000Z",
+      "endTime": "2025-11-24T15:43:00.000Z"
+    },
+    {
+      "id": "shift-past-1073",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-24",
+      "status": "completed",
+      "startTime": "2025-11-24T08:54:00.000Z",
+      "endTime": "2025-11-24T18:40:00.000Z"
+    },
+    {
+      "id": "shift-past-1074",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-24",
+      "status": "completed",
+      "startTime": "2025-11-24T09:54:00.000Z",
+      "endTime": "2025-11-24T18:58:00.000Z"
+    },
+    {
+      "id": "shift-past-1075",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-25",
+      "status": "completed",
+      "startTime": "2025-11-25T09:16:00.000Z",
+      "endTime": "2025-11-25T18:26:00.000Z"
+    },
+    {
+      "id": "shift-past-1076",
       "driverId": "driver-2",
       "vehicleId": "vehicle-2",
       "date": "2025-11-25",
-      "status": "active",
-      "startTime": "2025-11-25T08:00:00.000Z",
-      "endTime": null
+      "status": "completed",
+      "startTime": "2025-11-25T09:20:00.000Z",
+      "endTime": "2025-11-25T16:22:00.000Z"
     },
     {
-      "id": "shift-3",
+      "id": "shift-past-1077",
       "driverId": "driver-3",
       "vehicleId": "vehicle-3",
       "date": "2025-11-25",
-      "status": "pending",
-      "startTime": null,
-      "endTime": null
+      "status": "completed",
+      "startTime": "2025-11-25T09:52:00.000Z",
+      "endTime": "2025-11-25T18:25:00.000Z"
+    },
+    {
+      "id": "shift-past-1078",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-25",
+      "status": "completed",
+      "startTime": "2025-11-25T08:49:00.000Z",
+      "endTime": "2025-11-25T18:23:00.000Z"
+    },
+    {
+      "id": "shift-past-1079",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-25",
+      "status": "completed",
+      "startTime": "2025-11-25T07:39:00.000Z",
+      "endTime": "2025-11-25T17:34:00.000Z"
+    },
+    {
+      "id": "shift-past-1080",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-25",
+      "status": "completed",
+      "startTime": "2025-11-25T08:21:00.000Z",
+      "endTime": "2025-11-25T16:50:00.000Z"
+    },
+    {
+      "id": "shift-past-1081",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-25",
+      "status": "completed",
+      "startTime": "2025-11-25T09:23:00.000Z",
+      "endTime": "2025-11-25T18:10:00.000Z"
+    },
+    {
+      "id": "shift-past-1082",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-25",
+      "status": "completed",
+      "startTime": "2025-11-25T07:27:00.000Z",
+      "endTime": "2025-11-25T15:54:00.000Z"
+    },
+    {
+      "id": "shift-past-1083",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-25",
+      "status": "completed",
+      "startTime": "2025-11-25T07:43:00.000Z",
+      "endTime": "2025-11-25T15:03:00.000Z"
     },
     {
       "id": "shift-4",
@@ -782,6 +2899,51 @@
       "endTime": "2025-11-26T16:45:00.000Z"
     },
     {
+      "id": "shift-11",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-26",
+      "status": "active",
+      "startTime": "2025-11-26T17:27:37.428Z",
+      "endTime": null
+    },
+    {
+      "id": "shift-12",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-26",
+      "status": "completed",
+      "startTime": "2025-11-26T15:59:14.971Z",
+      "endTime": "2025-11-26T17:05:49.666Z"
+    },
+    {
+      "id": "shift-13",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-26",
+      "status": "active",
+      "startTime": "2025-11-26T17:44:27.906Z",
+      "endTime": null
+    },
+    {
+      "id": "shift-new-1",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-26",
+      "status": "active",
+      "startTime": "2025-11-26T17:56:23.432Z",
+      "endTime": null
+    },
+    {
+      "id": "shift-new-2",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-26",
+      "status": "active",
+      "startTime": "2025-11-26T17:55:01.204Z",
+      "endTime": null
+    },
+    {
       "id": "shift-6",
       "driverId": "driver-6",
       "vehicleId": "vehicle-6",
@@ -794,6 +2956,87 @@
       "id": "shift-7",
       "driverId": "driver-7",
       "vehicleId": "vehicle-7",
+      "date": "2025-11-27",
+      "status": "active",
+      "startTime": "2025-11-26T18:31:39.250Z",
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1084",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1085",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1086",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1087",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1088",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1089",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1090",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1091",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-27",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1092",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
       "date": "2025-11-27",
       "status": "pending",
       "startTime": null,
@@ -818,10 +3061,730 @@
       "endTime": null
     },
     {
+      "id": "shift-future-1093",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1094",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1095",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1096",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1097",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1098",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1099",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1100",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-28",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
       "id": "shift-10",
       "driverId": "driver-10",
       "vehicleId": "vehicle-10",
       "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1101",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1102",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1103",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1104",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1105",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1106",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1107",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1108",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1109",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1110",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-29",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1111",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1112",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1113",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1114",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1115",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1116",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1117",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1118",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-11-30",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1119",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1120",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1121",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1122",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1123",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1124",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1125",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1126",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1127",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-12-01",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1128",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1129",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1130",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1131",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1132",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1133",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1134",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1135",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-12-02",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1136",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1137",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1138",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1139",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1140",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1141",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1142",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1143",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1144",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-12-03",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1145",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1146",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1147",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1148",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1149",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1150",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1151",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1152",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-12-04",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1153",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1154",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1155",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1156",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1157",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1158",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1159",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1160",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1161",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1162",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-12-05",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1163",
+      "driverId": "driver-1",
+      "vehicleId": "vehicle-1",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1164",
+      "driverId": "driver-2",
+      "vehicleId": "vehicle-2",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1165",
+      "driverId": "driver-3",
+      "vehicleId": "vehicle-3",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1166",
+      "driverId": "driver-4",
+      "vehicleId": "vehicle-4",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1167",
+      "driverId": "driver-5",
+      "vehicleId": "vehicle-5",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1168",
+      "driverId": "driver-6",
+      "vehicleId": "vehicle-6",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1169",
+      "driverId": "driver-7",
+      "vehicleId": "vehicle-7",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1170",
+      "driverId": "driver-8",
+      "vehicleId": "vehicle-8",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1171",
+      "driverId": "driver-9",
+      "vehicleId": "vehicle-9",
+      "date": "2025-12-06",
+      "status": "pending",
+      "startTime": null,
+      "endTime": null
+    },
+    {
+      "id": "shift-future-1172",
+      "driverId": "driver-10",
+      "vehicleId": "vehicle-10",
+      "date": "2025-12-06",
       "status": "pending",
       "startTime": null,
       "endTime": null
@@ -895,6 +3858,139 @@
       "id": "delivery-10",
       "shiftId": "shift-10",
       "orderId": "order-10",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-11",
+      "shiftId": "shift-11",
+      "orderId": "order-2",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-12",
+      "shiftId": "shift-12",
+      "orderId": "order-1",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-1",
+      "shiftId": "shift-hist-1",
+      "orderId": "order-1",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-2",
+      "shiftId": "shift-hist-1",
+      "orderId": "order-2",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-3",
+      "shiftId": "shift-hist-1",
+      "orderId": "order-3",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-4",
+      "shiftId": "shift-hist-2",
+      "orderId": "order-4",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-5",
+      "shiftId": "shift-hist-2",
+      "orderId": "order-5",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-6",
+      "shiftId": "shift-hist-2",
+      "orderId": "order-6",
+      "status": "failed",
+      "failureReason": "Customer not available at delivery location"
+    },
+    {
+      "id": "delivery-hist-7",
+      "shiftId": "shift-hist-3",
+      "orderId": "order-7",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-8",
+      "shiftId": "shift-hist-3",
+      "orderId": "order-8",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-9",
+      "shiftId": "shift-hist-3",
+      "orderId": "order-9",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-10",
+      "shiftId": "shift-hist-3",
+      "orderId": "order-10",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-11",
+      "shiftId": "shift-hist-4",
+      "orderId": "order-1",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-12",
+      "shiftId": "shift-hist-4",
+      "orderId": "order-2",
+      "status": "completed",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-hist-13",
+      "shiftId": "shift-hist-4",
+      "orderId": "order-3",
+      "status": "failed",
+      "failureReason": "Vehicle breakdown during delivery"
+    },
+    {
+      "id": "delivery-13",
+      "shiftId": "shift-13",
+      "orderId": "order-3",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-14",
+      "shiftId": "shift-new-1",
+      "orderId": "order-6",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-15",
+      "shiftId": "shift-new-2",
+      "orderId": "order-7",
+      "status": "pending",
+      "failureReason": null
+    },
+    {
+      "id": "delivery-1764172631645",
+      "shiftId": "shift-11",
+      "orderId": "order-1764172631618",
       "status": "pending",
       "failureReason": null
     }
@@ -998,6 +4094,226 @@
       "coordinates": {
         "lat": 40.657,
         "lng": -74.061
+      }
+    },
+    {
+      "id": "gps-1764175189853",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:39:49.853Z",
+      "coordinates": {
+        "lat": 40.714427,
+        "lng": -74.013422
+      }
+    },
+    {
+      "id": "gps-1764175206338",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:40:06.338Z",
+      "coordinates": {
+        "lat": 40.739099,
+        "lng": -74.009915
+      }
+    },
+    {
+      "id": "gps-1764175600235",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:46:40.235Z",
+      "coordinates": {
+        "lat": 40.714427,
+        "lng": -74.013422
+      }
+    },
+    {
+      "id": "gps-1764175686114",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:48:06.114Z",
+      "coordinates": {
+        "lat": 40.714427,
+        "lng": -74.013422
+      }
+    },
+    {
+      "id": "gps-1764175696368",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:48:16.368Z",
+      "coordinates": {
+        "lat": 40.739099,
+        "lng": -74.009915
+      }
+    },
+    {
+      "id": "gps-1764175699726",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:48:19.726Z",
+      "coordinates": {
+        "lat": 40.747959,
+        "lng": -74.00767
+      }
+    },
+    {
+      "id": "gps-1764176147670",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:55:47.670Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764176177674",
+      "vehicleId": "vehicle-1",
+      "driverId": "driver-1",
+      "timestamp": "2025-11-26T16:56:17.674Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764178072274",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "timestamp": "2025-11-26T17:27:52.274Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764178075114",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "timestamp": "2025-11-26T17:27:55.114Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764178077480",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "timestamp": "2025-11-26T17:27:57.480Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764178078304",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "timestamp": "2025-11-26T17:27:58.304Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764178079156",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "timestamp": "2025-11-26T17:27:59.156Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764178142490",
+      "vehicleId": "vehicle-2",
+      "driverId": "driver-2",
+      "timestamp": "2025-11-26T17:29:02.490Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183550212",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T18:59:10.212Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183813481",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T19:03:33.481Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183814791",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T19:03:34.791Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183936074",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T19:05:36.074Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183937769",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T19:05:37.769Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183941767",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T19:05:41.767Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183982001",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T19:06:22.001Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
+      }
+    },
+    {
+      "id": "gps-1764183985297",
+      "vehicleId": "vehicle-7",
+      "driverId": "driver-7",
+      "timestamp": "2025-11-26T19:06:25.297Z",
+      "coordinates": {
+        "lat": 40.712,
+        "lng": -74.006
       }
     }
   ]

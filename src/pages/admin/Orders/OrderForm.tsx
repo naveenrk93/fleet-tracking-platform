@@ -14,21 +14,23 @@ import {
   SimpleGrid,
   Divider,
   Badge,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  Link,
 } from "@chakra-ui/react";
 import { MdSave, MdCancel } from "react-icons/md";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useNavigate, useParams, Link as RouterLink } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 import {
   createOrder,
   updateOrder,
   getOrder,
-  getProducts,
   getDrivers,
   getVehicles,
   getTerminals,
   getHubs,
-  type Order,
-  type Product,
+  getDriverVehicleAllocation,
   type Driver,
   type Vehicle,
   type Terminal,
@@ -43,6 +45,11 @@ export const OrderForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [allocationWarning, setAllocationWarning] = useState<string>("");
+  const [allocatedVehicleId, setAllocatedVehicleId] = useState<string>("");
+  const [availableProducts, setAvailableProducts] = useState<Array<{ id: string; name: string; availableQty: number }>>([]);
+  const [maxQuantity, setMaxQuantity] = useState<number>(0);
+  const [showNoVehicleWarning, setShowNoVehicleWarning] = useState<boolean>(false);
   
   // Form data
   const [formData, setFormData] = useState({
@@ -56,7 +63,6 @@ export const OrderForm = () => {
   });
 
   // Master data lists
-  const [products, setProducts] = useState<Product[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [terminals, setTerminals] = useState<Terminal[]>([]);
@@ -72,15 +78,13 @@ export const OrderForm = () => {
       setLoading(true);
       
       // Load all master data
-      const [productsData, driversData, vehiclesData, terminalsData, hubsData] = await Promise.all([
-        getProducts(),
+      const [driversData, vehiclesData, terminalsData, hubsData] = await Promise.all([
         getDrivers(),
         getVehicles(),
         getTerminals(),
         getHubs(),
       ]);
 
-      setProducts(productsData);
       setDrivers(driversData);
       setVehicles(vehiclesData);
       setTerminals(terminalsData);
@@ -116,8 +120,73 @@ export const OrderForm = () => {
     }
   };
 
-  const handleInputChange = (field: string, value: string | number) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = async (field: string, value: string | number) => {
+    const newFormData = { ...formData, [field]: value };
+    setFormData(newFormData);
+    
+    // Update available products when destination changes
+    if (field === 'destinationId') {
+      updateAvailableProductsMemo(value as string);
+      // Reset product and quantity when destination changes
+      setFormData(prev => ({ ...prev, productId: "", quantity: 0 }));
+      setMaxQuantity(0);
+    }
+    
+    // Update max quantity when product changes
+    if (field === 'productId' && value) {
+      const selectedProduct = availableProducts.find(p => p.id === value);
+      setMaxQuantity(selectedProduct?.availableQty || 0);
+    }
+    
+    // Check vehicle allocation when driver or delivery date changes
+    if ((field === 'assignedDriverId' || field === 'deliveryDate') && newFormData.assignedDriverId && newFormData.deliveryDate) {
+      await checkDriverVehicleAllocation(newFormData.assignedDriverId, newFormData.deliveryDate);
+    } else if (field === 'assignedDriverId' && !value) {
+      // Clear warning if driver is unassigned
+      setAllocationWarning("");
+      setAllocatedVehicleId("");
+      setShowNoVehicleWarning(false);
+    }
+    
+    // Clear warnings if delivery date is cleared
+    if (field === 'deliveryDate' && !value) {
+      setAllocationWarning("");
+      setAllocatedVehicleId("");
+      setShowNoVehicleWarning(false);
+      // Also clear driver selection if date is removed
+      setFormData(prev => ({ ...prev, assignedDriverId: "", vehicleId: "" }));
+    }
+  };
+  
+  const checkDriverVehicleAllocation = async (driverId: string, date: string) => {
+    try {
+      const allocation = await getDriverVehicleAllocation(driverId, date);
+      
+      if (allocation) {
+        const vehicle = vehicles.find(v => v.id === allocation.vehicleId);
+        setAllocationWarning("");
+        setAllocatedVehicleId(allocation.vehicleId);
+        setShowNoVehicleWarning(false);
+        
+        // Auto-populate vehicle field
+        setFormData(prev => ({ ...prev, vehicleId: allocation.vehicleId }));
+        
+        toast({
+          title: "Vehicle allocation found",
+          description: `Driver has ${vehicle?.registration || 'a vehicle'} allocated on this date. A shift will be created automatically.`,
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        });
+      } else {
+        const driver = drivers.find(d => d.id === driverId);
+        setAllocationWarning(`${driver?.name || 'This driver'} does not have a vehicle allocated on ${new Date(date).toLocaleDateString()}.`);
+        setAllocatedVehicleId("");
+        setShowNoVehicleWarning(true);
+      }
+    } catch (error) {
+      console.error("Error checking vehicle allocation:", error);
+    }
   };
 
   const validateForm = (): boolean => {
@@ -127,6 +196,17 @@ export const OrderForm = () => {
         description: "Please select a destination",
         status: "error",
         duration: 3000,
+        isClosable: true,
+      });
+      return false;
+    }
+
+    if (availableProducts.length === 0) {
+      toast({
+        title: "Validation Error",
+        description: "The selected destination has no products available. Please choose a different destination.",
+        status: "error",
+        duration: 4000,
         isClosable: true,
       });
       return false;
@@ -154,12 +234,36 @@ export const OrderForm = () => {
       return false;
     }
 
+    if (maxQuantity > 0 && formData.quantity > maxQuantity) {
+      toast({
+        title: "Insufficient Stock",
+        description: `Only ${maxQuantity.toLocaleString()} units available at this location. Please reduce the order quantity.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return false;
+    }
+
     if (!formData.deliveryDate) {
       toast({
         title: "Validation Error",
         description: "Please select a delivery date",
         status: "error",
         duration: 3000,
+        isClosable: true,
+      });
+      return false;
+    }
+
+    // Check if delivery date is not in the past
+    const today = new Date().toISOString().split('T')[0];
+    if (formData.deliveryDate < today) {
+      toast({
+        title: "Invalid Date",
+        description: "Delivery date cannot be in the past. Please select today or a future date.",
+        status: "error",
+        duration: 4000,
         isClosable: true,
       });
       return false;
@@ -230,6 +334,35 @@ export const OrderForm = () => {
     ...terminals.map(t => ({ ...t, type: 'Terminal' as const })),
     ...hubs.map(h => ({ ...h, type: 'Hub' as const })),
   ];
+  
+  // Memoize the update function to avoid unnecessary re-renders
+  const updateAvailableProductsMemo = useCallback((destinationId: string) => {
+    if (!destinationId) {
+      setAvailableProducts([]);
+      return;
+    }
+    
+    // Find the selected destination (hub or terminal)
+    const destination = allDestinations.find(d => d.id === destinationId);
+    
+    if (destination && destination.products && destination.products.length > 0) {
+      const productsWithQty = destination.products.map((p) => ({
+        id: p.productId,
+        name: p.productName,
+        availableQty: p.quantity,
+      }));
+      setAvailableProducts(productsWithQty);
+    } else {
+      setAvailableProducts([]);
+    }
+  }, [terminals, hubs]);
+  
+  // Update available products when destinations load or formData.destinationId is set
+  useEffect(() => {
+    if (formData.destinationId && (terminals.length > 0 || hubs.length > 0)) {
+      updateAvailableProductsMemo(formData.destinationId);
+    }
+  }, [formData.destinationId, terminals, hubs, updateAvailableProductsMemo]);
 
   if (loading) {
     return (
@@ -303,36 +436,87 @@ export const OrderForm = () => {
                 </FormControl>
 
                 <FormControl isRequired>
-                  <FormLabel color="text.primary">Product</FormLabel>
+                  <FormLabel color="text.primary">
+                    Product
+                    {!formData.destinationId && (
+                      <Text as="span" fontSize="xs" color="orange.500" ml={2}>
+                        (Select destination first)
+                      </Text>
+                    )}
+                  </FormLabel>
                   <Select
-                    placeholder="Select product"
+                    placeholder={
+                      !formData.destinationId 
+                        ? "Select destination first" 
+                        : availableProducts.length === 0 
+                          ? "No products available at this location"
+                          : "Select product"
+                    }
                     value={formData.productId}
                     onChange={(e) => handleInputChange("productId", e.target.value)}
                     bg="bg.surface"
                     borderColor="border.default"
                     _hover={{ borderColor: "purple.400" }}
                     _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
+                    isDisabled={!formData.destinationId || availableProducts.length === 0}
                   >
-                    {products.map((product) => (
+                    {availableProducts.map((product) => (
                       <option key={product.id} value={product.id}>
-                        {product.name} - {product.sku}
+                        {product.name} (Available: {product.availableQty.toLocaleString()})
                       </option>
                     ))}
                   </Select>
+                  {availableProducts.length === 0 && formData.destinationId && (
+                    <Text fontSize="xs" color="red.500" mt={1}>
+                      ⚠️ No products available at selected destination
+                    </Text>
+                  )}
                 </FormControl>
 
                 <FormControl isRequired>
-                  <FormLabel color="text.primary">Quantity</FormLabel>
+                  <FormLabel color="text.primary">
+                    Quantity
+                    {maxQuantity > 0 && (
+                      <Badge ml={2} colorScheme={formData.quantity > maxQuantity ? "red" : "blue"}>
+                        Max: {maxQuantity.toLocaleString()}
+                      </Badge>
+                    )}
+                  </FormLabel>
                   <Input
                     type="number"
                     placeholder="Enter quantity"
                     value={formData.quantity || ""}
                     onChange={(e) => handleInputChange("quantity", parseInt(e.target.value) || 0)}
                     bg="bg.surface"
-                    borderColor="border.default"
+                    borderColor={formData.quantity > maxQuantity && maxQuantity > 0 ? "red.400" : "border.default"}
                     _hover={{ borderColor: "purple.400" }}
                     _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
+                    color="text.primary"
+                    _dark={{
+                      color: "white",
+                      bg: "whiteAlpha.100",
+                      borderColor: formData.quantity > maxQuantity && maxQuantity > 0 ? "red.400" : "whiteAlpha.300",
+                      _hover: {
+                        borderColor: "purple.400"
+                      },
+                      _focus: {
+                        borderColor: "purple.500",
+                        boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)"
+                      }
+                    }}
+                    min={0}
+                    max={maxQuantity > 0 ? maxQuantity : undefined}
                   />
+                  {formData.quantity > maxQuantity && maxQuantity > 0 && (
+                    <Text fontSize="xs" color="red.500" mt={1}>
+                      ⚠️ Quantity exceeds available stock ({maxQuantity.toLocaleString()} units)
+                    </Text>
+                  )}
+                  {formData.productId && maxQuantity > 0 && formData.quantity <= maxQuantity && formData.quantity > 0 && (
+                    <Text fontSize="xs" color="green.600" mt={1}>
+                      ✓ {(maxQuantity - formData.quantity).toLocaleString()} units will remain after this order
+                    </Text>
+                  )}
                 </FormControl>
 
                 <FormControl isRequired>
@@ -341,10 +525,53 @@ export const OrderForm = () => {
                     type="date"
                     value={formData.deliveryDate}
                     onChange={(e) => handleInputChange("deliveryDate", e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
                     bg="bg.surface"
                     borderColor="border.default"
                     _hover={{ borderColor: "purple.400" }}
                     _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
+                    color="text.primary"
+                    _dark={{
+                      color: "white",
+                      bg: "whiteAlpha.100",
+                      borderColor: "whiteAlpha.300",
+                      _hover: {
+                        borderColor: "purple.400"
+                      },
+                      _focus: {
+                        borderColor: "purple.500",
+                        boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)"
+                      }
+                    }}
+                    sx={{
+                      colorScheme: "light",
+                      _dark: {
+                        colorScheme: "dark",
+                        "&::-webkit-calendar-picker-indicator": {
+                          filter: "brightness(0) invert(1)",
+                          cursor: "pointer",
+                          opacity: 0.9
+                        },
+                        "&::-webkit-datetime-edit": {
+                          color: "white"
+                        },
+                        "&::-webkit-datetime-edit-fields-wrapper": {
+                          color: "white"
+                        },
+                        "&::-webkit-datetime-edit-text": {
+                          color: "whiteAlpha.700"
+                        },
+                        "&::-webkit-datetime-edit-month-field": {
+                          color: "white"
+                        },
+                        "&::-webkit-datetime-edit-day-field": {
+                          color: "white"
+                        },
+                        "&::-webkit-datetime-edit-year-field": {
+                          color: "white"
+                        }
+                      }
+                    }}
                   />
                 </FormControl>
               </SimpleGrid>
@@ -357,17 +584,51 @@ export const OrderForm = () => {
               <Text fontSize="lg" fontWeight="semibold" color="text.primary" mb={4}>
                 Assignment (Optional)
               </Text>
+              
+              {showNoVehicleWarning && allocationWarning && (
+                <Alert status="warning" mb={4} borderRadius="md" display={"flex"} alignItems={"center"}>
+                  <AlertIcon />
+                  <Box flex="1">
+                    <AlertDescription fontSize="sm">
+                      {allocationWarning}
+                    </AlertDescription>
+                    <AlertDescription fontSize="sm" mt={2}>
+                      <Link 
+                        as={RouterLink} 
+                        to="/admin/vehicle-allocation" 
+                        color="blue.500" 
+                        fontWeight="semibold"
+                        textDecoration="underline"
+                        _hover={{ color: "blue.600" }}
+                        marginLeft={"4px"}
+                      >
+                        Go to Vehicle Allocation
+                      </Link>
+                      {" "}to assign a vehicle, or the shift will not be created.
+                    </AlertDescription>
+                  </Box>
+                </Alert>
+              )}
+              
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                 <FormControl>
-                  <FormLabel color="text.primary">Assign Driver</FormLabel>
+                  <FormLabel color="text.primary">
+                    Assign Driver
+                    {!formData.deliveryDate && (
+                      <Text as="span" fontSize="xs" color="orange.500" ml={2}>
+                        (Select delivery date first)
+                      </Text>
+                    )}
+                  </FormLabel>
                   <Select
-                    placeholder="Select driver (optional)"
+                    placeholder={!formData.deliveryDate ? "Select delivery date first" : "Select driver (optional)"}
                     value={formData.assignedDriverId}
                     onChange={(e) => handleInputChange("assignedDriverId", e.target.value)}
                     bg="bg.surface"
                     borderColor="border.default"
                     _hover={{ borderColor: "purple.400" }}
                     _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
+                    isDisabled={!formData.deliveryDate}
                   >
                     {drivers.map((driver) => (
                       <option key={driver.id} value={driver.id}>
@@ -375,10 +636,17 @@ export const OrderForm = () => {
                       </option>
                     ))}
                   </Select>
+                  {!formData.deliveryDate && (
+                    <Text fontSize="xs" color="orange.500" mt={1}>
+                      Please select a delivery date to assign a driver
+                    </Text>
+                  )}
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel color="text.primary">Assign Vehicle</FormLabel>
+                  <FormLabel color="text.primary">
+                    Vehicle {allocatedVehicleId && <Badge ml={2} colorScheme="green">Auto-assigned</Badge>}
+                  </FormLabel>
                   <Select
                     placeholder="Select vehicle (optional)"
                     value={formData.vehicleId}
@@ -387,6 +655,7 @@ export const OrderForm = () => {
                     borderColor="border.default"
                     _hover={{ borderColor: "purple.400" }}
                     _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
+                    isDisabled={!!allocatedVehicleId}
                   >
                     {vehicles.map((vehicle) => (
                       <option key={vehicle.id} value={vehicle.id}>
@@ -394,6 +663,11 @@ export const OrderForm = () => {
                       </option>
                     ))}
                   </Select>
+                  {allocatedVehicleId && (
+                    <Text fontSize="xs" color="green.600" mt={1}>
+                      Vehicle automatically assigned based on driver allocation
+                    </Text>
+                  )}
                 </FormControl>
               </SimpleGrid>
             </Box>
