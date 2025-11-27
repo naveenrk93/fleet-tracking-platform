@@ -199,19 +199,6 @@ export const VehiclesPage = () => {
       render: (vehicle) => <Text>{vehicle.capacity.toLocaleString()}</Text>,
       skeletonWidth: "90px",
     },
-    {
-      key: "currentLocation",
-      label: "Location",
-      render: (vehicle) => (
-        <Text fontSize="sm">
-          {vehicle.currentLocation 
-            ? `${vehicle.currentLocation.lat.toFixed(4)}, ${vehicle.currentLocation.lng.toFixed(4)}` 
-            : "N/A"
-          }
-        </Text>
-      ),
-      skeletonWidth: "130px",
-    },
   ];
 
   const mobileFields: MobileField<Vehicle>[] = [
@@ -219,17 +206,6 @@ export const VehiclesPage = () => {
       label: "Capacity",
       render: (vehicle) => (
         <Text color="text.primary">{vehicle.capacity.toLocaleString()} L</Text>
-      ),
-    },
-    {
-      label: "Location",
-      render: (vehicle) => (
-        <Text color="text.primary">
-          {vehicle.currentLocation 
-            ? `${vehicle.currentLocation.lat.toFixed(2)}, ${vehicle.currentLocation.lng.toFixed(2)}`
-            : 'N/A'
-          }
-        </Text>
       ),
     },
   ];

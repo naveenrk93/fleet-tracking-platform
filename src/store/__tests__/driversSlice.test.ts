@@ -10,7 +10,6 @@ import driversReducer, {
   fetchDrivers,
   type Driver,
 } from '../driversSlice';
-import { getDrivers } from '../../services/api';
 
 // Mock the API
 vi.mock('../../services/api', () => ({

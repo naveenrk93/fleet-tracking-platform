@@ -46,7 +46,7 @@ export const ConfirmDialog = ({
       <ModalContent mx={{ base: 4, sm: 0 }}>
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody overflow="auto" maxHeight={{ base: "calc(100vh - 200px)", sm: "calc(66vh - 124px)" }}>
           {typeof message === 'string' ? (
             <Text>{message}</Text>
           ) : (

@@ -139,7 +139,7 @@ describe('SearchInput Component', () => {
         value="" 
         onChange={mockOnChange} 
         data-testid="custom-search"
-        disabled
+        isDisabled
       />
     );
     

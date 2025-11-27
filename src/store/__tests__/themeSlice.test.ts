@@ -12,7 +12,7 @@ describe('themeSlice', () => {
       length: 0,
       key: vi.fn(),
     };
-    global.localStorage = localStorageMock as any;
+    (globalThis as any).localStorage = localStorageMock;
   });
 
   it('should return the initial state with light mode by default', () => {

@@ -507,7 +507,7 @@ export const DeliveryManagementPage = () => {
           <ModalContent>
             <ModalHeader>Mark Delivery as Failed</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
+            <ModalBody overflow="auto" maxHeight={{ base: "calc(100vh - 200px)", sm: "calc(66vh - 124px)" }}>
               <VStack spacing={4} align="stretch">
                 <FormControl isRequired>
                   <FormLabel>Delivery</FormLabel>

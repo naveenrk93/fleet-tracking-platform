@@ -205,7 +205,12 @@ export const AllocationModal = ({
           {allocation ? "Edit Allocation" : "New Allocation"}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
+        <ModalBody 
+          px={{ base: 4, md: 6 }} 
+          py={{ base: 4, md: 6 }}
+          overflow="auto"
+          maxHeight={{ base: "calc(100vh - 200px)", sm: "calc(66vh - 124px)" }}
+        >
           <VStack spacing={{ base: 3, md: 4 }}>
 
             {conflictingVehicleAllocation && (
