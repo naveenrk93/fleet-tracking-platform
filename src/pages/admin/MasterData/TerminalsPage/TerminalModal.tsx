@@ -253,6 +253,7 @@ export const TerminalModal = ({
                   placeholder="e.g., North Terminal Station"
                   bg="bg.input"
                   size={{ base: "md", md: "md" }}
+                  sx={{ _dark: { color: "gray.900" } }}
                 />
                 <FormErrorMessage fontSize="sm">{errors.name?.message}</FormErrorMessage>
               </FormControl>
@@ -271,6 +272,7 @@ export const TerminalModal = ({
                   bg="bg.input"
                   rows={3}
                   size={{ base: "sm", md: "md" }}
+                  sx={{ _dark: { color: "gray.900" } }}
                 />
                 <FormErrorMessage fontSize="sm">{errors.address?.message}</FormErrorMessage>
               </FormControl>
@@ -288,6 +290,7 @@ export const TerminalModal = ({
                     placeholder="e.g., 40.7128"
                     bg="bg.input"
                     size={{ base: "md", md: "md" }}
+                    sx={{ _dark: { color: "gray.900" } }}
                   />
                   <FormErrorMessage fontSize="xs">{errors.coordinates?.lat?.message}</FormErrorMessage>
                 </FormControl>
@@ -303,6 +306,7 @@ export const TerminalModal = ({
                     placeholder="e.g., -74.0060"
                     bg="bg.input"
                     size={{ base: "md", md: "md" }}
+                    sx={{ _dark: { color: "gray.900" } }}
                   />
                   <FormErrorMessage fontSize="xs">{errors.coordinates?.lng?.message}</FormErrorMessage>
                 </FormControl>
@@ -348,6 +352,7 @@ export const TerminalModal = ({
                           bg="bg.input"
                           isDisabled={loadingProducts}
                           size="sm"
+                          sx={{ _dark: { color: "gray.900" } }}
                         >
                           {availableProducts.map((p) => (
                             <option key={p.id} value={p.id}>
@@ -373,6 +378,7 @@ export const TerminalModal = ({
                             bg="bg.input"
                             isDisabled={!product.productId}
                             size="sm"
+                            sx={{ _dark: { color: "gray.900" } }}
                           />
                         </FormControl>
                         {!isLastRow && (
@@ -404,6 +410,7 @@ export const TerminalModal = ({
                           onChange={(e) => handleProductSelect(index, e.target.value)}
                           bg="bg.input"
                           isDisabled={loadingProducts}
+                          sx={{ _dark: { color: "gray.900" } }}
                         >
                           {availableProducts.map((p) => (
                             <option key={p.id} value={p.id}>
@@ -427,6 +434,7 @@ export const TerminalModal = ({
                           placeholder="0"
                           bg="bg.input"
                           isDisabled={!product.productId}
+                          sx={{ _dark: { color: "gray.900" } }}
                         />
                       </FormControl>
 

@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import type { RootState } from "../store";
-import type { UserRole } from "../store/userSlice";
-import { ROUTE_PATHS } from "../app/routes";
+import type { RootState } from "../../store.ts";
+import type { UserRole } from "../../store/userSlice.ts";
+import { ROUTE_PATHS } from "../../app/routes.tsx";
 
 interface RoleGuardProps {
   children: React.ReactNode;

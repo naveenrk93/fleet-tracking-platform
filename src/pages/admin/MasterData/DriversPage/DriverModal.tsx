@@ -1,19 +1,11 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
   FormControl,
   FormLabel,
-  Input,
   FormErrorMessage,
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import { MasterDataModal, MasterDataInput as Input } from "../../../../components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -108,99 +100,58 @@ export const DriverModal = ({
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={handleCancel} 
-      size={{ base: "full", sm: "md", md: "xl" }}
-      scrollBehavior="inside"
+    <MasterDataModal
+      isOpen={isOpen}
+      onClose={handleCancel}
+      title={mode === "create" ? "Add New Driver" : "Edit Driver"}
+      onSubmit={handleSubmit(handleFormSubmit)}
+      isSubmitting={isSubmitting}
+      submitLabel={mode === "create" ? "Create Driver" : "Update Driver"}
     >
-      <ModalOverlay />
-      <ModalContent 
-        bg="bg.card" 
-        borderColor="border.default"
-        mx={{ base: 0, sm: 4 }}
-        my={{ base: 0, sm: 16 }}
-      >
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalHeader color="text.primary" fontSize={{ base: "lg", md: "xl" }}>
-            {mode === "create" ? "Add New Driver" : "Edit Driver"}
-          </ModalHeader>
-          <ModalCloseButton />
-          
-          <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
-            <VStack spacing={{ base: 3, md: 4 }} align="stretch">
-              {/* Driver Name */}
-              <FormControl isInvalid={!!errors.name}>
-                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
-                  Driver Name
-                </FormLabel>
-                <Input
-                  {...register("name")}
-                  placeholder="e.g., John Smith"
-                  bg="bg.input"
-                  size={{ base: "md", md: "md" }}
-                />
-                <FormErrorMessage fontSize="sm">{errors.name?.message}</FormErrorMessage>
-              </FormControl>
+      <VStack spacing={{ base: 3, md: 4 }} align="stretch">
+        {/* Driver Name */}
+        <FormControl isInvalid={!!errors.name}>
+          <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+            Driver Name
+          </FormLabel>
+          <Input
+            {...register("name")}
+            placeholder="e.g., John Smith"
+            bg="bg.input"
+            size={{ base: "md", md: "md" }}
+          />
+          <FormErrorMessage fontSize="sm">{errors.name?.message}</FormErrorMessage>
+        </FormControl>
 
-              {/* License Number */}
-              <FormControl isInvalid={!!errors.license}>
-                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
-                  License Number
-                </FormLabel>
-                <Input
-                  {...register("license")}
-                  placeholder="e.g., DL-123456"
-                  bg="bg.input"
-                  size={{ base: "md", md: "md" }}
-                />
-                <FormErrorMessage fontSize="sm">{errors.license?.message}</FormErrorMessage>
-              </FormControl>
+        {/* License Number */}
+        <FormControl isInvalid={!!errors.license}>
+          <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+            License Number
+          </FormLabel>
+          <Input
+            {...register("license")}
+            placeholder="e.g., DL-123456"
+            bg="bg.input"
+            size={{ base: "md", md: "md" }}
+          />
+          <FormErrorMessage fontSize="sm">{errors.license?.message}</FormErrorMessage>
+        </FormControl>
 
-              {/* Phone Number */}
-              <FormControl isInvalid={!!errors.phone}>
-                <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
-                  Phone Number
-                </FormLabel>
-                <Input
-                  {...register("phone")}
-                  placeholder="e.g., +1-555-0100"
-                  bg="bg.input"
-                  size={{ base: "md", md: "md" }}
-                />
-                <FormErrorMessage fontSize="sm">{errors.phone?.message}</FormErrorMessage>
-              </FormControl>
-            </VStack>
-          </ModalBody>
-
-          <ModalFooter 
-            px={{ base: 4, md: 6 }} 
-            py={{ base: 3, md: 4 }}
-            flexDirection={{ base: "column", sm: "row" }}
-            gap={{ base: 2, sm: 0 }}
-          >
-            <Button 
-              variant="ghost" 
-              mr={{ base: 0, sm: 3 }} 
-              onClick={handleCancel}
-              width={{ base: "full", sm: "auto" }}
-              size={{ base: "md", md: "md" }}
-            >
-              Cancel
-            </Button>
-            <Button
-              colorScheme="purple"
-              type="submit"
-              isLoading={isSubmitting}
-              width={{ base: "full", sm: "auto" }}
-              size={{ base: "md", md: "md" }}
-            >
-              {mode === "create" ? "Create Driver" : "Update Driver"}
-            </Button>
-          </ModalFooter>
-        </form>
-      </ModalContent>
-    </Modal>
+        {/* Phone Number */}
+        <FormControl isInvalid={!!errors.phone}>
+          <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+            Phone Number
+          </FormLabel>
+          <Input
+            {...register("phone")}
+            placeholder="e.g., +1-555-0100"
+            bg="bg.input"
+            size={{ base: "md", md: "md" }}
+          />
+          <FormErrorMessage fontSize="sm">{errors.phone?.message}</FormErrorMessage>
+        </FormControl>
+      </VStack>
+    </MasterDataModal>
   );
 };
 

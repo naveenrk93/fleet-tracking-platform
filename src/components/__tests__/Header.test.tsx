@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
 import { render } from '../../test/test-utils';
-import { Header } from '../Header';
+import { Header } from '../Header/Header.tsx';
 
 // Mock react-router-dom
 vi.mock('react-router-dom', async () => {

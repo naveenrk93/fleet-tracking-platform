@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserRole, setUserId } from "../store/userSlice";
-import type { RootState } from "../store";
+import { setUserRole, setUserId } from "../../store/userSlice.ts";
+import type { RootState } from "../../store.ts";
 
 interface RoleAutoSwitchProps {
   children: React.ReactNode;

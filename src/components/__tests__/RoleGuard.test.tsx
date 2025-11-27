@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from '../../test/test-utils';
-import { RoleGuard } from '../RoleGuard';
+import { RoleGuard } from '../RoleGuard/RoleGuard.tsx';
 
 describe('RoleGuard', () => {
   it('should render children when user has required role', () => {

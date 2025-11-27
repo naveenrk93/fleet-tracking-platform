@@ -1,9 +1,9 @@
 import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import { useRoutes } from "react-router-dom";
-import { Sidebar } from "../components/Sidebar";
-import { Header } from "../components/Header";
-import { RoleAutoSwitch } from "../components/RoleAutoSwitch";
-import { ErrorBoundary } from "../components/ErrorBoundary";
+import { Sidebar } from "../components/Sidebar/Sidebar.tsx";
+import { Header } from "../components/Header/Header.tsx";
+import { RoleAutoSwitch } from "../components/RoleAutoSwitch/RoleAutoSwitch.tsx";
+import { ErrorBoundary } from "../components/ErrorBoundary/ErrorBoundary.tsx";
 import { routes } from "./routes";
 
 const App = () => {

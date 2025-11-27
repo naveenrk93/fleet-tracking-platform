@@ -1,8 +1,6 @@
 import { 
   Box, 
-  Heading, 
   VStack, 
-  Button, 
   HStack,
   Table,
   Thead,
@@ -13,17 +11,15 @@ import {
   TableContainer,
   Spinner,
   Text,
-  Badge,
   IconButton,
   useToast,
-  Input,
-  InputGroup,
-  InputLeftElement,
+  useDisclosure,
   Select,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { MdAdd, MdEdit, MdDelete, MdVisibility, MdSearch, MdArrowUpward, MdArrowDownward } from "react-icons/md";
+import { MdEdit, MdDelete, MdVisibility, MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { SearchInput, PageHeader, StatusBadge, ConfirmDialog } from "../../../components";
 import { useEffect, useState } from "react";
 import { 
   getOrders, 
@@ -43,18 +39,23 @@ import {
 
 export const OrdersPage = () => {
   const navigate = useNavigate();
+  const { 
+    isOpen: isDeleteOpen, 
+    onOpen: onDeleteOpen, 
+    onClose: onDeleteClose 
+  } = useDisclosure();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<Record<string, Product>>({});
   const [drivers, setDrivers] = useState<Record<string, Driver>>({});
   const [vehicles, setVehicles] = useState<Record<string, Vehicle>>({});
   const [destinations, setDestinations] = useState<Record<string, Terminal | Hub>>({});
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<"id" | "product" | "quantity" | "destination" | "driver" | "vehicle" | "deliveryDate" | "status">("id");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const toast = useToast();
-  const inputTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
   const selectTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
   useEffect(() => {
@@ -101,25 +102,32 @@ export const OrdersPage = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this order?")) {
-      try {
-        await deleteOrder(id);
-        toast({
-          title: "Order deleted successfully",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        fetchAllData();
-      } catch (error) {
-        toast({
-          title: "Error deleting order",
-          description: error instanceof Error ? error.message : "An error occurred",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+    setOrderToDelete(id);
+    onDeleteOpen();
+  };
+
+  const confirmDelete = async () => {
+    if (!orderToDelete) return;
+    
+    try {
+      await deleteOrder(orderToDelete);
+      toast({
+        title: "Order deleted successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      fetchAllData();
+    } catch (error) {
+      toast({
+        title: "Error deleting order",
+        description: error instanceof Error ? error.message : "An error occurred",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setOrderToDelete(null);
     }
   };
 
@@ -132,20 +140,6 @@ export const OrdersPage = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "assigned":
-        return "blue";
-      case "in_progress":
-        return "yellow";
-      case "completed":
-        return "green";
-      case "cancelled":
-        return "red";
-      default:
-        return "gray";
-    }
-  };
 
   const filteredOrders = orders.filter((order) => {
     const query = searchQuery.toLowerCase();
@@ -219,38 +213,22 @@ export const OrdersPage = () => {
   return (
     <Box>
       <VStack align="stretch" spacing={6}>
-        {/* Page Header */}
-        <HStack justify="space-between">
-          <Heading size="lg" color="text.primary">
-            Orders Management
-          </Heading>
-          <Button
-            colorScheme="purple"
-            leftIcon={<MdAdd />}
-            size="md"
-            onClick={() => navigate("/admin/orders/new")}
-          >
-            Create Order
-          </Button>
-        </HStack>
+        <PageHeader 
+          title="Orders Management" 
+          actionLabel="Create Order"
+          onActionClick={() => navigate("/admin/orders/new")}
+        />
 
         {/* Search Bar and Filters */}
         <HStack spacing={4} justifyContent="space-between">
-          <InputGroup flex={1} maxW="600px" minW="300px">
-            <InputLeftElement pointerEvents="none">
-              <MdSearch color="gray" size="20px" />
-            </InputLeftElement>
-            <Input
-              placeholder="Search orders by ID, product, destination, driver, vehicle, status, or quantity..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              bg="bg.card"
-              borderColor="border.default"
-              color={inputTextColor}
-              _hover={{ borderColor: "purple.400" }}
-              _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
-            />
-          </InputGroup>
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search orders by ID, product, destination, driver, vehicle, status, or quantity..."
+            flex={1}
+            maxW="600px"
+            minW="300px"
+          />
           <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -412,9 +390,7 @@ export const OrdersPage = () => {
                       <Td color="text.primary">{vehicles[order.vehicleId]?.registration || "N/A"}</Td>
                       <Td color="text.primary">{new Date(order.deliveryDate).toLocaleDateString()}</Td>
                       <Td>
-                        <Badge colorScheme={getStatusColor(order.status)}>
-                          {order.status}
-                        </Badge>
+                        <StatusBadge status={order.status} />
                       </Td>
                       <Td>
                         <HStack spacing={2}>
@@ -452,6 +428,16 @@ export const OrdersPage = () => {
           )}
         </Box>
       </VStack>
+
+      <ConfirmDialog
+        isOpen={isDeleteOpen}
+        onClose={onDeleteClose}
+        onConfirm={confirmDelete}
+        title="Delete Order"
+        message="Are you sure you want to delete this order? This action cannot be undone."
+        confirmLabel="Delete"
+        confirmColorScheme="red"
+      />
     </Box>
   );
 };

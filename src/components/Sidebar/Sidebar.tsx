@@ -33,10 +33,10 @@ import {
 } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ROUTE_PATHS } from "../app/routes";
-import type { RootState } from "../store";
+import { ROUTE_PATHS } from "../../app/routes.tsx";
+import type { RootState } from "../../store.ts";
 import { useState } from "react";
-import fleetNitroLogo from "../assets/images/fleet-nitro-logo.png";
+import fleetNitroLogo from "../../assets/images/fleet-nitro-logo.png";
 
 interface SubMenuItem {
   label: string;

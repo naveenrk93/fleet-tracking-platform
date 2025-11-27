@@ -34,7 +34,7 @@ import { fetchDrivers } from "../../../store/driversSlice";
 import { fetchVehicles } from "../../../store/vehiclesSlice";
 import { fetchHubs } from "../../../store/hubsSlice";
 import { fetchTerminals } from "../../../store/terminalsSlice";
-import { MapErrorBoundary } from "../../../components/MapErrorBoundary";
+import { MapErrorBoundary } from "../../../components/MapErrorBoundary/MapErrorBoundary.tsx";
 
 const MAPBOX_TOKEN = "pk.eyJ1IjoibmF2ZWVucms5MyIsImEiOiJjbWUzcDd3OW4wODdwMmpzOHhrMjhleHM3In0.QNzeHbwZHUucsrXymelg0A";
 

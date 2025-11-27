@@ -31,12 +31,12 @@ import {
 } from "react-icons/md";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {toggleColorMode as toggleColorModeRedux} from "../store/themeSlice";
-import {toggleUserRole, setUserId} from "../store/userSlice";
-import {ROUTE_PATHS} from "../app/routes";
-import type {RootState} from "../store";
+import {toggleColorMode as toggleColorModeRedux} from "../../store/themeSlice.ts";
+import {toggleUserRole, setUserId} from "../../store/userSlice.ts";
+import {ROUTE_PATHS} from "../../app/routes.tsx";
+import type {RootState} from "../../store.ts";
 import {useState, useEffect} from "react";
-import {getDrivers, type Driver} from "../services/api";
+import {getDrivers, type Driver} from "../../services/api.ts";
 
 interface HeaderProps {
     onMenuClick: () => void;

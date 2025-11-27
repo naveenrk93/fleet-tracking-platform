@@ -439,7 +439,7 @@ export const InventoryDashboardPage = () => {
               ref={tableContainerRef}
               overflowY="auto"
               overflowX="auto"
-              maxH="600px"
+              maxH="800px"
               position="relative"
             >
               <Table variant="simple" style={{ tableLayout: 'fixed' }} w="100%">

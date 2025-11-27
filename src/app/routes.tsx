@@ -1,6 +1,6 @@
 import { type RouteObject, Navigate } from "react-router-dom";
 import { DashboardPage } from "../pages/DashboardPage";
-import { RoleBasedRedirect } from "../components/RoleBasedRedirect";
+import { RoleBasedRedirect } from "../utils/RoleBasedRedirect.tsx";
 
 // Admin Pages
 import { AdminDashboard } from "../pages/admin/Dashboard/Dashboard.tsx";

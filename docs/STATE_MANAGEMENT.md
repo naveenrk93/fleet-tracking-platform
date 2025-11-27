@@ -53,11 +53,11 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 **Usage:**
 ```typescript
-// Instead of useDispatch and useSelector
+// Use typed hooks instead of plain useDispatch/useSelector
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 const dispatch = useAppDispatch();
-const data = useAppSelector((state) => state.orders.orders);
+const orders = useAppSelector((state) => state.orders.orders);
 ```
 
 ---
@@ -668,11 +668,11 @@ Redux DevTools is automatically enabled in development mode with Redux Toolkit.
 ```typescript
 // ✅ Good: Use typed hooks
 const dispatch = useAppDispatch();
-const orders = useAppSelector(state => state.orders.orders);
+const orders = useAppSelector((state) => state.orders.orders);
 
-// ❌ Bad: Use plain hooks
+// ❌ Bad: Use plain hooks (no type safety)
 const dispatch = useDispatch();
-const orders = useSelector(state => state.orders.orders);
+const orders = useSelector((state) => state.orders.orders);
 ```
 
 ### 5. Avoid Over-Fetching

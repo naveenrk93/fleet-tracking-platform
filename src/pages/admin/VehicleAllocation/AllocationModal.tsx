@@ -283,6 +283,7 @@ export const AllocationModal = ({
                 value={formData.vehicleId}
                 onChange={(e) => handleChange("vehicleId", e.target.value)}
                 size={{ base: "md", md: "md" }}
+                sx={{ _dark: { color: "gray.900" } }}
               >
                 {vehicles.map((vehicle) => (
                   <option key={vehicle.id} value={vehicle.id}>
@@ -299,6 +300,7 @@ export const AllocationModal = ({
                 value={formData.driverId}
                 onChange={(e) => handleChange("driverId", e.target.value)}
                 size={{ base: "md", md: "md" }}
+                sx={{ _dark: { color: "gray.900" } }}
               >
                 {drivers.map((driver) => (
                   <option key={driver.id} value={driver.id}>
@@ -314,6 +316,7 @@ export const AllocationModal = ({
                 value={formData.status}
                 onChange={(e) => handleChange("status", e.target.value)}
                 size={{ base: "md", md: "md" }}
+                sx={{ _dark: { color: "gray.900" } }}
               >
                 <option value="pending">Pending</option>
                 <option value="allocated">Allocated</option>

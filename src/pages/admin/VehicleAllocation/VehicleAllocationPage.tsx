@@ -1,6 +1,5 @@
 import { 
   Box, 
-  Heading, 
   VStack, 
   Button, 
   HStack, 
@@ -22,7 +21,8 @@ import {
   Select,
   Skeleton,
 } from "@chakra-ui/react";
-import { MdAdd, MdDelete, MdEdit, MdRefresh, MdChevronLeft, MdChevronRight, MdArrowUpward, MdArrowDownward } from "react-icons/md";
+import { MdDelete, MdEdit, MdRefresh, MdChevronLeft, MdChevronRight, MdArrowUpward, MdArrowDownward } from "react-icons/md";
+import { PageHeader, StatusBadge, ConfirmDialog, getStatusColor } from "../../../components";
 import { useState, useEffect, useRef } from "react";
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { 
@@ -42,6 +42,7 @@ export const VehicleAllocationPage = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAllocation, setSelectedAllocation] = useState<Allocation | null>(null);
+  const [allocationToDelete, setAllocationToDelete] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [filterVehicle, setFilterVehicle] = useState<string>('');
@@ -52,6 +53,11 @@ export const VehicleAllocationPage = () => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { 
+    isOpen: isDeleteOpen, 
+    onOpen: onDeleteOpen, 
+    onClose: onDeleteClose 
+  } = useDisclosure();
   const toast = useToast();
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -112,9 +118,16 @@ export const VehicleAllocationPage = () => {
   };
 
   const handleDelete = async (id: string) => {
+    setAllocationToDelete(id);
+    onDeleteOpen();
+  };
+
+  const confirmDelete = async () => {
+    if (!allocationToDelete) return;
+    
     try {
-      await deleteAllocation(id);
-      setAllocations(allocations.filter((a) => a.id !== id));
+      await deleteAllocation(allocationToDelete);
+      setAllocations(allocations.filter((a) => a.id !== allocationToDelete));
       toast({
         title: "Allocation deleted",
         status: "success",
@@ -128,6 +141,8 @@ export const VehicleAllocationPage = () => {
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setAllocationToDelete(null);
     }
   };
 
@@ -161,20 +176,6 @@ export const VehicleAllocationPage = () => {
     return vehicle?.registration || "Unknown Vehicle";
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "allocated":
-        return "blue";
-      case "completed":
-        return "green";
-      case "pending":
-        return "yellow";
-      case "cancelled":
-        return "red";
-      default:
-        return "gray";
-    }
-  };
 
   const getWeekDates = (date: Date): Date[] => {
     const week: Date[] = [];
@@ -346,21 +347,11 @@ export const VehicleAllocationPage = () => {
     return (
       <Box>
         <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
-          {/* Page Header */}
-          <HStack justify="space-between" flexWrap={{ base: "wrap", sm: "nowrap" }} gap={{ base: 3, md: 0 }}>
-            <Heading size={{ base: "md", md: "lg" }} color="text.primary">
-              Vehicle Allocation
-            </Heading>
-            <Button
-              colorScheme="purple"
-              leftIcon={<MdAdd />}
-              size={{ base: "sm", md: "md" }}
-              onClick={handleAddNew}
-              width={{ base: "full", sm: "auto" }}
-            >
-              New Allocation
-            </Button>
-          </HStack>
+          <PageHeader 
+            title="Vehicle Allocation" 
+            actionLabel="New Allocation"
+            onActionClick={handleAddNew}
+          />
 
           {/* Calendar Controls Skeleton */}
           <Box
@@ -518,21 +509,11 @@ export const VehicleAllocationPage = () => {
   return (
     <Box>
       <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
-        {/* Page Header */}
-        <HStack justify="space-between" flexWrap={{ base: "wrap", sm: "nowrap" }} gap={{ base: 3, md: 0 }}>
-          <Heading size={{ base: "md", md: "lg" }} color="text.primary">
-            Vehicle Allocation
-          </Heading>
-          <Button
-            colorScheme="purple"
-            leftIcon={<MdAdd />}
-            size={{ base: "sm", md: "md" }}
-            onClick={handleAddNew}
-            width={{ base: "full", sm: "auto" }}
-          >
-            New Allocation
-          </Button>
-        </HStack>
+          <PageHeader 
+            title="Vehicle Allocation" 
+            actionLabel="New Allocation"
+            onActionClick={handleAddNew}
+          />
 
         {/* Calendar Controls */}
         <Box
@@ -961,9 +942,7 @@ export const VehicleAllocationPage = () => {
                                       <Td width="20%">{getVehicleRegistration(allocation.vehicleId)}</Td>
                                       <Td width="25%">{getDriverName(allocation.driverId)}</Td>
                                       <Td width="20%">
-                                        <Badge colorScheme={getStatusColor(allocation.status)}>
-                                          {allocation.status}
-                                        </Badge>
+                                        <StatusBadge status={allocation.status} />
                                       </Td>
                                       <Td width="20%">
                                         <HStack spacing={2}>
@@ -1023,9 +1002,7 @@ export const VehicleAllocationPage = () => {
                           <Text fontWeight="bold" color="text.primary" fontSize="md">
                             {getVehicleRegistration(allocation.vehicleId)}
                           </Text>
-                          <Badge colorScheme={getStatusColor(allocation.status)}>
-                            {allocation.status}
-                          </Badge>
+                          <StatusBadge status={allocation.status} />
                         </HStack>
                         <Text fontSize="sm" color="text.secondary">
                           {getDriverName(allocation.driverId)}
@@ -1076,6 +1053,15 @@ export const VehicleAllocationPage = () => {
         existingAllocations={allocations}
       />
 
+      <ConfirmDialog
+        isOpen={isDeleteOpen}
+        onClose={onDeleteClose}
+        onConfirm={confirmDelete}
+        title="Delete Allocation"
+        message="Are you sure you want to delete this allocation? This action cannot be undone."
+        confirmLabel="Delete"
+        confirmColorScheme="red"
+      />
     </Box>
   );
 };

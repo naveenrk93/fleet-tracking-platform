@@ -44,7 +44,7 @@ App (Root)
 ### Error Boundaries
 
 #### `ErrorBoundary.tsx`
-**Location:** `src/components/ErrorBoundary.tsx`
+**Location:** `src/components/ErrorBoundary/ErrorBoundary.tsx`
 
 **Responsibility:** Top-level error boundary for catching and displaying React errors.
 
@@ -64,7 +64,7 @@ App (Root)
 ---
 
 #### `FormErrorBoundary.tsx`
-**Location:** `src/components/FormErrorBoundary.tsx`
+**Location:** `src/components/FormErrorBoundary/FormErrorBoundary.tsx`
 
 **Responsibility:** Specialized error boundary for form components.
 
@@ -84,7 +84,7 @@ App (Root)
 ---
 
 #### `MapErrorBoundary.tsx`
-**Location:** `src/components/MapErrorBoundary.tsx`
+**Location:** `src/components/MapErrorBoundary/MapErrorBoundary.tsx`
 
 **Responsibility:** Error boundary specifically for Mapbox GL components.
 
@@ -104,7 +104,7 @@ App (Root)
 ---
 
 ### `Sidebar.tsx`
-**Location:** `src/components/Sidebar.tsx`
+**Location:** `src/components/Sidebar/Sidebar.tsx`
 
 **Responsibility:** Dynamic navigation menu that adapts based on user role.
 
@@ -141,7 +141,7 @@ App (Root)
 ---
 
 ### `Header.tsx`
-**Location:** `src/components/Header.tsx`
+**Location:** `src/components/Header/Header.tsx`
 
 **Responsibility:** Top navigation bar with user actions and system controls.
 
@@ -181,7 +181,7 @@ App (Root)
 ---
 
 ### `RoleAutoSwitch.tsx`
-**Location:** `src/components/RoleAutoSwitch.tsx`
+**Location:** `src/components/RoleAutoSwitch/RoleAutoSwitch.tsx`
 
 **Responsibility:** Automatically switches user role based on URL path.
 
@@ -197,7 +197,7 @@ App (Root)
 ---
 
 ### `RoleBasedRedirect.tsx`
-**Location:** `src/components/RoleBasedRedirect.tsx`
+**Location:** `src/utils/RoleBasedRedirect.tsx`
 
 **Responsibility:** Redirects users to appropriate dashboard based on role.
 
@@ -209,7 +209,7 @@ App (Root)
 ---
 
 ### `RoleGuard.tsx`
-**Location:** `src/components/RoleGuard.tsx`
+**Location:** `src/components/RoleGuard/RoleGuard.tsx`
 
 **Responsibility:** Protected route wrapper that enforces role-based access.
 
@@ -468,6 +468,200 @@ App (Root)
 
 ---
 
+## Reusable UI Components
+
+### `DataTable.tsx`
+**Location:** `src/components/DataTable/datatable.tsx`
+
+**Responsibility:** Reusable data table component with sorting, pagination, and actions.
+
+**Features:**
+- Column-based configuration
+- Sort by column (ascending/descending)
+- Row actions (Edit, Delete)
+- Loading skeleton states
+- Responsive design
+- TypeScript generic support
+
+**Props:**
+- `data: T[]` - Array of data objects
+- `columns: Column<T>[]` - Column definitions
+- `onEdit?: (item: T) => void` - Edit handler
+- `onDelete?: (item: T) => void` - Delete handler
+- `isLoading?: boolean` - Loading state
+
+**Usage:**
+```tsx
+<DataTable
+  data={hubs}
+  columns={[
+    { key: 'name', label: 'Hub Name', sortable: true },
+    { key: 'address', label: 'Address', sortable: false }
+  ]}
+  onEdit={(hub) => openEditModal(hub)}
+  onDelete={(hub) => handleDelete(hub.id)}
+  isLoading={loading}
+/>
+```
+
+---
+
+### `SearchInput.tsx`
+**Location:** `src/components/SearchInput/SearchInput.tsx`
+
+**Responsibility:** Reusable search input with debouncing and clear functionality.
+
+**Features:**
+- Debounced search (configurable delay)
+- Clear button
+- Search icon
+- Customizable placeholder
+- TypeScript support
+
+**Props:**
+- `value: string` - Current search value
+- `onChange: (value: string) => void` - Change handler
+- `placeholder?: string` - Input placeholder
+- `debounceMs?: number` - Debounce delay (default: 300ms)
+
+**Usage:**
+```tsx
+<SearchInput
+  value={searchTerm}
+  onChange={setSearchTerm}
+  placeholder="Search hubs..."
+  debounceMs={500}
+/>
+```
+
+---
+
+### `StatusBadge.tsx`
+**Location:** `src/components/StatusBadge/StatusBadge.tsx`
+
+**Responsibility:** Display status with appropriate color coding.
+
+**Features:**
+- Color-coded badges
+- Predefined status mappings
+- Customizable colors
+- Responsive sizing
+
+**Props:**
+- `status: string` - Status value
+- `colorScheme?: string` - Override color scheme
+
+**Status Colors:**
+- `pending` / `allocated` → yellow
+- `completed` / `active` → green
+- `cancelled` / `failed` → red
+- `in-progress` / `in-transit` → blue
+
+**Usage:**
+```tsx
+<StatusBadge status="completed" />
+<StatusBadge status="pending" colorScheme="purple" />
+```
+
+---
+
+### `PageHeader.tsx`
+**Location:** `src/components/PageHeader/PageHeader.tsx`
+
+**Responsibility:** Consistent page header with title and action buttons.
+
+**Features:**
+- Page title display
+- Action button area
+- Breadcrumb support
+- Responsive layout
+
+**Props:**
+- `title: string` - Page title
+- `actions?: ReactNode` - Action buttons/components
+- `breadcrumbs?: ReactNode` - Optional breadcrumb navigation
+
+**Usage:**
+```tsx
+<PageHeader
+  title="Hubs Management"
+  actions={
+    <Button onClick={handleAdd}>Add New Hub</Button>
+  }
+/>
+```
+
+---
+
+### `ConfirmDialog.tsx`
+**Location:** `src/components/ConfirmDialog/ConfirmDialog.tsx`
+
+**Responsibility:** Reusable confirmation dialog for destructive actions.
+
+**Features:**
+- Customizable title and message
+- Confirm/Cancel buttons
+- Color-coded confirm button
+- Chakra UI Modal integration
+
+**Props:**
+- `isOpen: boolean` - Dialog visibility
+- `onClose: () => void` - Close handler
+- `onConfirm: () => void` - Confirm handler
+- `title: string` - Dialog title
+- `message: string` - Confirmation message
+- `confirmText?: string` - Confirm button text (default: "Confirm")
+- `cancelText?: string` - Cancel button text (default: "Cancel")
+- `confirmColorScheme?: string` - Button color (default: "red")
+
+**Usage:**
+```tsx
+<ConfirmDialog
+  isOpen={isDeleteOpen}
+  onClose={() => setIsDeleteOpen(false)}
+  onConfirm={handleDelete}
+  title="Delete Hub"
+  message="Are you sure you want to delete this hub? This action cannot be undone."
+  confirmText="Delete"
+  confirmColorScheme="red"
+/>
+```
+
+---
+
+### `MasterDataModal.tsx`
+**Location:** `src/components/MasterDataModal/MasterDataModal.tsx`
+
+**Responsibility:** Generic modal wrapper for master data create/edit forms.
+
+**Features:**
+- Consistent modal layout
+- Title and close button
+- Form content area
+- Footer with action buttons
+- Responsive sizing
+
+**Props:**
+- `isOpen: boolean` - Modal visibility
+- `onClose: () => void` - Close handler
+- `title: string` - Modal title
+- `children: ReactNode` - Form content
+- `size?: string` - Modal size (default: "xl")
+
+**Usage:**
+```tsx
+<MasterDataModal
+  isOpen={isOpen}
+  onClose={onClose}
+  title={editingHub ? "Edit Hub" : "Create Hub"}
+  size="2xl"
+>
+  <HubForm onSubmit={handleSubmit} initialData={editingHub} />
+</MasterDataModal>
+```
+
+---
+
 ## Reusable Dashboard Components
 
 ### `StatCard.tsx`
@@ -616,12 +810,48 @@ npm test:coverage     # Generate coverage report
 
 To add a new page/component:
 
-1. Create file in appropriate directory (`pages/admin` or `pages/driver`)
-2. Define component with TypeScript interface for props
-3. Connect to Redux if needed
-4. Add route to `routes.tsx`
-5. Add menu item to `Sidebar.tsx` if applicable
-6. Export from parent index if using subdirectories
+1. **Create component folder and file:**
+   - For shared components: `src/components/ComponentName/ComponentName.tsx`
+   - For pages: `src/pages/admin` or `src/pages/driver`
+   
+2. **Define component with TypeScript:**
+   ```tsx
+   interface ComponentNameProps {
+     title: string;
+     // ... other props
+   }
+   
+   export const ComponentName: React.FC<ComponentNameProps> = ({ title }) => {
+     // ... component implementation
+   };
+   ```
+
+3. **Export from index file:**
+   - Add to `src/components/index.ts` for shared components:
+     ```typescript
+     export { ComponentName } from './ComponentName/ComponentName';
+     ```
+
+4. **Connect to Redux if needed:**
+   ```tsx
+   import { useAppSelector, useAppDispatch } from '@/store/hooks';
+   const data = useAppSelector(state => state.entityName);
+   const dispatch = useAppDispatch();
+   ```
+
+5. **Add route to `routes.tsx` (for pages):**
+   ```typescript
+   { path: "/admin/new-page", element: <NewPage /> }
+   ```
+
+6. **Add menu item to `Sidebar.tsx` (if applicable):**
+   ```tsx
+   <MenuItem icon={MdIcon} path="/admin/new-page">New Page</MenuItem>
+   ```
+
+7. **Add tests:**
+   - Unit tests in `__tests__` folder next to component
+   - Integration tests in `src/test/integration/`
 
 ---
 
@@ -643,18 +873,31 @@ To add a new page/component:
 - Modal components depend on parent pages for open/close state
 - Navigation components depend on `routes.tsx` for path constants
 
-### Import Aliases
-The project uses path aliases for cleaner imports in tests:
+### Import Patterns
 
+**Component Imports:**
 ```typescript
-// Configured in vitest.config.ts
-import { useAppSelector } from '@/store/hooks';
-import { getOrders } from '@/services/api';
-import { StatCard } from '@/components/dashboard/StatCard';
+// From centralized exports
+import { Header, Sidebar, DataTable, StatusBadge } from '@/components';
+
+// Direct imports (alternative)
+import { Header } from '@/components/Header/Header';
+import { DataTable } from '@/components/DataTable/datatable';
 ```
 
-**Alias Configuration:**
-- `@/` → `src/` (configured in vitest.config.ts for test files)
+**Store Imports:**
+```typescript
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { setOrders, addOrder } from '@/store/ordersSlice';
+```
 
-**Note:** Production code uses relative imports. Path aliases are primarily configured for test files to simplify test setup.
+**Service Imports:**
+```typescript
+import { getOrders, createOrder } from '@/services/api';
+```
+
+**Import Aliases:**
+- `@/` → `src/` (configured in vitest.config.ts for test files)
+- Production code can use either relative imports or the `@/` alias
+- Test files consistently use `@/` alias for cleaner imports
 

@@ -38,7 +38,7 @@ import {
     type Order,
     type Vehicle,
 } from "../../../services/api.ts";
-import {MapErrorBoundary} from "../../../components/MapErrorBoundary.tsx";
+import {MapErrorBoundary} from "../../../components/MapErrorBoundary/MapErrorBoundary.tsx";
 
 const MAPBOX_TOKEN = "pk.eyJ1IjoibmF2ZWVucms5MyIsImEiOiJjbWUzcDd3OW4wODdwMmpzOHhrMjhleHM3In0.QNzeHbwZHUucsrXymelg0A";
 const ROUTE_COLOR = "#007FFF";

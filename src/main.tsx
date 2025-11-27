@@ -4,7 +4,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import App from "./app/App";
-import { ErrorBoundary } from "./components/ErrorBoundary";
+import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary.tsx";
 
 const theme = extendTheme({
     config: {
