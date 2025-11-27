@@ -12,6 +12,33 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
+// Mock routes to prevent initialization errors
+vi.mock('../../app/routes.tsx', () => ({
+  ROUTE_PATHS: {
+    DASHBOARD: "/dashboard",
+    ADMIN: {
+      DASHBOARD: "/admin/dashboard",
+      MASTER_DATA: {
+        HUBS: "/admin/master-data/hubs",
+        TERMINALS: "/admin/master-data/terminals",
+        PRODUCTS: "/admin/master-data/products",
+        DRIVERS: "/admin/master-data/drivers",
+        VEHICLES: "/admin/master-data/vehicles",
+      },
+      ORDERS: "/admin/orders",
+      VEHICLE_ALLOCATIONS: "/admin/vehicle-allocations",
+      LIVE_FLEET: "/admin/live-fleet",
+      INVENTORY: "/admin/inventory",
+    },
+    DRIVER: {
+      DASHBOARD: "/driver/dashboard",
+      SHIFTS: "/driver/shifts",
+      DELIVERIES: "/driver/deliveries",
+      HISTORY: "/driver/history",
+    },
+  },
+}));
+
 describe('Header', () => {
   const mockOnMenuClick = vi.fn();
 

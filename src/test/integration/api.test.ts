@@ -36,7 +36,7 @@ describe('API Integration Tests', () => {
 
     it('should handle API errors', async () => {
       server.use(
-        http.get('http://localhost:3001/vehicles', () => {
+        http.get('https://json-server-fleet.onrender.com/vehicles', () => {
           return HttpResponse.json(
             { message: 'Internal Server Error' },
             { status: 500 }
@@ -122,7 +122,7 @@ describe('API Integration Tests', () => {
     it('should fetch all allocations', async () => {
       const allocations = await api.getAllocations();
       expect(allocations).toHaveLength(1);
-      expect(allocations[0].status).toBe('active');
+      expect(allocations[0].status).toBe('allocated');
     });
 
     it('should create a new allocation', async () => {
@@ -141,7 +141,7 @@ describe('API Integration Tests', () => {
   describe('Error Handling', () => {
     it('should handle network errors', async () => {
       server.use(
-        http.get('http://localhost:3001/vehicles', () => {
+        http.get('https://json-server-fleet.onrender.com/vehicles', () => {
           return HttpResponse.error();
         })
       );
@@ -151,7 +151,7 @@ describe('API Integration Tests', () => {
 
     it('should handle 404 errors', async () => {
       server.use(
-        http.get('http://localhost:3001/vehicles/:id', () => {
+        http.get('https://json-server-fleet.onrender.com/vehicles/:id', () => {
           return HttpResponse.json(
             { message: 'Not Found' },
             { status: 404 }

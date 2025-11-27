@@ -1,7 +1,34 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from '../../test/test-utils';
 import { RoleGuard } from '../RoleGuard/RoleGuard.tsx';
+
+// Mock routes to prevent initialization errors
+vi.mock('../../app/routes.tsx', () => ({
+  ROUTE_PATHS: {
+    DASHBOARD: "/dashboard",
+    ADMIN: {
+      DASHBOARD: "/admin/dashboard",
+      MASTER_DATA: {
+        HUBS: "/admin/master-data/hubs",
+        TERMINALS: "/admin/master-data/terminals",
+        PRODUCTS: "/admin/master-data/products",
+        DRIVERS: "/admin/master-data/drivers",
+        VEHICLES: "/admin/master-data/vehicles",
+      },
+      ORDERS: "/admin/orders",
+      VEHICLE_ALLOCATIONS: "/admin/vehicle-allocations",
+      LIVE_FLEET: "/admin/live-fleet",
+      INVENTORY: "/admin/inventory",
+    },
+    DRIVER: {
+      DASHBOARD: "/driver/dashboard",
+      SHIFTS: "/driver/shifts",
+      DELIVERIES: "/driver/deliveries",
+      HISTORY: "/driver/history",
+    },
+  },
+}));
 
 describe('RoleGuard', () => {
   it('should render children when user has required role', () => {

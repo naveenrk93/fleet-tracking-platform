@@ -119,6 +119,14 @@ export const handlers = [
     ]);
   }),
 
+  http.post(`${API_BASE}/deliveries`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, any>;
+    return HttpResponse.json({
+      id: body.id || '123',
+      ...(body as any),
+    }, { status: 201 });
+  }),
+
   http.patch(`${API_BASE}/deliveries/:id`, async ({ params, request }) => {
     const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
