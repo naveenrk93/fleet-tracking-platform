@@ -635,10 +635,26 @@ To add a new page/component:
 - **Zod** - Schema validation
 - **Mapbox GL** - Interactive maps
 - **React Icons** - Icon library
+- **Framer Motion** - Animations and transitions
 
 ### Internal Dependencies
 - All pages depend on `src/store` for state management
 - All pages depend on `src/services/api.ts` for data fetching
 - Modal components depend on parent pages for open/close state
 - Navigation components depend on `routes.tsx` for path constants
+
+### Import Aliases
+The project uses path aliases for cleaner imports in tests:
+
+```typescript
+// Configured in vitest.config.ts
+import { useAppSelector } from '@/store/hooks';
+import { getOrders } from '@/services/api';
+import { StatCard } from '@/components/dashboard/StatCard';
+```
+
+**Alias Configuration:**
+- `@/` → `src/` (configured in vitest.config.ts for test files)
+
+**Note:** Production code uses relative imports. Path aliases are primarily configured for test files to simplify test setup.
 
