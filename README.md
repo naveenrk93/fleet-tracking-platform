@@ -141,15 +141,7 @@ Comprehensive documentation is available in the [`docs/`](./docs/) directory:
 - **[COMPONENTS.md](./docs/COMPONENTS.md)** - Component hierarchy and responsibilities
 - **[STATE_MANAGEMENT.md](./docs/STATE_MANAGEMENT.md)** - Redux state management guide
 - **[DECISIONS.md](./docs/DECISIONS.md)** - Technical decisions and rationale
-- **[ERROR_BOUNDARIES.md](./docs/ERROR_BOUNDARIES.md)** - Error handling and recovery strategies
 - **[docs/README.md](./docs/README.md)** - Documentation navigation guide
-
-### Quick Links
-
-- **New to the project?** Start with [docs/README.md](./docs/README.md)
-- **Adding a feature?** Check [COMPONENTS.md](./docs/COMPONENTS.md)
-- **Working with state?** Read [STATE_MANAGEMENT.md](./docs/STATE_MANAGEMENT.md)
-- **Understanding choices?** See [DECISIONS.md](./docs/DECISIONS.md)
 
 ## 🎯 Key Features
 
