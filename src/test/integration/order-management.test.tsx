@@ -11,11 +11,13 @@ describe('Order Management Integration', () => {
 
     it('should create a new order', async () => {
       const newOrder = {
-        customerId: '1',
-        customerName: 'Test Customer',
-        status: 'pending' as const,
-        totalAmount: 5000,
-        items: [],
+        destinationId: 'terminal-1',
+        productId: 'product-1',
+        quantity: 100,
+        deliveryDate: '2024-01-15',
+        assignedDriverId: 'driver-1',
+        vehicleId: 'vehicle-1',
+        status: 'pending',
       };
 
       const created = await api.createOrder(newOrder);
@@ -40,11 +42,13 @@ describe('Order Management Integration', () => {
     it('should handle order workflow', async () => {
       // Create order
       const newOrder = await api.createOrder({
-        customerId: '1',
-        customerName: 'Test Customer',
-        status: 'pending' as const,
-        totalAmount: 5000,
-        items: [],
+        destinationId: 'terminal-1',
+        productId: 'product-1',
+        quantity: 100,
+        deliveryDate: '2024-01-15',
+        assignedDriverId: 'driver-1',
+        vehicleId: 'vehicle-1',
+        status: 'pending',
       });
 
       expect(newOrder.status).toBe('pending');

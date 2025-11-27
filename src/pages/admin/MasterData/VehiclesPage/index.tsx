@@ -12,7 +12,6 @@ import {
   Th,
   Td,
   TableContainer,
-  Spinner,
   Text,
   Badge,
   IconButton,
@@ -68,7 +67,7 @@ export const VehiclesPage = () => {
   const handleVehicleSubmit = async (data: VehicleData) => {
     try {
       if (mode === "create") {
-        await createVehicle(data);
+        await createVehicle({ ...data, currentLocation: data.currentLocation || { lat: 0, lng: 0 } });
         toast({
           title: "Vehicle created successfully",
           status: "success",

@@ -716,20 +716,98 @@ const selectedOrder = useAppSelector(state => state.orders.selectedOrder);
 
 ## Testing State Management
 
+The project uses **Vitest** and **React Testing Library** for testing Redux state management.
+
+### Test Infrastructure
+
+**Test Utilities:** `src/test/test-utils.tsx`
+
+Custom render function that provides Redux store and Chakra UI:
+```typescript
+import { render } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { ChakraProvider } from '@chakra-ui/react';
+
+export function renderWithProviders(ui, { store, ...options } = {}) {
+  return render(
+    <Provider store={store}>
+      <ChakraProvider>
+        {ui}
+      </ChakraProvider>
+    </Provider>,
+    options
+  );
+}
+```
+
+**API Mocking:** `src/test/mocks/`
+- `handlers.ts` - MSW request handlers for all API endpoints
+- `server.ts` - MSW server configuration
+
 ### Unit Testing Reducers
 ```typescript
+import { describe, it, expect } from 'vitest';
 import reducer, { addOrder } from './ordersSlice';
 
-test('addOrder adds order to state', () => {
-  const initialState = { orders: [], loading: false, error: null };
-  const newOrder = { id: '1', /* ... */ };
-  
-  const nextState = reducer(initialState, addOrder(newOrder));
-  
-  expect(nextState.orders).toHaveLength(1);
-  expect(nextState.orders[0]).toEqual(newOrder);
+describe('ordersSlice', () => {
+  it('should add order to state', () => {
+    const initialState = { orders: [], loading: false, error: null };
+    const newOrder = { id: '1', /* ... */ };
+    
+    const nextState = reducer(initialState, addOrder(newOrder));
+    
+    expect(nextState.orders).toHaveLength(1);
+    expect(nextState.orders[0]).toEqual(newOrder);
+  });
 });
 ```
+
+### Integration Testing with Redux
+
+**Location:** `src/test/integration/`
+
+**Example test files:**
+- `api.test.ts` - API service and Redux integration
+- `order-management.test.tsx` - Order CRUD with Redux
+- `delivery-management.test.tsx` - Delivery workflow with Redux
+- `vehicle-allocation.test.tsx` - Allocation operations with Redux
+
+**Integration test pattern:**
+```typescript
+import { describe, it, expect, beforeAll, afterEach, afterAll } from 'vitest';
+import { renderWithProviders } from '../test-utils';
+import { server } from '../mocks/server';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+it('should update order status', async () => {
+  const user = userEvent.setup();
+  renderWithProviders(<OrdersPage />);
+  
+  await user.click(screen.getByText('Mark as Completed'));
+  
+  await waitFor(() => {
+    expect(screen.getByText('Completed')).toBeInTheDocument();
+  });
+});
+```
+
+### Running Tests
+```bash
+npm test              # Run all tests in watch mode
+npm test:ui           # Interactive test UI
+npm test:coverage     # Generate coverage report
+```
+
+### Coverage Reports
+Coverage reports are generated in the `coverage/` directory with:
+- HTML reports for visual inspection
+- LCOV format for CI/CD integration
+- Text summary in terminal
 
 ---
 

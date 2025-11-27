@@ -29,13 +29,77 @@ App (Root)
 - Integrates routing system using React Router
 - Provides fixed sidebar and header layout
 - Wraps application in RoleAutoSwitch for role-based behavior
+- Wraps application in ErrorBoundary for error handling
 - Sets up main content area with scrolling
 
 **Children:**
+- `ErrorBoundary` - Top-level error catching
 - `RoleAutoSwitch` - Role management wrapper
 - `Sidebar` - Left navigation panel
 - `Header` - Top navigation bar
 - Route-based page components
+
+---
+
+### Error Boundaries
+
+#### `ErrorBoundary.tsx`
+**Location:** `src/components/ErrorBoundary.tsx`
+
+**Responsibility:** Top-level error boundary for catching and displaying React errors.
+
+**Features:**
+- Catches JavaScript errors anywhere in the component tree
+- Displays fallback UI when errors occur
+- Logs error information for debugging
+- Prevents entire app crashes
+
+**Usage:**
+```tsx
+<ErrorBoundary>
+  <App />
+</ErrorBoundary>
+```
+
+---
+
+#### `FormErrorBoundary.tsx`
+**Location:** `src/components/FormErrorBoundary.tsx`
+
+**Responsibility:** Specialized error boundary for form components.
+
+**Features:**
+- Catches form-specific errors
+- Provides user-friendly error messages
+- Prevents form crashes from breaking entire page
+- Can reset error state when form is closed
+
+**Usage:**
+```tsx
+<FormErrorBoundary>
+  <OrderForm />
+</FormErrorBoundary>
+```
+
+---
+
+#### `MapErrorBoundary.tsx`
+**Location:** `src/components/MapErrorBoundary.tsx`
+
+**Responsibility:** Error boundary specifically for Mapbox GL components.
+
+**Features:**
+- Catches Mapbox-specific errors (token issues, network failures)
+- Displays map-specific fallback UI
+- Handles WebGL errors gracefully
+- Provides helpful error messages for map issues
+
+**Usage:**
+```tsx
+<MapErrorBoundary>
+  <LiveFleetMap />
+</MapErrorBoundary>
+```
 
 ---
 
@@ -168,7 +232,7 @@ App (Root)
 ### Dashboard & Analytics
 
 #### `Dashboard.tsx`
-**Location:** `src/pages/admin/Dashboard.tsx`
+**Location:** `src/pages/admin/Dashboard/Dashboard.tsx`
 
 **Responsibility:** Admin overview with key metrics and analytics.
 
@@ -178,6 +242,9 @@ App (Root)
 - `RevenueGeneratedCard` - Revenue breakdown
 - `WebsiteAnalyticsCard` - Traffic and analytics
 - `SupportTrackerCard` - Support metrics
+
+**Tests:**
+- Component tests may exist in `src/components/dashboard/__tests__/`
 
 ---
 
@@ -338,7 +405,7 @@ App (Root)
 ## Driver Pages
 
 ### `ShiftViewPage.tsx`
-**Location:** `src/pages/driver/ShiftViewPage.tsx`
+**Location:** `src/pages/driver/ShiftView/ShiftViewPage.tsx`
 
 **Responsibility:** Driver's current shift overview and management.
 
@@ -355,7 +422,7 @@ App (Root)
 ---
 
 ### `DriverLiveMapPage.tsx`
-**Location:** `src/pages/driver/DriverLiveMapPage.tsx`
+**Location:** `src/pages/driver/DriverLiveMap/DriverLiveMapPage.tsx`
 
 **Responsibility:** Driver's GPS tracking and navigation view.
 
@@ -372,7 +439,7 @@ App (Root)
 ---
 
 ### `DeliveryManagementPage.tsx`
-**Location:** `src/pages/driver/DeliveryManagementPage.tsx`
+**Location:** `src/pages/driver/DeliveryManagement/DeliveryManagementPage.tsx`
 
 **Responsibility:** Delivery execution and status management.
 
@@ -389,7 +456,7 @@ App (Root)
 ---
 
 ### `ShiftHistoryPage.tsx`
-**Location:** `src/pages/driver/ShiftHistoryPage.tsx`
+**Location:** `src/pages/driver/ShiftHistory/ShiftHistoryPage.tsx`
 
 **Responsibility:** Historical view of past shifts and deliveries.
 
@@ -497,6 +564,41 @@ Component Re-render
 
 ---
 
+## Testing Components
+
+The codebase includes comprehensive testing infrastructure:
+
+### Unit Tests
+**Location:** `src/components/__tests__/`
+
+**Test Files:**
+- `Header.test.tsx` - Header component tests
+- `RoleGuard.test.tsx` - Role-based access control tests
+- `src/components/dashboard/__tests__/StatCard.test.tsx` - StatCard component tests
+
+### Integration Tests
+**Location:** `src/test/integration/`
+
+**Test Files:**
+- `api.test.ts` - API service tests
+- `delivery-management.test.tsx` - Delivery workflow tests
+- `order-management.test.tsx` - Order management tests
+- `vehicle-allocation.test.tsx` - Vehicle allocation tests
+
+### Test Utilities
+- `src/test/test-utils.tsx` - Custom render with Redux and Chakra providers
+- `src/test/setup.ts` - Test environment configuration
+- `src/test/mocks/` - MSW handlers for API mocking
+
+**Running Tests:**
+```bash
+npm test              # Run tests in watch mode
+npm test:ui           # Run tests with UI
+npm test:coverage     # Generate coverage report
+```
+
+---
+
 ## Best Practices
 
 1. **Keep components focused:** Each component has a single responsibility
@@ -505,6 +607,8 @@ Component Re-render
 4. **Type safety:** All components use TypeScript interfaces
 5. **Redux for shared state:** Local state for UI-only concerns
 6. **Async operations:** Handle in Redux thunks or component useEffect
+7. **Error boundaries:** Wrap error-prone components in appropriate error boundaries
+8. **Test coverage:** Write tests for complex components and user workflows
 
 ---
 

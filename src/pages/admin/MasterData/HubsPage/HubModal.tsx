@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useEffect } from "react";
-import { MdAdd, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { getProducts, type Product, type HubProduct } from "../../../../services/api";
 
 const hubSchema = z.object({
@@ -226,7 +226,7 @@ export const HubModal = ({
       isOpen={isOpen} 
       onClose={handleCancel} 
       size={{ base: "full", sm: "md", md: "xl" }}
-      scrollBehavior={{ base: "inside", md: "outside" }}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent 
@@ -266,7 +266,7 @@ export const HubModal = ({
                   {...register("address")}
                   placeholder="e.g., 123 Main St, City"
                   bg="bg.input"
-                  rows={{ base: 2, md: 3 }}
+                  rows={3}
                   size={{ base: "sm", md: "md" }}
                 />
                 <FormErrorMessage fontSize="sm">{errors.address?.message}</FormErrorMessage>

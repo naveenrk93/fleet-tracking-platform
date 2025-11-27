@@ -127,7 +127,10 @@ const hubsSlice = createSlice({
       })
       .addCase(fetchHubs.fulfilled, (state, action) => {
         state.loading = false;
-        state.hubs = action.payload;
+        state.hubs = action.payload.map((hub: any) => ({
+          ...hub,
+          products: hub.products || []
+        })) as any;
       })
       .addCase(fetchHubs.rejected, (state, action) => {
         state.loading = false;

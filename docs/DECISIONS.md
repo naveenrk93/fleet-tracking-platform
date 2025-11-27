@@ -286,8 +286,10 @@ export const getOrders = async (): Promise<Order[]> => {
 
 **Alternatives considered:**
 - Mirage JS - More complex setup
-- MSW (Mock Service Worker) - Better for testing, not data persistence
+- MSW (Mock Service Worker) - Used for testing, not ideal for development data persistence
 - Firebase - Overkill for simple mock data
+
+**Note:** MSW is used alongside JSON Server for testing purposes - JSON Server for development API, MSW for mocking API calls in tests.
 
 ---
 
@@ -457,18 +459,50 @@ navigate(ROUTE_PATHS.ADMIN.ORDERS);
 
 ### ESLint 9.39.1
 
-**Configuration:** `eslint.config.js`
+**Configuration:** `eslint.config.js` (Flat Config Format)
 
 **Plugins:**
-- `eslint-plugin-react-hooks` - Enforces Hook rules
-- `eslint-plugin-react-refresh` - Fast Refresh compatibility
-- `typescript-eslint` - TypeScript linting
+- `eslint-plugin-react-hooks` (v7.0.1) - Enforces Hook rules
+- `eslint-plugin-react-refresh` (v0.4.24) - Fast Refresh compatibility
+- `typescript-eslint` (v8.46.4) - TypeScript linting
+
+**Configuration Features:**
+- Flat config format (ESLint 9.x new standard)
+- TypeScript-first configuration
+- Recommended rules from all plugins
+- Browser globals enabled
+- ECMAScript 2020 support
 
 **Why ESLint?**
 - Catch common mistakes
 - Enforce code style
 - Prevent bugs
 - Team consistency
+
+**Running Linter:**
+```bash
+npm run lint
+```
+
+---
+
+## Virtual Scrolling: @tanstack/react-virtual 3.13.12
+
+**Why React Virtual?**
+- **Performance:** Efficiently render large lists
+- **Flexible:** Works with any layout
+- **Small bundle:** Lightweight library
+- **TypeScript support:** Fully typed
+
+**Use Cases:**
+- Large data tables
+- Long lists in master data pages
+- Improved scroll performance
+
+**Alternatives considered:**
+- react-window - Less flexible
+- react-virtualized - Larger, more complex
+- Custom implementation - Time-consuming
 
 ---
 
@@ -566,21 +600,65 @@ navigate(ROUTE_PATHS.ADMIN.ORDERS);
 
 ---
 
-## Testing Strategy (Future)
+## Testing Strategy
 
-### Recommended Testing Tools
+### Testing Tools (Implemented)
 
-1. **Unit Testing:**
-   - Jest - Test runner
-   - React Testing Library - Component testing
-   - Testing focus: Reducers, selectors, utilities
+1. **Test Runner: Vitest 4.0.14**
+   - Fast, modern test runner built on Vite
+   - Native ESM support
+   - Compatible with Jest API
+   - Built-in coverage with V8
+   - UI mode for interactive testing
 
-2. **Integration Testing:**
-   - Cypress or Playwright
+2. **Unit Testing:**
+   - **React Testing Library 16.3.0** - Component testing
+   - **@testing-library/user-event 14.6.1** - User interaction simulation
+   - **@testing-library/jest-dom 6.9.1** - Custom matchers
+   - Testing focus: Reducers, selectors, utilities, components
+
+3. **Integration Testing:**
+   - **MSW (Mock Service Worker) 2.12.3** - API mocking
    - Test user workflows
-   - API mocking with MSW
+   - Integration tests for complex features
+   - Tests located in `src/test/integration/`
 
-3. **E2E Testing:**
+4. **Coverage:**
+   - **@vitest/coverage-v8 4.0.14** - Coverage reporting
+   - Multiple reporters: text, JSON, HTML, LCOV
+   - Coverage thresholds: 70% for lines, functions, branches, statements
+   - HTML coverage reports in `coverage/` directory
+
+**Why Vitest?**
+- Seamless Vite integration - same config, same plugins
+- Lightning fast with native ESM
+- Jest-compatible API - easy migration from Jest
+- Better TypeScript support
+- Watch mode with HMR-like experience
+
+**Test Structure:**
+```
+src/test/
+  ├── setup.ts              # Test configuration
+  ├── test-utils.tsx        # Custom render with providers
+  ├── mocks/
+  │   ├── handlers.ts       # MSW request handlers
+  │   └── server.ts         # MSW server setup
+  └── integration/
+      ├── api.test.ts
+      ├── delivery-management.test.tsx
+      ├── order-management.test.tsx
+      └── vehicle-allocation.test.tsx
+```
+
+**Running Tests:**
+```bash
+npm test              # Run tests in watch mode
+npm test:ui           # Run tests with UI
+npm test:coverage     # Run tests with coverage report
+```
+
+5. **E2E Testing (Future Consideration):**
    - Playwright
    - Test critical paths
    - Cross-browser testing

@@ -8,10 +8,10 @@ export const handlers = [
     return HttpResponse.json([
       {
         id: '1',
-        registrationNumber: 'TN01AB1234',
-        make: 'Tata',
-        model: 'Ace',
+        registration: 'TN01AB1234',
+        type: 'Truck',
         capacity: 1000,
+        currentLocation: { lat: 13.0827, lng: 80.2707 },
         status: 'active',
       },
     ]);
@@ -20,19 +20,19 @@ export const handlers = [
   http.get(`${API_BASE}/vehicles/:id`, ({ params }) => {
     return HttpResponse.json({
       id: params.id,
-      registrationNumber: 'TN01AB1234',
-      make: 'Tata',
-      model: 'Ace',
+      registration: 'TN01AB1234',
+      type: 'Truck',
       capacity: 1000,
+      currentLocation: { lat: 13.0827, lng: 80.2707 },
       status: 'active',
     });
   }),
 
   http.post(`${API_BASE}/vehicles`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
       id: '123',
-      ...body,
+      ...(body as any),
     }, { status: 201 });
   }),
 
@@ -42,7 +42,7 @@ export const handlers = [
       {
         id: '1',
         name: 'John Doe',
-        licenseNumber: 'DL1234567890',
+        license: 'DL1234567890',
         phone: '9876543210',
         status: 'available',
       },
@@ -50,10 +50,10 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE}/drivers`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
       id: '123',
-      ...body,
+      ...(body as any),
     }, { status: 201 });
   }),
 
@@ -62,12 +62,13 @@ export const handlers = [
     return HttpResponse.json([
       {
         id: '1',
-        orderNumber: 'ORD-001',
-        customerId: '1',
-        customerName: 'Test Customer',
+        destinationId: 'terminal-1',
+        productId: 'product-1',
+        quantity: 100,
+        deliveryDate: '2024-01-15',
+        assignedDriverId: 'driver-1',
+        vehicleId: 'vehicle-1',
         status: 'pending',
-        totalAmount: 5000,
-        items: [],
       },
     ]);
   }),
@@ -75,28 +76,29 @@ export const handlers = [
   http.get(`${API_BASE}/orders/:id`, ({ params }) => {
     return HttpResponse.json({
       id: params.id,
-      orderNumber: 'ORD-001',
-      customerId: '1',
-      customerName: 'Test Customer',
+      destinationId: 'terminal-1',
+      productId: 'product-1',
+      quantity: 100,
+      deliveryDate: '2024-01-15',
+      assignedDriverId: 'driver-1',
+      vehicleId: 'vehicle-1',
       status: 'pending',
-      totalAmount: 5000,
-      items: [],
     });
   }),
 
   http.post(`${API_BASE}/orders`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
       id: '123',
-      ...body,
+      ...(body as any),
     }, { status: 201 });
   }),
 
   http.patch(`${API_BASE}/orders/:id`, async ({ params, request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
       id: params.id,
-      ...body,
+      ...(body as any),
     });
   }),
 
@@ -110,7 +112,7 @@ export const handlers = [
         id: '1',
         orderId: '1',
         driverId: driverId || '1',
-        status: 'in_transit',
+        status: 'in-progress',
         pickupLocation: { lat: 13.0827, lng: 80.2707 },
         dropLocation: { lat: 13.0869, lng: 80.2839 },
       },
@@ -118,10 +120,10 @@ export const handlers = [
   }),
 
   http.patch(`${API_BASE}/deliveries/:id`, async ({ params, request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
       id: params.id,
-      ...body,
+      ...(body as any),
     });
   }),
 
@@ -132,25 +134,25 @@ export const handlers = [
         id: '1',
         vehicleId: '1',
         driverId: '1',
-        startDate: new Date().toISOString(),
-        status: 'active',
+        date: new Date().toISOString().split('T')[0],
+        status: 'allocated',
       },
     ]);
   }),
 
   http.post(`${API_BASE}/allocations`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
       id: '123',
-      ...body,
+      ...(body as any),
     }, { status: 201 });
   }),
 
   http.patch(`${API_BASE}/allocations/:id`, async ({ params, request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     return HttpResponse.json({
       id: params.id,
-      ...body,
+      ...(body as any),
     });
   }),
 

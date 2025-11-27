@@ -22,7 +22,6 @@ import {
   useColorModeValue,
   Flex,
   Skeleton,
-  HStack,
 } from "@chakra-ui/react";
 import { MdInventory, MdWarning, MdLocalShipping, MdSearch, MdRemoveCircleOutline, MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -54,7 +53,6 @@ export const InventoryDashboardPage = () => {
   const [isScrolling, setIsScrolling] = useState(false);
 
   const tableBg = useColorModeValue("white", "gray.800");
-  const headerBg = useColorModeValue("gray.50", "gray.700");
   const hoverBg = useColorModeValue("gray.50", "gray.700");
   const alertBorderColor = useColorModeValue("red.500", "red.400");
   const lowStockBorderColor = useColorModeValue("orange.400", "orange.300");

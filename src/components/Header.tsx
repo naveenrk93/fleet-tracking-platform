@@ -20,7 +20,6 @@ import {
     IconButton,
 } from "@chakra-ui/react";
 import {
-    MdLightMode,
     MdDarkMode,
     MdPerson,
     MdSettings,

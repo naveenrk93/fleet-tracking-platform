@@ -12,27 +12,26 @@ describe('API Integration Tests', () => {
     it('should fetch all vehicles', async () => {
       const vehicles = await api.getVehicles();
       expect(vehicles).toHaveLength(1);
-      expect(vehicles[0].registrationNumber).toBe('TN01AB1234');
+      expect(vehicles[0].registration).toBe('TN01AB1234');
     });
 
     it('should fetch vehicle by id', async () => {
       const vehicle = await api.getVehicle('1');
       expect(vehicle.id).toBe('1');
-      expect(vehicle.registrationNumber).toBe('TN01AB1234');
+      expect(vehicle.registration).toBe('TN01AB1234');
     });
 
     it('should create a new vehicle', async () => {
       const newVehicle = {
-        registrationNumber: 'TN02CD5678',
-        make: 'Mahindra',
-        model: 'Bolero',
+        registration: 'TN02CD5678',
+        type: 'Truck',
         capacity: 1500,
-        status: 'active' as const,
+        currentLocation: { lat: 13.0827, lng: 80.2707 },
       };
 
       const created = await api.createVehicle(newVehicle);
       expect(created.id).toBe('123');
-      expect(created.registrationNumber).toBe('TN02CD5678');
+      expect(created.registration).toBe('TN02CD5678');
     });
 
     it('should handle API errors', async () => {
@@ -59,9 +58,9 @@ describe('API Integration Tests', () => {
     it('should create a new driver', async () => {
       const newDriver = {
         name: 'Jane Smith',
-        licenseNumber: 'DL9876543210123',
+        license: 'DL9876543210123',
         phone: '8765432109',
-        status: 'available' as const,
+        status: 'available',
       };
 
       const created = await api.createDriver(newDriver);
@@ -74,22 +73,24 @@ describe('API Integration Tests', () => {
     it('should fetch all orders', async () => {
       const orders = await api.getOrders();
       expect(orders).toHaveLength(1);
-      expect(orders[0].orderNumber).toBe('ORD-001');
+      expect(orders[0].id).toBe('1');
     });
 
     it('should fetch order by id', async () => {
       const order = await api.getOrder('1');
       expect(order.id).toBe('1');
-      expect(order.orderNumber).toBe('ORD-001');
+      expect(order.destinationId).toBeTruthy();
     });
 
     it('should create a new order', async () => {
       const newOrder = {
-        customerId: '2',
-        customerName: 'Test Customer 2',
-        status: 'pending' as const,
-        totalAmount: 3000,
-        items: [],
+        destinationId: 'terminal-1',
+        productId: 'product-1',
+        quantity: 100,
+        deliveryDate: '2024-01-15',
+        assignedDriverId: 'driver-1',
+        vehicleId: 'vehicle-1',
+        status: 'pending',
       };
 
       const created = await api.createOrder(newOrder);
@@ -107,13 +108,13 @@ describe('API Integration Tests', () => {
     it('should fetch deliveries', async () => {
       const deliveries = await api.getDeliveries();
       expect(deliveries).toHaveLength(1);
-      expect(deliveries[0].status).toBe('in_transit');
+      expect(deliveries[0].status).toBe('in-progress');
     });
 
     it('should update delivery status', async () => {
-      const updated = await api.updateDelivery('1', { status: 'delivered' });
+      const updated = await api.updateDelivery('1', { status: 'completed' });
       expect(updated.id).toBe('1');
-      expect(updated.status).toBe('delivered');
+      expect(updated.status).toBe('completed');
     });
   });
 
@@ -128,8 +129,8 @@ describe('API Integration Tests', () => {
       const newAllocation = {
         vehicleId: '2',
         driverId: '2',
-        startDate: new Date().toISOString(),
-        status: 'active' as const,
+        date: new Date().toISOString().split('T')[0],
+        status: 'allocated' as const,
       };
 
       const created = await api.createAllocation(newAllocation);

@@ -112,7 +112,7 @@ export const DriverModal = ({
       isOpen={isOpen} 
       onClose={handleCancel} 
       size={{ base: "full", sm: "md", md: "xl" }}
-      scrollBehavior={{ base: "inside", md: "outside" }}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent 

@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useEffect } from "react";
-import { MdAdd, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { getProducts, type Product, type TerminalProduct } from "../../../../services/api";
 
 const terminalSchema = z.object({
@@ -226,7 +226,7 @@ export const TerminalModal = ({
       isOpen={isOpen} 
       onClose={handleCancel} 
       size={{ base: "full", sm: "md", md: "xl" }}
-      scrollBehavior={{ base: "inside", md: "outside" }}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent 
@@ -269,7 +269,7 @@ export const TerminalModal = ({
                   {...register("address")}
                   placeholder="e.g., 456 Terminal Rd, City"
                   bg="bg.input"
-                  rows={{ base: 2, md: 3 }}
+                  rows={3}
                   size={{ base: "sm", md: "md" }}
                 />
                 <FormErrorMessage fontSize="sm">{errors.address?.message}</FormErrorMessage>
@@ -327,14 +327,14 @@ export const TerminalModal = ({
                     : terminalProducts;
                   
                   return rowsToRender.map((product, index) => {
-                    const isLastRow = index === terminalProducts.length;
+                    const isLastRow = hasAvailableProducts && index === terminalProducts.length;
                     const availableProducts = products.filter(
                       p => !terminalProducts.some((tp, idx) => tp.productId === p.id && idx !== index)
                     );
 
                     return (
-                    <VStack key={index} spacing={2} align="stretch" display={{ base: "flex", sm: "none" }}>
-                      {/* Mobile: Stacked Layout */}
+                    <Box key={index}>
+                      <VStack spacing={2} align="stretch" display={{ base: "flex", sm: "none" }}>
                       <FormControl>
                         {index === 0 && (
                           <FormLabel color="text.secondary" fontSize="xs" mb={1}>
@@ -388,9 +388,9 @@ export const TerminalModal = ({
                           />
                         )}
                       </HStack>
-                    </VStack>
-                    ) || (
-                    <HStack key={index} spacing={2} display={{ base: "none", sm: "flex" }}>
+                      </VStack>
+                      
+                      <HStack spacing={2} display={{ base: "none", sm: "flex" }}>
                       {/* Desktop: Horizontal Layout */}
                       <FormControl flex="2">
                         {index === 0 && (
@@ -445,6 +445,7 @@ export const TerminalModal = ({
                         {isLastRow && <Box w="40px" />}
                       </Box>
                     </HStack>
+                    </Box>
                     );
                   });
                 })()}

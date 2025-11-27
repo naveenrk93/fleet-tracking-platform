@@ -13,8 +13,8 @@ describe('Vehicle Allocation Integration', () => {
       const newAllocation = {
         vehicleId: '1',
         driverId: '1',
-        startDate: new Date().toISOString(),
-        status: 'active' as const,
+        date: new Date().toISOString().split('T')[0],
+        status: 'allocated' as const,
       };
 
       const created = await api.createAllocation(newAllocation);
@@ -42,11 +42,11 @@ describe('Vehicle Allocation Integration', () => {
       const allocation = await api.createAllocation({
         vehicleId: vehicles[0].id,
         driverId: drivers[0].id,
-        startDate: new Date().toISOString(),
-        status: 'active' as const,
+        date: new Date().toISOString().split('T')[0],
+        status: 'allocated' as const,
       });
 
-      expect(allocation.status).toBe('active');
+      expect(allocation.status).toBe('allocated');
     });
   });
 });

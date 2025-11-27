@@ -131,7 +131,7 @@ export const ProductModal = ({
       isOpen={isOpen} 
       onClose={handleCancel} 
       size={{ base: "full", sm: "md", md: "xl" }}
-      scrollBehavior={{ base: "inside", md: "outside" }}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent 
@@ -271,7 +271,7 @@ export const ProductModal = ({
                   {...register("description")}
                   placeholder="e.g., High-quality premium diesel fuel for commercial vehicles"
                   bg="bg.input"
-                  rows={{ base: 2, md: 3 }}
+                  rows={3}
                   size={{ base: "sm", md: "md" }}
                 />
                 <FormErrorMessage fontSize="sm">{errors.description?.message}</FormErrorMessage>

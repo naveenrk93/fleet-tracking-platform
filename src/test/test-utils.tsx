@@ -3,7 +3,7 @@ import { render, RenderOptions } from '@testing-library/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { configureStore, PreloadedState } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import dashboardReducer from '../store/dashboardSlice';
 import themeReducer from '../store/themeSlice';
@@ -19,7 +19,7 @@ import fleetTrackingReducer from '../store/fleetTrackingSlice';
 import deliveriesReducer from '../store/deliveriesSlice';
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'wrapper'> {
-  preloadedState?: PreloadedState<RootState>;
+  preloadedState?: Partial<RootState>;
   store?: ReturnType<typeof configureStore>;
 }
 
@@ -29,18 +29,18 @@ export function renderWithProviders(
     preloadedState = {},
     store = configureStore({
       reducer: {
-        dashboard: dashboardReducer,
-        theme: themeReducer,
-        user: userReducer,
-        orders: ordersReducer,
-        hubs: hubsReducer,
-        terminals: terminalsReducer,
-        products: productsReducer,
-        drivers: driversReducer,
-        vehicles: vehiclesReducer,
-        vehicleAllocations: vehicleAllocationsReducer,
-        fleetTracking: fleetTrackingReducer,
-        deliveries: deliveriesReducer,
+        dashboard: dashboardReducer as any,
+        theme: themeReducer as any,
+        user: userReducer as any,
+        orders: ordersReducer as any,
+        hubs: hubsReducer as any,
+        terminals: terminalsReducer as any,
+        products: productsReducer as any,
+        drivers: driversReducer as any,
+        vehicles: vehiclesReducer as any,
+        vehicleAllocations: vehicleAllocationsReducer as any,
+        fleetTracking: fleetTrackingReducer as any,
+        deliveries: deliveriesReducer as any,
       },
       preloadedState,
     }),

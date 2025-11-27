@@ -922,7 +922,7 @@ export const LiveFleetMapPage = () => {
           borderColor="border.default"
           p={4}
         >
-          <Flex spacing={4} flexWrap="wrap" w="100%" gap={4} alignItems="center">
+          <Flex flexWrap="wrap" w="100%" gap={4} alignItems="center">
             <HStack spacing={4} flexWrap="wrap" flex="1">
               <Text fontWeight="600" color="text.primary" minW="80px">
                 Filters:

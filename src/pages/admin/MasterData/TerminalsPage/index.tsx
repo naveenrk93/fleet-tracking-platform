@@ -12,7 +12,6 @@ import {
   Th,
   Td,
   TableContainer,
-  Spinner,
   Text,
   IconButton,
   useToast,
@@ -24,7 +23,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { MdAdd, MdEdit, MdDelete, MdSearch, MdArrowUpward, MdArrowDownward } from "react-icons/md";
-import { TerminalModal, type TerminalData } from "./TerminalModal";
+import { TerminalModal } from "./TerminalModal";
 import { useEffect, useState } from "react";
 import { getTerminals, createTerminal, updateTerminal, deleteTerminal, type Terminal } from "../../../../services/api";
 
@@ -150,7 +149,7 @@ export const TerminalsPage = () => {
     
     let matchesProducts = true;
     if (productsFilter === "with_products") {
-      matchesProducts = terminal.products && terminal.products.length > 0;
+      matchesProducts = !!(terminal.products && terminal.products.length > 0);
     } else if (productsFilter === "without_products") {
       matchesProducts = !terminal.products || terminal.products.length === 0;
     }

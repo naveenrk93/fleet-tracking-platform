@@ -11,7 +11,7 @@ describe('Delivery Management Integration', () => {
 
     it('should update delivery status', async () => {
       const updated = await api.updateDelivery('1', {
-        status: 'in_transit',
+        status: 'in-progress',
       });
       expect(updated).toBeDefined();
     });
@@ -24,20 +24,22 @@ describe('Delivery Management Integration', () => {
       if (deliveries.length > 0) {
         // Update first delivery
         const updated = await api.updateDelivery(deliveries[0].id, {
-          status: 'delivered',
+          status: 'completed',
         });
-        expect(updated.status).toBe('delivered');
+        expect(updated.status).toBe('completed');
       }
     });
 
     it('should integrate with orders', async () => {
       // Create an order
       const order = await api.createOrder({
-        customerId: '1',
-        customerName: 'Test Customer',
-        status: 'pending' as const,
-        totalAmount: 5000,
-        items: [],
+        destinationId: 'terminal-1',
+        productId: 'product-1',
+        quantity: 50,
+        deliveryDate: '2024-01-15',
+        assignedDriverId: 'driver-1',
+        vehicleId: 'vehicle-1',
+        status: 'pending',
       });
 
       expect(order).toBeDefined();

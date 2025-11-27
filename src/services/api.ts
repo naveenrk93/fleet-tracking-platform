@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-// Local development database (change to production URL when deploying)
-const API_BASE_URL = 'http://localhost:3001';
-// Production: 'https://json-server-fleet.onrender.com'
+const API_BASE_URL = 'https://json-server-fleet.onrender.com';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

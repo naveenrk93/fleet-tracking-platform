@@ -10,7 +10,6 @@ import {
   Stat,
   StatLabel,
   StatNumber,
-  StatGroup,
   SimpleGrid,
   Divider,
   Icon,

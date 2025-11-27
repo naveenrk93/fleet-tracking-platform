@@ -24,6 +24,10 @@ const vehicleSchema = z.object({
   registration: z.string().min(1, "Registration number is required").min(3, "Registration must be at least 3 characters"),
   capacity: z.number().min(1, "Capacity must be at least 1 liter").positive("Capacity must be positive"),
   type: z.string().min(1, "Vehicle type is required"),
+  currentLocation: z.object({
+    lat: z.number(),
+    lng: z.number(),
+  }).optional(),
 });
 
 type VehicleFormData = z.infer<typeof vehicleSchema>;
@@ -91,6 +95,7 @@ export const VehicleModal = ({
       const vehicleData: VehicleData = {
         ...data,
         id: vehicleId,
+        currentLocation: data.currentLocation || { lat: 0, lng: 0 },
       };
       
       if (onSubmit) {

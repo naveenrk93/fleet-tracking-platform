@@ -13,8 +13,10 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('Header', () => {
+  const mockOnMenuClick = vi.fn();
+
   it('should render header component', () => {
-    const { container } = render(<Header />, {
+    const { container } = render(<Header onMenuClick={mockOnMenuClick} />, {
       preloadedState: {
         user: {
           userId: '1',
@@ -30,7 +32,7 @@ describe('Header', () => {
   });
 
   it('should display user name when logged in', () => {
-    render(<Header />, {
+    render(<Header onMenuClick={mockOnMenuClick} />, {
       preloadedState: {
         user: {
           userId: '1',
@@ -45,7 +47,7 @@ describe('Header', () => {
   });
 
   it('should show theme toggle button', () => {
-    render(<Header />, {
+    render(<Header onMenuClick={mockOnMenuClick} />, {
       preloadedState: {
         user: {
           userId: '1',
@@ -54,7 +56,7 @@ describe('Header', () => {
           email: 'admin@example.com',
         },
         theme: {
-          mode: 'light',
+          colorMode: 'light',
         },
       },
     });
@@ -64,7 +66,7 @@ describe('Header', () => {
   });
 
   it('should toggle theme when button clicked', () => {
-    const { store } = render(<Header />, {
+    const { store } = render(<Header onMenuClick={mockOnMenuClick} />, {
       preloadedState: {
         user: {
           userId: '1',
@@ -73,7 +75,7 @@ describe('Header', () => {
           email: 'admin@example.com',
         },
         theme: {
-          mode: 'light',
+          colorMode: 'light',
         },
       },
     });
@@ -84,12 +86,13 @@ describe('Header', () => {
     
     if (themeToggle) {
       fireEvent.click(themeToggle);
-      expect(store.getState().theme.mode).toBe('dark');
+      const state: any = store.getState();
+      expect(state.theme.colorMode).toBe('dark');
     }
   });
 
   it('should show user menu', () => {
-    render(<Header />, {
+    render(<Header onMenuClick={mockOnMenuClick} />, {
       preloadedState: {
         user: {
           userId: '1',

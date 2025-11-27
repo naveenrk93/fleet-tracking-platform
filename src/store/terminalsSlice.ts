@@ -80,7 +80,10 @@ const terminalsSlice = createSlice({
       })
       .addCase(fetchTerminals.fulfilled, (state, action) => {
         state.loading = false;
-        state.terminals = action.payload;
+        state.terminals = action.payload.map((terminal: any) => ({
+          ...terminal,
+          products: terminal.products || []
+        })) as any;
       })
       .addCase(fetchTerminals.rejected, (state, action) => {
         state.loading = false;
