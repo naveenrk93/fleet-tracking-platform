@@ -19,7 +19,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
 
-// Zod validation schema for Driver
 const driverSchema = z.object({
   name: z.string().min(1, "Driver name is required").min(3, "Name must be at least 3 characters"),
   license: z.string().min(1, "License number is required").min(5, "License must be at least 5 characters"),
@@ -63,7 +62,6 @@ export const DriverModal = ({
     },
   });
 
-  // Reset form with initialData when modal opens or data changes
   useEffect(() => {
     if (isOpen && initialData) {
       reset({
@@ -82,18 +80,15 @@ export const DriverModal = ({
 
   const handleFormSubmit = async (data: DriverFormData) => {
     try {
-      // Generate ID for new drivers
       const driverData: DriverData = {
         ...data,
         id: mode === "create" ? `driver-${Date.now()}` : (initialData as any)?.id || `driver-${Date.now()}`,
       };
       
-      // Call the onSubmit prop if provided
       if (onSubmit) {
         await onSubmit(driverData);
       }
       
-      // Reset form and close modal
       reset();
       onClose();
     } catch (error) {

@@ -21,8 +21,10 @@ import {
   InputGroup,
   InputLeftElement,
   Select,
+  Skeleton,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { MdAdd, MdEdit, MdDelete, MdSearch } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdSearch, MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { VehicleModal, type VehicleData } from "./VehicleModal";
 import { useEffect, useState } from "react";
 import { getVehicles, createVehicle, updateVehicle, deleteVehicle, type Vehicle } from "../../../../services/api";
@@ -35,9 +37,12 @@ export const VehiclesPage = () => {
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<"registration" | "type" | "capacity">("registration");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const toast = useToast();
+  const inputTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const selectTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
-  // Fetch vehicles on mount
   useEffect(() => {
     fetchVehicles();
   }, []);
@@ -60,7 +65,6 @@ export const VehiclesPage = () => {
     }
   };
 
-  // Handle form submission
   const handleVehicleSubmit = async (data: VehicleData) => {
     try {
       if (mode === "create") {
@@ -128,10 +132,17 @@ export const VehiclesPage = () => {
     onOpen();
   };
 
-  // Get unique vehicle types for filter
+  const handleSort = (field: "registration" | "type" | "capacity") => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
   const vehicleTypes = Array.from(new Set(vehicles.map(v => v.type)));
 
-  // Filter vehicles based on search query and type filter
   const filteredVehicles = vehicles.filter((vehicle) => {
     const query = searchQuery.toLowerCase();
     const matchesSearch = (
@@ -143,6 +154,23 @@ export const VehiclesPage = () => {
     const matchesType = typeFilter === "all" || vehicle.type === typeFilter;
     
     return matchesSearch && matchesType;
+  });
+
+  const sortedVehicles = [...filteredVehicles].sort((a, b) => {
+    let aValue: string | number;
+    let bValue: string | number;
+
+    if (sortField === "capacity") {
+      aValue = a.capacity;
+      bValue = b.capacity;
+    } else {
+      aValue = a[sortField].toLowerCase();
+      bValue = b[sortField].toLowerCase();
+    }
+
+    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+    return 0;
   });
 
   return (
@@ -176,6 +204,7 @@ export const VehiclesPage = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               bg="bg.card"
               borderColor="border.default"
+              color={inputTextColor}
               _hover={{ borderColor: "purple.400" }}
               _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             />
@@ -185,6 +214,7 @@ export const VehiclesPage = () => {
             onChange={(e) => setTypeFilter(e.target.value)}
             bg="bg.card"
             borderColor="border.default"
+            color={selectTextColor}
             _hover={{ borderColor: "purple.400" }}
             _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             width={{ base: "100%", md: "200px" }}
@@ -206,18 +236,8 @@ export const VehiclesPage = () => {
           minH="400px"
         >
           {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Spinner size="xl" color="purple.500" />
-            </Box>
-          ) : filteredVehicles.length === 0 ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Text color="text.secondary" textAlign="center" px={4}>
-                {searchQuery ? "No vehicles found matching your search." : "No vehicles found. Add your first vehicle!"}
-              </Text>
-            </Box>
-          ) : (
             <>
-              {/* Desktop Table View */}
+              {/* Desktop Skeleton View */}
               <Box display={{ base: "none", md: "block" }}>
                 <TableContainer>
                   <Table variant="simple">
@@ -231,7 +251,130 @@ export const VehiclesPage = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {filteredVehicles.map((vehicle) => (
+                      {[...Array(5)].map((_, index) => (
+                        <Tr key={index}>
+                          <Td>
+                            <Skeleton height="20px" width="110px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="80px" borderRadius="md" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="90px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="130px" />
+                          </Td>
+                          <Td>
+                            <HStack spacing={2}>
+                              <Skeleton height="32px" width="32px" borderRadius="md" />
+                              <Skeleton height="32px" width="32px" borderRadius="md" />
+                            </HStack>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Box>
+
+              {/* Mobile Skeleton View */}
+              <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
+                {[...Array(3)].map((_, index) => (
+                  <Box
+                    key={index}
+                    p={4}
+                    borderRadius="md"
+                    border="1px solid"
+                    borderColor="border.default"
+                    bg="bg.surface"
+                  >
+                    <VStack align="stretch" spacing={3}>
+                      <HStack justify="space-between" align="flex-start">
+                        <Box flex="1">
+                          <Skeleton height="20px" width="120px" mb={2} />
+                          <Skeleton height="20px" width="80px" borderRadius="md" />
+                        </Box>
+                        <HStack spacing={1}>
+                          <Skeleton height="32px" width="32px" borderRadius="md" />
+                          <Skeleton height="32px" width="32px" borderRadius="md" />
+                        </HStack>
+                      </HStack>
+                      
+                      <HStack spacing={4}>
+                        <Box>
+                          <Skeleton height="14px" width="60px" mb={1} />
+                          <Skeleton height="16px" width="80px" />
+                        </Box>
+                        <Box>
+                          <Skeleton height="14px" width="60px" mb={1} />
+                          <Skeleton height="16px" width="100px" />
+                        </Box>
+                      </HStack>
+                    </VStack>
+                  </Box>
+                ))}
+              </VStack>
+            </>
+          ) : sortedVehicles.length === 0 ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
+              <Text color="text.secondary" textAlign="center" px={4}>
+                {searchQuery ? "No vehicles found matching your search." : "No vehicles found. Add your first vehicle!"}
+              </Text>
+            </Box>
+          ) : (
+            <>
+              {/* Desktop Table View */}
+              <Box display={{ base: "none", md: "block" }}>
+                <TableContainer>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("registration")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Registration</Text>
+                            {sortField === "registration" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("type")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Type</Text>
+                            {sortField === "type" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("capacity")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Capacity (L)</Text>
+                            {sortField === "capacity" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th color="text.secondary">Location</Th>
+                        <Th color="text.secondary">Actions</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {sortedVehicles.map((vehicle) => (
                         <Tr key={vehicle.id}>
                           <Td color="text.primary" fontWeight="medium">{vehicle.registration}</Td>
                           <Td>
@@ -273,7 +416,7 @@ export const VehiclesPage = () => {
 
               {/* Mobile Card View */}
               <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
-                {filteredVehicles.map((vehicle) => (
+                {sortedVehicles.map((vehicle) => (
                   <Box
                     key={vehicle.id}
                     p={4}

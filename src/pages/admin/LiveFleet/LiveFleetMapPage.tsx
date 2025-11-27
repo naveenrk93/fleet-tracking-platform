@@ -42,7 +42,6 @@ mapboxgl.accessToken = MAPBOX_TOKEN;
 
 const ROUTE_COLOR = "#007FFF";
 
-// Helper function to style popup close button
 const stylePopupCloseButton = (popup: mapboxgl.Popup) => {
   popup.on('open', () => {
     const closeButton = document.querySelector('.mapboxgl-popup-close-button') as HTMLElement;
@@ -113,12 +112,10 @@ export const LiveFleetMapPage = () => {
   const { hubs } = useAppSelector((state) => state.hubs);
   const { terminals } = useAppSelector((state) => state.terminals);
 
-  // Calculate stats
   const activeCount = filteredLocations.filter((loc) => loc.status === "active").length;
   const idleCount = filteredLocations.filter((loc) => loc.status === "idle").length;
   const offlineCount = filteredLocations.filter((loc) => loc.status === "offline").length;
 
-  // Apply 3D styling
   const apply3DStyling = useCallback(() => {
     if (!map.current) return;
 
@@ -175,7 +172,6 @@ export const LiveFleetMapPage = () => {
     }
   }, []);
 
-  // Setup route layers
   const setupRouteLayers = useCallback(() => {
     if (!map.current) return;
 
@@ -200,7 +196,6 @@ export const LiveFleetMapPage = () => {
     }
   }, []);
 
-  // Initialize map with 3D features
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
 
@@ -235,7 +230,6 @@ export const LiveFleetMapPage = () => {
     };
   }, [apply3DStyling, setupRouteLayers]);
 
-  // Toggle 3D mode
   useEffect(() => {
     if (!map.current || !mapLoaded) return;
 
@@ -250,7 +244,6 @@ export const LiveFleetMapPage = () => {
     }
   }, [enable3D, mapLoaded, apply3DStyling]);
 
-  // Fetch initial data
   useEffect(() => {
     dispatch(fetchFleetLocations());
     dispatch(fetchDrivers());
@@ -259,7 +252,6 @@ export const LiveFleetMapPage = () => {
     dispatch(fetchTerminals());
   }, [dispatch]);
 
-  // Auto-refresh every 30 seconds
   useEffect(() => {
     if (!autoRefresh) return;
 
@@ -270,22 +262,18 @@ export const LiveFleetMapPage = () => {
     return () => clearInterval(interval);
   }, [autoRefresh, dispatch]);
 
-  // Add markers for hubs
   useEffect(() => {
     if (!map.current || !mapLoaded || hubs.length === 0) return;
 
-    // Clear existing hub markers
     hubMarkers.current.forEach((marker) => marker.remove());
     hubMarkers.current = [];
 
     hubs.forEach((hub) => {
-      // Skip hubs without valid coordinates
       if (!hub.coordinates || typeof hub.coordinates.lng !== 'number' || typeof hub.coordinates.lat !== 'number') {
         console.warn(`Hub "${hub.name}" is missing valid coordinates`);
         return;
       }
 
-      // Create custom 3D-style marker for hub
       const el = document.createElement("div");
       el.style.width = "50px";
       el.style.height = "70px";
@@ -359,7 +347,6 @@ export const LiveFleetMapPage = () => {
         </div>
       `);
 
-      // Style the close button
       stylePopupCloseButton(popup);
 
       const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
@@ -371,22 +358,18 @@ export const LiveFleetMapPage = () => {
     });
   }, [hubs, mapLoaded]);
 
-  // Add markers for terminals
   useEffect(() => {
     if (!map.current || !mapLoaded || terminals.length === 0) return;
 
-    // Clear existing terminal markers
     terminalMarkers.current.forEach((marker) => marker.remove());
     terminalMarkers.current = [];
 
     terminals.forEach((terminal) => {
-      // Skip terminals without valid coordinates
       if (!terminal.coordinates || typeof terminal.coordinates.lng !== 'number' || typeof terminal.coordinates.lat !== 'number') {
         console.warn(`Terminal "${terminal.name}" is missing valid coordinates`);
         return;
       }
 
-      // Create custom 3D-style marker for terminal
       const el = document.createElement("div");
       el.style.width = "50px";
       el.style.height = "70px";
@@ -460,7 +443,6 @@ export const LiveFleetMapPage = () => {
         </div>
       `);
 
-      // Style the close button
       stylePopupCloseButton(popup);
 
       const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
@@ -472,7 +454,6 @@ export const LiveFleetMapPage = () => {
     });
   }, [terminals, mapLoaded]);
 
-  // Animate route
   const animateRoute = useCallback((coords: [number, number][], targetName: string) => {
     if (!map.current) return;
 
@@ -515,7 +496,6 @@ export const LiveFleetMapPage = () => {
     animationFrame.current = requestAnimationFrame(frame);
   }, [toast]);
 
-  // Get route between two points
   const getRoute = useCallback(async (
     start: [number, number],
     end: [number, number],
@@ -586,7 +566,6 @@ export const LiveFleetMapPage = () => {
           )
           .addTo(map.current);
 
-        // Style the close button
         stylePopupCloseButton(popup);
 
         activePopup.current = popup;
@@ -603,23 +582,18 @@ export const LiveFleetMapPage = () => {
     }
   }, [animateRoute, toast]);
 
-  // Update vehicle markers
   useEffect(() => {
     if (!map.current || !mapLoaded) return;
 
-    // Remove old markers
     Object.values(markers.current).forEach((marker) => marker.remove());
     markers.current = {};
 
-    // Add vehicle markers
     filteredLocations.forEach((location) => {
-      // Skip locations without valid coordinates
       if (!location.currentLocation || typeof location.currentLocation.lng !== 'number' || typeof location.currentLocation.lat !== 'number') {
         console.warn(`Vehicle "${location.vehicleRegistration}" is missing valid coordinates`);
         return;
       }
 
-      // Determine color and icon based on status
       let bgColor = '#48BB78'; // Green for active
       let icon = '🚗';
       if (location.status === 'idle') {
@@ -630,7 +604,6 @@ export const LiveFleetMapPage = () => {
         icon = '❌';
       }
 
-      // Create vehicle marker
       const el = document.createElement("div");
       el.style.width = "50px";
       el.style.height = "50px";
@@ -660,7 +633,6 @@ export const LiveFleetMapPage = () => {
         </div>
       `;
 
-      // Create popup
       const popup = new mapboxgl.Popup({ 
         offset: 25,
         className: 'custom-popup',
@@ -757,7 +729,6 @@ export const LiveFleetMapPage = () => {
         }
       });
 
-      // Style the close button
       stylePopupCloseButton(popup);
 
       const marker = new mapboxgl.Marker(el)
@@ -768,7 +739,6 @@ export const LiveFleetMapPage = () => {
       markers.current[location.id] = marker;
     });
 
-    // Fit bounds to show all markers
     if (filteredLocations.length > 0 || hubs.length > 0 || terminals.length > 0) {
       const bounds = new mapboxgl.LngLatBounds();
       let hasValidBounds = false;
@@ -800,7 +770,6 @@ export const LiveFleetMapPage = () => {
     }
   }, [filteredLocations, mapLoaded, hubs, terminals, getRoute]);
 
-  // Show error toast
   useEffect(() => {
     if (error) {
       toast({

@@ -59,7 +59,6 @@ export const ShiftViewPage = () => {
   const [deliveries, setDeliveries] = useState<DeliveryWithDetails[]>([]);
   const [startingShift, setStartingShift] = useState(false);
 
-  // Get today's date in local timezone (not UTC)
   const today = (() => {
     const date = new Date();
     const year = date.getFullYear();
@@ -81,7 +80,6 @@ export const ShiftViewPage = () => {
     try {
       setLoading(true);
       
-      // Fetch all shifts and filter for today's shift for current driver
       const allShifts = await getShifts();
       const shift = allShifts.find(
         (s) => s.driverId === userId && s.date === today
@@ -90,23 +88,19 @@ export const ShiftViewPage = () => {
       setTodayShift(shift || null);
 
       if (shift) {
-        // Fetch vehicle details
         const allVehicles = await getVehicles();
         const vehicleData = allVehicles.find((v) => v.id === shift.vehicleId);
         setVehicle(vehicleData || null);
 
-        // Fetch deliveries for this shift
         const allDeliveries = await getDeliveries();
         const shiftDeliveries = allDeliveries.filter((d) => d.shiftId === shift.id);
 
-        // Fetch related data for deliveries
         const [allOrders, allTerminals, allProducts] = await Promise.all([
           getOrders(),
           getTerminals(),
           getProducts(),
         ]);
 
-        // Enrich deliveries with order, terminal, and product details
         const enrichedDeliveries: DeliveryWithDetails[] = shiftDeliveries.map((delivery) => {
           const order = allOrders.find((o) => o.id === delivery.orderId);
           const terminal = order ? allTerminals.find((t) => t.id === order.destinationId) : undefined;
@@ -189,17 +183,16 @@ export const ShiftViewPage = () => {
     }
   };
 
-  // If not in driver role, don't show anything (prevents flash of alerts when switching modes)
   if (userRole !== "driver") {
     return null;
   }
 
   if (loading) {
     return (
-      <Box p={6} display="flex" justifyContent="center" alignItems="center" minH="400px">
+      <Box p={{ base: 4, md: 6 }} display="flex" justifyContent="center" alignItems="center" minH="400px">
         <VStack spacing={4}>
           <Spinner size="xl" color="blue.500" thickness="4px" />
-          <Text color="text.secondary">Loading shift information...</Text>
+          <Text color="text.secondary" fontSize={{ base: "sm", md: "md" }}>Loading shift information...</Text>
         </VStack>
       </Box>
     );
@@ -207,12 +200,12 @@ export const ShiftViewPage = () => {
 
   if (!userId) {
     return (
-      <Box p={6}>
+      <Box p={{ base: 4, md: 6 }}>
         <Alert status="warning" borderRadius="md">
           <AlertIcon />
           <Box>
-            <AlertTitle>No Driver ID</AlertTitle>
-            <AlertDescription>
+            <AlertTitle fontSize={{ base: "md", md: "lg" }}>No Driver ID</AlertTitle>
+            <AlertDescription fontSize={{ base: "sm", md: "md" }}>
               Please log in to view your shift information.
             </AlertDescription>
           </Box>
@@ -223,8 +216,8 @@ export const ShiftViewPage = () => {
 
   if (!todayShift) {
     return (
-      <Box p={6}>
-        <Heading size="lg" mb={4}>Shift View</Heading>
+      <Box p={{ base: 4, md: 6 }}>
+        <Heading size={{ base: "md", md: "lg" }} mb={4}>Shift View</Heading>
         <Alert
           status="info"
           variant="subtle"
@@ -235,11 +228,11 @@ export const ShiftViewPage = () => {
           minH="200px"
           borderRadius="md"
         >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
+          <AlertIcon boxSize={{ base: "32px", md: "40px" }} mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize={{ base: "md", md: "lg" }}>
             No Shift Allocated
           </AlertTitle>
-          <AlertDescription maxWidth="sm">
+          <AlertDescription maxWidth="sm" fontSize={{ base: "sm", md: "md" }}>
             You don't have a shift allocated for today ({today}). Please contact your
             supervisor or check back later.
           </AlertDescription>
@@ -249,12 +242,12 @@ export const ShiftViewPage = () => {
   }
 
   return (
-    <Box p={6}>
-      <VStack spacing={6} align="stretch">
+    <Box p={{ base: 4, md: 6 }}>
+      <VStack spacing={{ base: 4, md: 6 }} align="stretch">
         {/* Header */}
         <Box>
-          <Heading size="lg" mb={2}>Today's Shift</Heading>
-          <Text color="text.secondary">
+          <Heading size={{ base: "md", md: "lg" }} mb={2}>Today's Shift</Heading>
+          <Text color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
             {new Date().toLocaleDateString('en-US', { 
               weekday: 'long', 
               year: 'numeric', 
@@ -267,132 +260,140 @@ export const ShiftViewPage = () => {
         {/* Shift Details Card */}
         <Card>
           <CardHeader>
-            <HStack justify="space-between" align="center" wrap="wrap">
+            <VStack spacing={3} align="stretch">
               <HStack spacing={3}>
-                <Icon as={FaTruck} boxSize={6} color="blue.500" />
-                <Heading size="md">Shift Details</Heading>
+                <Icon as={FaTruck} boxSize={{ base: 5, md: 6 }} color="blue.500" />
+                <Heading size={{ base: "sm", md: "md" }}>Shift Details</Heading>
               </HStack>
-              <Badge colorScheme={getStatusColor(todayShift.status)} fontSize="md" px={3} py={1}>
+              <Badge 
+                colorScheme={getStatusColor(todayShift.status)} 
+                fontSize={{ base: "sm", md: "md" }} 
+                px={3} 
+                py={1}
+                width="fit-content"
+              >
                 {todayShift.status.toUpperCase()}
               </Badge>
-            </HStack>
+            </VStack>
           </CardHeader>
           <CardBody>
-            <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
-              <GridItem>
-                <VStack align="stretch" spacing={3}>
-                  <Box>
-                    <Text fontSize="sm" color="text.secondary" mb={1}>
-                      Vehicle
-                    </Text>
-                    <Text fontSize="lg" fontWeight="bold">
-                      {vehicle?.registration || "N/A"}
-                    </Text>
-                    <Text fontSize="sm" color="text.secondary">
-                      {vehicle?.type} • Capacity: {vehicle?.capacity.toLocaleString()} L
-                    </Text>
-                  </Box>
-                  <Divider />
-                  <Box>
-                    <Text fontSize="sm" color="text.secondary" mb={1}>
-                      <Icon as={FaClock} mr={1} />
-                      Shift Times
-                    </Text>
-                    {todayShift.startTime ? (
-                      <VStack align="stretch" spacing={1}>
-                        <Text fontSize="sm">
-                          Started: {new Date(todayShift.startTime).toLocaleTimeString()}
-                        </Text>
-                        {todayShift.endTime && (
+            <VStack spacing={6} align="stretch">
+              <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
+                <GridItem>
+                  <VStack align="stretch" spacing={3}>
+                    <Box>
+                      <Text fontSize="sm" color="text.secondary" mb={1}>
+                        Vehicle
+                      </Text>
+                      <Text fontSize={{ base: "md", md: "lg" }} fontWeight="bold">
+                        {vehicle?.registration || "N/A"}
+                      </Text>
+                      <Text fontSize="sm" color="text.secondary">
+                        {vehicle?.type} • Capacity: {vehicle?.capacity.toLocaleString()} L
+                      </Text>
+                    </Box>
+                    <Divider />
+                    <Box>
+                      <Text fontSize="sm" color="text.secondary" mb={1}>
+                        <Icon as={FaClock} mr={1} />
+                        Shift Times
+                      </Text>
+                      {todayShift.startTime ? (
+                        <VStack align="stretch" spacing={1}>
                           <Text fontSize="sm">
-                            Ended: {new Date(todayShift.endTime).toLocaleTimeString()}
+                            Started: {new Date(todayShift.startTime).toLocaleTimeString()}
                           </Text>
-                        )}
+                          {todayShift.endTime && (
+                            <Text fontSize="sm">
+                              Ended: {new Date(todayShift.endTime).toLocaleTimeString()}
+                            </Text>
+                          )}
+                        </VStack>
+                      ) : (
+                        <Text fontSize="sm" color="text.secondary">Not started yet</Text>
+                      )}
+                    </Box>
+                  </VStack>
+                </GridItem>
+
+                <GridItem>
+                  <VStack align="stretch" spacing={3}>
+                    <Box>
+                      <Text fontSize="sm" color="text.secondary" mb={1}>
+                        Assigned Deliveries
+                      </Text>
+                      <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" color="blue.500">
+                        {deliveries.length}
+                      </Text>
+                    </Box>
+                    
+                    <Divider />
+                    
+                    <Box>
+                      <Text fontSize="sm" color="text.secondary" mb={2}>
+                        Delivery Status
+                      </Text>
+                      <VStack align="stretch" spacing={1}>
+                        <HStack justify="space-between">
+                          <Text fontSize="sm">Pending:</Text>
+                          <Badge colorScheme="yellow">
+                            {deliveries.filter((d) => d.status === "pending").length}
+                          </Badge>
+                        </HStack>
+                        <HStack justify="space-between">
+                          <Text fontSize="sm">In Progress:</Text>
+                          <Badge colorScheme="blue">
+                            {deliveries.filter((d) => d.status === "in-progress").length}
+                          </Badge>
+                        </HStack>
+                        <HStack justify="space-between">
+                          <Text fontSize="sm">Completed:</Text>
+                          <Badge colorScheme="green">
+                            {deliveries.filter((d) => d.status === "completed").length}
+                          </Badge>
+                        </HStack>
                       </VStack>
-                    ) : (
-                      <Text fontSize="sm" color="text.secondary">Not started yet</Text>
-                    )}
-                  </Box>
-                </VStack>
-              </GridItem>
+                    </Box>
+                  </VStack>
+                </GridItem>
+              </Grid>
 
-              <GridItem>
-                <VStack align="stretch" spacing={3}>
-                  <Box>
-                    <Text fontSize="sm" color="text.secondary" mb={1}>
-                      Assigned Deliveries
-                    </Text>
-                    <Text fontSize="3xl" fontWeight="bold" color="blue.500">
-                      {deliveries.length}
-                    </Text>
-                  </Box>
-                  
-                  <Divider />
-                  
-                  <Box>
-                    <Text fontSize="sm" color="text.secondary" mb={2}>
-                      Delivery Status
-                    </Text>
-                    <VStack align="stretch" spacing={1}>
-                      <HStack justify="space-between">
-                        <Text fontSize="sm">Pending:</Text>
-                        <Badge colorScheme="yellow">
-                          {deliveries.filter((d) => d.status === "pending").length}
-                        </Badge>
-                      </HStack>
-                      <HStack justify="space-between">
-                        <Text fontSize="sm">In Progress:</Text>
-                        <Badge colorScheme="blue">
-                          {deliveries.filter((d) => d.status === "in-progress").length}
-                        </Badge>
-                      </HStack>
-                      <HStack justify="space-between">
-                        <Text fontSize="sm">Completed:</Text>
-                        <Badge colorScheme="green">
-                          {deliveries.filter((d) => d.status === "completed").length}
-                        </Badge>
-                      </HStack>
-                    </VStack>
-                  </Box>
-                </VStack>
-              </GridItem>
-            </Grid>
-
-            {todayShift.status === "pending" && (
-              <Box mt={6}>
-                <Button
-                  colorScheme="blue"
-                  size="lg"
-                  leftIcon={<FaPlayCircle />}
-                  onClick={handleStartShift}
-                  isLoading={startingShift}
-                  loadingText="Starting shift..."
-                  width={{ base: "100%", md: "auto" }}
-                >
-                  Start Shift
-                </Button>
-                <Text fontSize="sm" color="text.secondary" mt={2}>
-                  Click to begin your shift and start accepting deliveries
-                </Text>
-              </Box>
-            )}
-            
-            {todayShift.status === "active" && (
-              <Box mt={6}>
-                <Button
-                  colorScheme="green"
-                  size="lg"
-                  leftIcon={<FaMap />}
-                  onClick={() => navigate("/driver/live-map")}
-                  width={{ base: "100%", md: "auto" }}
-                >
-                  Open Live Map
-                </Button>
-                <Text fontSize="sm" color="text.secondary" mt={2}>
-                  Navigate to your delivery destinations with real-time GPS tracking
-                </Text>
-              </Box>
-            )}
+              {todayShift.status === "pending" && (
+                <Box>
+                  <Button
+                    colorScheme="blue"
+                    size={{ base: "md", md: "lg" }}
+                    leftIcon={<FaPlayCircle />}
+                    onClick={handleStartShift}
+                    isLoading={startingShift}
+                    loadingText="Starting shift..."
+                    width={{ base: "100%", md: "auto" }}
+                  >
+                    Start Shift
+                  </Button>
+                  <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary" mt={2}>
+                    Click to begin your shift and start accepting deliveries
+                  </Text>
+                </Box>
+              )}
+              
+              {todayShift.status === "active" && (
+                <Box>
+                  <Button
+                    colorScheme="green"
+                    size={{ base: "md", md: "lg" }}
+                    leftIcon={<FaMap />}
+                    onClick={() => navigate("/driver/live-map")}
+                    width={{ base: "100%", md: "auto" }}
+                  >
+                    Open Live Map
+                  </Button>
+                  <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary" mt={2}>
+                    Navigate to your delivery destinations with real-time GPS tracking
+                  </Text>
+                </Box>
+              )}
+            </VStack>
           </CardBody>
         </Card>
 
@@ -400,73 +401,73 @@ export const ShiftViewPage = () => {
         <Card>
           <CardHeader>
             <HStack spacing={3}>
-              <Icon as={FaBox} boxSize={5} color="purple.500" />
-              <Heading size="md">Assigned Deliveries</Heading>
+              <Icon as={FaBox} boxSize={{ base: 4, md: 5 }} color="purple.500" />
+              <Heading size={{ base: "sm", md: "md" }}>Assigned Deliveries</Heading>
             </HStack>
           </CardHeader>
           <CardBody>
             {deliveries.length === 0 ? (
               <Alert status="info" borderRadius="md">
                 <AlertIcon />
-                No deliveries assigned to this shift yet.
+                <Text fontSize={{ base: "sm", md: "md" }}>No deliveries assigned to this shift yet.</Text>
               </Alert>
             ) : (
               <VStack spacing={4} align="stretch">
                 {deliveries.map((delivery, index) => (
                   <Box
                     key={delivery.id}
-                    p={4}
+                    p={{ base: 3, md: 4 }}
                     borderWidth="1px"
                     borderRadius="md"
                     borderColor="gray.200"
                     _hover={{ borderColor: "blue.400", shadow: "sm" }}
                     transition="all 0.2s"
                   >
-                    <HStack justify="space-between" align="start" wrap="wrap">
-                      <VStack align="start" spacing={2} flex={1}>
-                        <HStack>
-                          <Badge colorScheme="purple" fontSize="xs">
-                            Delivery #{index + 1}
-                          </Badge>
-                          <Badge colorScheme={getStatusColor(delivery.status)} fontSize="xs">
-                            {delivery.status}
-                          </Badge>
-                        </HStack>
-                        
-                        <HStack spacing={2}>
-                          <Icon as={FaMapMarkerAlt} color="red.500" />
-                          <Box>
-                            <Text fontWeight="semibold" fontSize="md">
+                    <VStack align="stretch" spacing={3}>
+                      <HStack flexWrap="wrap" gap={2}>
+                        <Badge colorScheme="purple" fontSize="xs">
+                          Delivery #{index + 1}
+                        </Badge>
+                        <Badge colorScheme={getStatusColor(delivery.status)} fontSize="xs">
+                          {delivery.status}
+                        </Badge>
+                      </HStack>
+                      
+                      <VStack align="start" spacing={2}>
+                        <HStack spacing={2} align="start">
+                          <Icon as={FaMapMarkerAlt} color="red.500" mt={1} />
+                          <Box flex="1">
+                            <Text fontWeight="semibold" fontSize={{ base: "sm", md: "md" }}>
                               {delivery.terminal?.name || "Unknown Terminal"}
                             </Text>
-                            <Text fontSize="sm" color="text.secondary">
+                            <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
                               {delivery.terminal?.address || "Address not available"}
                             </Text>
                           </Box>
                         </HStack>
 
-                        <HStack spacing={2} pl={6}>
-                          <Icon as={FaBox} color="blue.500" boxSize={4} />
-                          <Box>
-                            <Text fontSize="sm" fontWeight="medium">
+                        <HStack spacing={2} align="start" pl={{ base: 0, md: 6 }}>
+                          <Icon as={FaBox} color="blue.500" boxSize={4} mt={1} />
+                          <Box flex="1">
+                            <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="medium">
                               {delivery.product?.name || `Product (${delivery.order?.productId || "Unknown"})`}
                             </Text>
-                            <Text fontSize="sm" color="text.secondary">
+                            <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
                               Quantity: {delivery.order?.quantity.toLocaleString() || 0} {delivery.product?.unit || "units"}
                             </Text>
                           </Box>
                         </HStack>
 
                         {delivery.failureReason && (
-                          <Alert status="error" size="sm" borderRadius="md" mt={2}>
+                          <Alert status="error" size="sm" borderRadius="md">
                             <AlertIcon />
-                            <AlertDescription fontSize="sm">
+                            <AlertDescription fontSize={{ base: "xs", md: "sm" }}>
                               {delivery.failureReason}
                             </AlertDescription>
                           </Alert>
                         )}
                       </VStack>
-                    </HStack>
+                    </VStack>
                   </Box>
                 ))}
               </VStack>

@@ -81,38 +81,48 @@ const ShiftCard = ({ shift }: { shift: ShiftWithDetails }) => {
       <Box
         as="button"
         onClick={onToggle}
-        py={4}
-        px={6}
+        py={{ base: 3, md: 4 }}
+        px={{ base: 4, md: 6 }}
         w="100%"
         textAlign="left"
         _hover={{ bg: hoverBg }}
         transition="background-color 0.2s"
         cursor="pointer"
       >
-        <HStack flex="1" spacing={6} align="center">
-          <Icon as={FiCalendar} boxSize={5} color="blue.500" />
-          <VStack align="start" spacing={0} flex="1">
-            <Text fontWeight="bold" fontSize="lg">
-              {formatDate(shift.date)}
-            </Text>
-            <HStack spacing={4} fontSize="sm" color="gray.500">
-              <HStack>
-                <Icon as={FiTruck} />
-                <Text>{shift.vehicle?.registration || "Vehicle N/A"}</Text>
-              </HStack>
-              <HStack>
-                <Icon as={FiClock} />
-                <Text>{shift.duration}</Text>
-              </HStack>
+        <VStack spacing={3} align="stretch">
+          <HStack justify="space-between" align="start">
+            <HStack spacing={{ base: 3, md: 4 }} flex="1">
+              <Icon as={FiCalendar} boxSize={{ base: 4, md: 5 }} color="blue.500" flexShrink={0} />
+              <VStack align="start" spacing={0} flex="1">
+                <Text fontWeight="bold" fontSize={{ base: "md", md: "lg" }}>
+                  {formatDate(shift.date)}
+                </Text>
+                <VStack align="start" spacing={1} fontSize={{ base: "xs", md: "sm" }} color="gray.500" mt={1}>
+                  <HStack>
+                    <Icon as={FiTruck} />
+                    <Text>{shift.vehicle?.registration || "Vehicle N/A"}</Text>
+                  </HStack>
+                  <HStack>
+                    <Icon as={FiClock} />
+                    <Text>{shift.duration}</Text>
+                  </HStack>
+                </VStack>
+              </VStack>
             </HStack>
-          </VStack>
+            <Icon
+              as={isOpen ? FiChevronUp : FiChevronDown}
+              boxSize={{ base: 5, md: 6 }}
+              transition="transform 0.2s"
+              flexShrink={0}
+            />
+          </HStack>
 
-          <HStack spacing={4}>
+          <HStack spacing={{ base: 2, md: 4 }} justify="space-between" flexWrap="wrap">
             <VStack spacing={0}>
               <Text fontSize="xs" color="gray.500">
                 Total
               </Text>
-              <Badge colorScheme="blue" fontSize="md" px={3} py={1}>
+              <Badge colorScheme="blue" fontSize={{ base: "sm", md: "md" }} px={{ base: 2, md: 3 }} py={1}>
                 {shift.totalDeliveries}
               </Badge>
             </VStack>
@@ -120,7 +130,7 @@ const ShiftCard = ({ shift }: { shift: ShiftWithDetails }) => {
               <Text fontSize="xs" color="gray.500">
                 Completed
               </Text>
-              <Badge colorScheme="green" fontSize="md" px={3} py={1}>
+              <Badge colorScheme="green" fontSize={{ base: "sm", md: "md" }} px={{ base: 2, md: 3 }} py={1}>
                 {shift.completedDeliveries}
               </Badge>
             </VStack>
@@ -129,43 +139,37 @@ const ShiftCard = ({ shift }: { shift: ShiftWithDetails }) => {
                 <Text fontSize="xs" color="gray.500">
                   Failed
                 </Text>
-                <Badge colorScheme="red" fontSize="md" px={3} py={1}>
+                <Badge colorScheme="red" fontSize={{ base: "sm", md: "md" }} px={{ base: 2, md: 3 }} py={1}>
                   {shift.failedDeliveries}
                 </Badge>
               </VStack>
             )}
           </HStack>
-
-          <Icon
-            as={isOpen ? FiChevronUp : FiChevronDown}
-            boxSize={6}
-            transition="transform 0.2s"
-          />
-        </HStack>
+        </VStack>
       </Box>
 
       <Collapse in={isOpen} animateOpacity>
-        <Box px={6} pb={4} pt={2}>
+        <Box px={{ base: 4, md: 6 }} pb={{ base: 3, md: 4 }} pt={2}>
           <VStack align="stretch" spacing={4}>
             {/* Shift Details */}
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
               <Box>
-                <Text fontSize="sm" color="gray.500" mb={1}>
+                <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500" mb={1}>
                   Start Time
                 </Text>
-                <Text fontWeight="semibold">{formatTime(shift.startTime)}</Text>
+                <Text fontWeight="semibold" fontSize={{ base: "sm", md: "md" }}>{formatTime(shift.startTime)}</Text>
               </Box>
               <Box>
-                <Text fontSize="sm" color="gray.500" mb={1}>
+                <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500" mb={1}>
                   End Time
                 </Text>
-                <Text fontWeight="semibold">{formatTime(shift.endTime)}</Text>
+                <Text fontWeight="semibold" fontSize={{ base: "sm", md: "md" }}>{formatTime(shift.endTime)}</Text>
               </Box>
               <Box>
-                <Text fontSize="sm" color="gray.500" mb={1}>
+                <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500" mb={1}>
                   Vehicle Type
                 </Text>
-                <Text fontWeight="semibold">
+                <Text fontWeight="semibold" fontSize={{ base: "sm", md: "md" }}>
                   {shift.vehicle?.type || "N/A"}
                 </Text>
               </Box>
@@ -175,7 +179,7 @@ const ShiftCard = ({ shift }: { shift: ShiftWithDetails }) => {
 
             {/* Deliveries List */}
             <Box>
-              <Text fontWeight="bold" mb={3}>
+              <Text fontWeight="bold" mb={3} fontSize={{ base: "sm", md: "md" }}>
                 Deliveries ({shift.totalDeliveries})
               </Text>
               <VStack align="stretch" spacing={3}>
@@ -186,64 +190,67 @@ const ShiftCard = ({ shift }: { shift: ShiftWithDetails }) => {
                     borderWidth={1}
                     borderColor={borderColor}
                   >
-                    <CardBody>
-                      <HStack spacing={4} align="start">
-                        <Icon
-                          as={
-                            delivery.status === "completed"
-                              ? FiCheckCircle
-                              : FiXCircle
-                          }
-                          boxSize={5}
-                          color={
-                            delivery.status === "completed"
-                              ? successColor
-                              : failColor
-                          }
-                          mt={1}
-                        />
-                        <VStack align="start" flex="1" spacing={1}>
-                          <HStack justify="space-between" w="100%">
-                            <Text fontWeight="semibold">
+                    <CardBody p={{ base: 3, md: 4 }}>
+                      <VStack spacing={2} align="stretch">
+                        <HStack justify="space-between" align="start">
+                          <HStack spacing={2} flex="1">
+                            <Icon
+                              as={
+                                delivery.status === "completed"
+                                  ? FiCheckCircle
+                                  : FiXCircle
+                              }
+                              boxSize={{ base: 4, md: 5 }}
+                              color={
+                                delivery.status === "completed"
+                                  ? successColor
+                                  : failColor
+                              }
+                              flexShrink={0}
+                            />
+                            <Text fontWeight="semibold" fontSize={{ base: "sm", md: "md" }} noOfLines={1}>
                               {delivery.destination?.name || "Unknown"}
                             </Text>
-                            <Badge
-                              colorScheme={
-                                delivery.status === "completed"
-                                  ? "green"
-                                  : "red"
-                              }
-                            >
-                              {delivery.status}
-                            </Badge>
                           </HStack>
-                          <Text fontSize="sm" color="gray.600">
-                            {delivery.destination?.address}
-                          </Text>
-                          <HStack spacing={4} fontSize="sm">
-                            <HStack>
-                              <Icon as={FiPackage} color="gray.500" />
-                              <Text color="gray.600">
-                                {delivery.product?.name || "Unknown"}
-                              </Text>
-                            </HStack>
-                            <Text color="gray.500">
-                              Qty: {delivery.order?.quantity || 0}{" "}
-                              {delivery.product?.unit || ""}
+                          <Badge
+                            colorScheme={
+                              delivery.status === "completed"
+                                ? "green"
+                                : "red"
+                            }
+                            fontSize={{ base: "xs", md: "sm" }}
+                            flexShrink={0}
+                          >
+                            {delivery.status}
+                          </Badge>
+                        </HStack>
+                        <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600" pl={{ base: 0, md: 6 }}>
+                          {delivery.destination?.address}
+                        </Text>
+                        <VStack align="start" spacing={1} pl={{ base: 0, md: 6 }} fontSize={{ base: "xs", md: "sm" }}>
+                          <HStack>
+                            <Icon as={FiPackage} color="gray.500" boxSize={3} />
+                            <Text color="gray.600">
+                              {delivery.product?.name || "Unknown"}
                             </Text>
                           </HStack>
-                          {delivery.status === "failed" &&
-                            delivery.failureReason && (
-                              <Text
-                                fontSize="sm"
-                                color={failColor}
-                                fontStyle="italic"
-                              >
-                                Reason: {delivery.failureReason}
-                              </Text>
-                            )}
+                          <Text color="gray.500">
+                            Qty: {delivery.order?.quantity || 0}{" "}
+                            {delivery.product?.unit || ""}
+                          </Text>
                         </VStack>
-                      </HStack>
+                        {delivery.status === "failed" &&
+                          delivery.failureReason && (
+                            <Text
+                              fontSize={{ base: "xs", md: "sm" }}
+                              color={failColor}
+                              fontStyle="italic"
+                              pl={{ base: 0, md: 6 }}
+                            >
+                              Reason: {delivery.failureReason}
+                            </Text>
+                          )}
+                      </VStack>
                     </CardBody>
                   </Card>
                 ))}
@@ -274,16 +281,13 @@ export const ShiftHistoryPage = () => {
 
     try {
       setLoading(true);
-      // Get all shifts for this driver that are completed
       const allShifts = await getShifts();
       const driverShifts = allShifts.filter(
         (shift) => shift.driverId === userId && shift.status === "completed"
       );
 
-      // Sort by date (most recent first)
       driverShifts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-      // Load details for each shift
       const shiftsWithDetails = await Promise.all(
         driverShifts.map(async (shift) => {
           const [vehicle, deliveries] = await Promise.all([
@@ -299,7 +303,6 @@ export const ShiftHistoryPage = () => {
             (d) => d.status === "failed"
           ).length;
 
-          // Calculate duration
           let duration = "N/A";
           if (shift.startTime && shift.endTime) {
             const start = new Date(shift.startTime);
@@ -330,34 +333,36 @@ export const ShiftHistoryPage = () => {
     }
   };
 
-  // If not in driver role, don't show anything (prevents flash of content when switching modes)
   if (userRole !== "driver") {
     return null;
   }
 
   if (loading) {
     return (
-      <Center h="400px">
-        <Spinner size="xl" color="blue.500" thickness="4px" />
+      <Center h="400px" p={{ base: 4, md: 6 }}>
+        <VStack spacing={4}>
+          <Spinner size="xl" color="blue.500" thickness="4px" />
+          <Text color="text.secondary" fontSize={{ base: "sm", md: "md" }}>Loading shift history...</Text>
+        </VStack>
       </Center>
     );
   }
 
   if (shifts.length === 0) {
     return (
-      <Box p={6}>
-        <Heading size="lg" mb={4}>
+      <Box p={{ base: 4, md: 6 }}>
+        <Heading size={{ base: "md", md: "lg" }} mb={4}>
           Shift History
         </Heading>
         <Card>
           <CardBody>
             <Center py={8}>
               <VStack spacing={3}>
-                <Icon as={FiCalendar} boxSize={12} color="gray.400" />
-                <Text color="gray.500" fontSize="lg">
+                <Icon as={FiCalendar} boxSize={{ base: 10, md: 12 }} color="gray.400" />
+                <Text color="gray.500" fontSize={{ base: "md", md: "lg" }}>
                   No completed shifts found
                 </Text>
-                <Text color="gray.400" fontSize="sm">
+                <Text color="gray.400" fontSize={{ base: "xs", md: "sm" }}>
                   Your completed shifts will appear here
                 </Text>
               </VStack>
@@ -369,13 +374,13 @@ export const ShiftHistoryPage = () => {
   }
 
   return (
-    <Box p={6}>
-      <VStack align="stretch" spacing={6}>
+    <Box p={{ base: 4, md: 6 }}>
+      <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
         <Box>
-          <Heading size="lg" mb={2}>
+          <Heading size={{ base: "md", md: "lg" }} mb={2}>
             Shift History
           </Heading>
-          <Text color="gray.500">
+          <Text color="gray.500" fontSize={{ base: "sm", md: "md" }}>
             Review your past shifts and delivery performance
           </Text>
         </Box>
@@ -383,30 +388,30 @@ export const ShiftHistoryPage = () => {
         {/* Summary Stats */}
         <Card bg={cardBg} borderColor={borderColor} borderWidth={1}>
           <CardBody>
-            <StatGroup>
+            <SimpleGrid columns={{ base: 2, md: 4 }} spacing={{ base: 4, md: 6 }}>
               <Stat>
-                <StatLabel>Total Shifts</StatLabel>
-                <StatNumber>{shifts.length}</StatNumber>
+                <StatLabel fontSize={{ base: "xs", md: "sm" }}>Total Shifts</StatLabel>
+                <StatNumber fontSize={{ base: "2xl", md: "3xl" }}>{shifts.length}</StatNumber>
               </Stat>
               <Stat>
-                <StatLabel>Total Deliveries</StatLabel>
-                <StatNumber>
+                <StatLabel fontSize={{ base: "xs", md: "sm" }}>Total Deliveries</StatLabel>
+                <StatNumber fontSize={{ base: "2xl", md: "3xl" }}>
                   {shifts.reduce((sum, s) => sum + s.totalDeliveries, 0)}
                 </StatNumber>
               </Stat>
               <Stat>
-                <StatLabel>Completed</StatLabel>
-                <StatNumber color="green.500">
+                <StatLabel fontSize={{ base: "xs", md: "sm" }}>Completed</StatLabel>
+                <StatNumber fontSize={{ base: "2xl", md: "3xl" }} color="green.500">
                   {shifts.reduce((sum, s) => sum + s.completedDeliveries, 0)}
                 </StatNumber>
               </Stat>
               <Stat>
-                <StatLabel>Failed</StatLabel>
-                <StatNumber color="red.500">
+                <StatLabel fontSize={{ base: "xs", md: "sm" }}>Failed</StatLabel>
+                <StatNumber fontSize={{ base: "2xl", md: "3xl" }} color="red.500">
                   {shifts.reduce((sum, s) => sum + s.failedDeliveries, 0)}
                 </StatNumber>
               </Stat>
-            </StatGroup>
+            </SimpleGrid>
           </CardBody>
         </Card>
 

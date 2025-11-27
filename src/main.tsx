@@ -30,12 +30,12 @@ const theme = extendTheme({
                 field: {
                     color: "gray.800",
                     _dark: {
-                        color: "gray.900"
+                        color: "whiteAlpha.900"
                     },
                     _placeholder: {
                         color: "gray.500",
                         _dark: {
-                            color: "gray.500"
+                            color: "gray.400"
                         }
                     }
                 }
@@ -45,12 +45,22 @@ const theme = extendTheme({
             baseStyle: {
                 color: "gray.800",
                 _dark: {
-                    color: "gray.900"
+                    color: "whiteAlpha.900"
                 },
                 _placeholder: {
                     color: "gray.500",
                     _dark: {
-                        color: "gray.700"
+                        color: "gray.400"
+                    }
+                }
+            }
+        },
+        Select: {
+            baseStyle: {
+                field: {
+                    color: "gray.800",
+                    _dark: {
+                        color: "whiteAlpha.900"
                     }
                 }
             }

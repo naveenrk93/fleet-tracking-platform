@@ -17,12 +17,12 @@ import {
   IconButton,
   useDisclosure,
   useToast,
-  Spinner,
   Center,
   ButtonGroup,
   Select,
+  Skeleton,
 } from "@chakra-ui/react";
-import { MdAdd, MdDelete, MdEdit, MdRefresh, MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { MdAdd, MdDelete, MdEdit, MdRefresh, MdChevronLeft, MdChevronRight, MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { useState, useEffect, useRef } from "react";
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { 
@@ -47,15 +47,44 @@ export const VehicleAllocationPage = () => {
   const [filterVehicle, setFilterVehicle] = useState<string>('');
   const [filterDriver, setFilterDriver] = useState<string>('');
   const [expandedCalendarDates, setExpandedCalendarDates] = useState<Set<string>>(new Set());
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [sortField, setSortField] = useState<"date" | "vehicle" | "driver" | "status">("date");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  // Ref for virtualization container
   const tableContainerRef = useRef<HTMLDivElement>(null);
+  const scrollTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const container = tableContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      setIsScrolling(true);
+      
+      if (scrollTimeoutRef.current !== null) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        setIsScrolling(false);
+      }, 150); // Show skeletons for 150ms after scroll stops
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current !== null) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
+    };
   }, []);
 
   const fetchData = async () => {
@@ -147,7 +176,6 @@ export const VehicleAllocationPage = () => {
     }
   };
 
-  // Calendar helper functions
   const getWeekDates = (date: Date): Date[] => {
     const week: Date[] = [];
     const startOfWeek = new Date(date);
@@ -168,7 +196,6 @@ export const VehicleAllocationPage = () => {
     const lastDay = new Date(year, month + 1, 0);
     const dates: Date[] = [];
     
-    // Add dates from previous month to fill the first week
     const firstDayOfWeek = firstDay.getDay();
     for (let i = firstDayOfWeek - 1; i >= 0; i--) {
       const prevDate = new Date(firstDay);
@@ -176,12 +203,10 @@ export const VehicleAllocationPage = () => {
       dates.push(prevDate);
     }
     
-    // Add all dates in current month
     for (let d = 1; d <= lastDay.getDate(); d++) {
       dates.push(new Date(year, month, d));
     }
     
-    // Add dates from next month to fill the last week
     const remainingDays = 7 - (dates.length % 7);
     if (remainingDays < 7) {
       for (let i = 1; i <= remainingDays; i++) {
@@ -201,7 +226,6 @@ export const VehicleAllocationPage = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // Helper to format date string (YYYY-MM-DD) to localized date string without timezone issues
   const formatDateString = (dateString: string): string => {
     const [year, month, day] = dateString.split('-').map(Number);
     const date = new Date(year, month - 1, day); // Create date in local timezone
@@ -267,17 +291,50 @@ export const VehicleAllocationPage = () => {
     setExpandedCalendarDates(newExpanded);
   };
 
+  const handleSort = (field: "date" | "vehicle" | "driver" | "status") => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
   const dates = viewMode === 'week' ? getWeekDates(currentDate) : getMonthDates(currentDate);
   
-  // Max allocations to show in calendar cell before "show more"
   const MAX_VISIBLE_ALLOCATIONS = viewMode === 'week' ? 3 : 2;
 
-  // Get sorted allocations for table display
-  const sortedAllocations = [...allocations].sort(
-    (a, b) => new Date(b.date + 'T00:00:00').getTime() - new Date(a.date + 'T00:00:00').getTime()
-  );
+  const sortedAllocations = [...allocations].sort((a, b) => {
+    let aValue: string | number;
+    let bValue: string | number;
 
-  // TanStack Virtual setup
+    switch (sortField) {
+      case "date":
+        aValue = new Date(a.date + 'T00:00:00').getTime();
+        bValue = new Date(b.date + 'T00:00:00').getTime();
+        break;
+      case "vehicle":
+        aValue = getVehicleRegistration(a.vehicleId).toLowerCase();
+        bValue = getVehicleRegistration(b.vehicleId).toLowerCase();
+        break;
+      case "driver":
+        aValue = getDriverName(a.driverId).toLowerCase();
+        bValue = getDriverName(b.driverId).toLowerCase();
+        break;
+      case "status":
+        aValue = a.status.toLowerCase();
+        bValue = b.status.toLowerCase();
+        break;
+      default:
+        aValue = new Date(a.date + 'T00:00:00').getTime();
+        bValue = new Date(b.date + 'T00:00:00').getTime();
+    }
+
+    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+    return 0;
+  });
+
   const rowVirtualizer = useVirtualizer({
     count: sortedAllocations.length,
     getScrollElement: () => tableContainerRef.current,
@@ -287,9 +344,174 @@ export const VehicleAllocationPage = () => {
 
   if (loading) {
     return (
-      <Center h="400px">
-        <Spinner size="xl" color="purple.500" />
-      </Center>
+      <Box>
+        <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
+          {/* Page Header */}
+          <HStack justify="space-between" flexWrap={{ base: "wrap", sm: "nowrap" }} gap={{ base: 3, md: 0 }}>
+            <Heading size={{ base: "md", md: "lg" }} color="text.primary">
+              Vehicle Allocation
+            </Heading>
+            <Button
+              colorScheme="purple"
+              leftIcon={<MdAdd />}
+              size={{ base: "sm", md: "md" }}
+              onClick={handleAddNew}
+              width={{ base: "full", sm: "auto" }}
+            >
+              New Allocation
+            </Button>
+          </HStack>
+
+          {/* Calendar Controls Skeleton */}
+          <Box
+            bg="bg.card"
+            borderRadius="lg"
+            border="1px solid"
+            borderColor="border.default"
+            p={{ base: 3, md: 4 }}
+          >
+            <HStack justify="space-between" mb={4} flexWrap="wrap" gap={2}>
+              <HStack spacing={{ base: 1, md: 2 }}>
+                <Skeleton height="32px" width="32px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                <Skeleton height="32px" width="250px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                <Skeleton height="32px" width="32px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+              </HStack>
+              <Skeleton height="32px" width="140px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+            </HStack>
+
+            {/* Filters Skeleton */}
+            <HStack mb={4} spacing={4} flexWrap="wrap">
+              <Skeleton height="32px" width="200px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+              <Skeleton height="32px" width="200px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+            </HStack>
+
+            {/* Calendar Grid Skeleton */}
+            <Box overflowX={{ base: "auto", md: "visible" }} pb={2}>
+              <Grid 
+                templateColumns='repeat(7, 1fr)' 
+                gap={{ base: 1, md: 2 }}
+                minW={{ base: "700px", md: "auto" }}
+              >
+                {/* Day headers */}
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                  <GridItem key={day}>
+                    <Text 
+                      textAlign="center" 
+                      fontWeight="bold" 
+                      py={{ base: 1, md: 2 }}
+                      color="text.secondary"
+                      fontSize={{ base: "xs", md: "sm" }}
+                    >
+                      {day}
+                    </Text>
+                  </GridItem>
+                ))}
+              
+              {[...Array(7)].map((_, index) => (
+                <GridItem key={index}>
+                  <Box
+                    border="1px solid"
+                    borderColor="border.default"
+                    bg="bg.surface"
+                    borderRadius="md"
+                    minH={{ base: "140px", md: "180px" }}
+                    p={{ base: 2, md: 3 }}
+                  >
+                    <Skeleton height="20px" width="30px" mb={2} startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                    <VStack spacing={2} align="stretch">
+                      <Skeleton height="32px" width="100%" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                      <Skeleton height="32px" width="100%" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                    </VStack>
+                  </Box>
+                </GridItem>
+              ))}
+              </Grid>
+            </Box>
+          </Box>
+
+          {/* Allocations List Skeleton */}
+          <Box
+            bg="bg.card"
+            borderRadius="lg"
+            border="1px solid"
+            borderColor="border.default"
+            p={{ base: 3, md: 6 }}
+          >
+            <HStack justify="space-between" mb={4} flexWrap="wrap" gap={2}>
+              <Skeleton height="24px" width="150px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+              <Skeleton height="32px" width="100px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+            </HStack>
+
+            {/* Desktop Table Skeleton */}
+            <Box display={{ base: "none", md: "block" }}>
+              <Table variant="simple" size="sm">
+                <Thead>
+                  <Tr>
+                    <Th width="15%">Date</Th>
+                    <Th width="20%">Vehicle</Th>
+                    <Th width="25%">Driver</Th>
+                    <Th width="20%">Status</Th>
+                    <Th width="20%">Actions</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {[...Array(8)].map((_, index) => (
+                    <Tr key={index}>
+                      <Td>
+                        <Skeleton height="20px" width="80px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                      </Td>
+                      <Td>
+                        <Skeleton height="20px" width="90px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                      </Td>
+                      <Td>
+                        <Skeleton height="20px" width="120px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                      </Td>
+                      <Td>
+                        <Skeleton height="20px" width="70px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                      </Td>
+                      <Td>
+                        <HStack spacing={2}>
+                          <Skeleton height="32px" width="32px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                          <Skeleton height="32px" width="32px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+
+            {/* Mobile Cards Skeleton */}
+            <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
+              {[...Array(5)].map((_, index) => (
+                <Box
+                  key={index}
+                  p={4}
+                  borderRadius="md"
+                  border="1px solid"
+                  borderColor="border.default"
+                  bg="bg.surface"
+                >
+                  <VStack align="stretch" spacing={2}>
+                    <Skeleton height="16px" width="100px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                    <HStack justify="space-between">
+                      <Box flex="1">
+                        <Skeleton height="18px" width="100px" mb={2} startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                        <Skeleton height="16px" width="130px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                      </Box>
+                      <Skeleton height="24px" width="70px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                    </HStack>
+                    <HStack spacing={2} pt={2}>
+                      <Skeleton height="32px" width="60px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                      <Skeleton height="32px" width="60px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                    </HStack>
+                  </VStack>
+                </Box>
+              ))}
+            </VStack>
+          </Box>
+        </VStack>
+      </Box>
     );
   }
 
@@ -455,10 +677,9 @@ export const VehicleAllocationPage = () => {
                 const isExpanded = expandedCalendarDates.has(dateStr);
                 const remainingCount = dayAllocations.length - MAX_VISIBLE_ALLOCATIONS;
                 
-                // Calculate heights for animation
-                const ALLOCATION_HEIGHT = 42; // Approximate height of each allocation item in px
-                const collapsedHeight = 94; // Fixed max height for collapsed state
-                const expandedHeight = 430; // Fixed max height for expanded state
+                const ALLOCATION_HEIGHT = 42;
+                const collapsedHeight = 94;
+                const expandedHeight = 430;
                 
                 return (
                   <GridItem key={index}>
@@ -629,10 +850,58 @@ export const VehicleAllocationPage = () => {
                   _dark={{ bg: "gray.800" }}
                 >
                   <Tr>
-                    <Th width="15%">Date</Th>
-                    <Th width="20%">Vehicle</Th>
-                    <Th width="25%">Driver</Th>
-                    <Th width="20%">Status</Th>
+                    <Th 
+                      width="15%" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("date")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Date</Text>
+                        {sortField === "date" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      width="20%" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("vehicle")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Vehicle</Text>
+                        {sortField === "vehicle" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      width="25%" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("driver")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Driver</Text>
+                        {sortField === "driver" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      width="20%" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("status")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Status</Text>
+                        {sortField === "status" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
                     <Th width="20%">Actions</Th>
                   </Tr>
                 </Thead>
@@ -645,6 +914,10 @@ export const VehicleAllocationPage = () => {
                       >
                         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
                           const allocation = sortedAllocations[virtualRow.index];
+                          const virtualItems = rowVirtualizer.getVirtualItems();
+                          const isInLastTwoVisibleRows = virtualItems.indexOf(virtualRow) >= virtualItems.length - 2;
+                          const showSkeleton = isScrolling && isInLastTwoVisibleRows;
+                          
                           return (
                             <Box
                               key={allocation.id}
@@ -655,40 +928,67 @@ export const VehicleAllocationPage = () => {
                               h={`${virtualRow.size}px`}
                               transform={`translateY(${virtualRow.start}px)`}
                             >
-                              <Table variant="simple" size="sm" style={{ tableLayout: 'fixed' }} w="100%">
-                                <Tbody>
-                                  <Tr>
-                                    <Td width="15%">{formatDateString(allocation.date)}</Td>
-                                    <Td width="20%">{getVehicleRegistration(allocation.vehicleId)}</Td>
-                                    <Td width="25%">{getDriverName(allocation.driverId)}</Td>
-                                    <Td width="20%">
-                                      <Badge colorScheme={getStatusColor(allocation.status)}>
-                                        {allocation.status}
-                                      </Badge>
-                                    </Td>
-                                    <Td width="20%">
-                                      <HStack spacing={2}>
-                                        <IconButton
-                                          aria-label="Edit"
-                                          icon={<MdEdit />}
-                                          size="sm"
-                                          variant="ghost"
-                                          colorScheme="blue"
-                                          onClick={() => handleEdit(allocation)}
-                                        />
-                                        <IconButton
-                                          aria-label="Delete"
-                                          icon={<MdDelete />}
-                                          size="sm"
-                                          variant="ghost"
-                                          colorScheme="red"
-                                          onClick={() => handleDelete(allocation.id)}
-                                        />
-                                      </HStack>
-                                    </Td>
-                                  </Tr>
-                                </Tbody>
-                              </Table>
+                              {showSkeleton ? (
+                                <Table variant="simple" size="sm" style={{ tableLayout: 'fixed' }} w="100%">
+                                  <Tbody>
+                                    <Tr>
+                                      <Td width="15%">
+                                        <Skeleton height="16px" width="70px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                                      </Td>
+                                      <Td width="20%">
+                                        <Skeleton height="16px" width="80px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                                      </Td>
+                                      <Td width="25%">
+                                        <Skeleton height="16px" width="100px" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                                      </Td>
+                                      <Td width="20%">
+                                        <Skeleton height="20px" width="70px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                                      </Td>
+                                      <Td width="20%">
+                                        <HStack spacing={2}>
+                                          <Skeleton height="28px" width="28px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                                          <Skeleton height="28px" width="28px" borderRadius="md" startColor="gray.200" endColor="gray.300" _dark={{ startColor: "gray.600", endColor: "gray.500" }} />
+                                        </HStack>
+                                      </Td>
+                                    </Tr>
+                                  </Tbody>
+                                </Table>
+                              ) : (
+                                <Table variant="simple" size="sm" style={{ tableLayout: 'fixed' }} w="100%">
+                                  <Tbody>
+                                    <Tr>
+                                      <Td width="15%">{formatDateString(allocation.date)}</Td>
+                                      <Td width="20%">{getVehicleRegistration(allocation.vehicleId)}</Td>
+                                      <Td width="25%">{getDriverName(allocation.driverId)}</Td>
+                                      <Td width="20%">
+                                        <Badge colorScheme={getStatusColor(allocation.status)}>
+                                          {allocation.status}
+                                        </Badge>
+                                      </Td>
+                                      <Td width="20%">
+                                        <HStack spacing={2}>
+                                          <IconButton
+                                            aria-label="Edit"
+                                            icon={<MdEdit />}
+                                            size="sm"
+                                            variant="ghost"
+                                            colorScheme="blue"
+                                            onClick={() => handleEdit(allocation)}
+                                          />
+                                          <IconButton
+                                            aria-label="Delete"
+                                            icon={<MdDelete />}
+                                            size="sm"
+                                            variant="ghost"
+                                            colorScheme="red"
+                                            onClick={() => handleDelete(allocation.id)}
+                                          />
+                                        </HStack>
+                                      </Td>
+                                    </Tr>
+                                  </Tbody>
+                                </Table>
+                              )}
                             </Box>
                           );
                         })}

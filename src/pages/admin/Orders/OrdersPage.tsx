@@ -20,8 +20,9 @@ import {
   InputGroup,
   InputLeftElement,
   Select,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { MdAdd, MdEdit, MdDelete, MdVisibility, MdSearch } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdVisibility, MdSearch, MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { 
@@ -50,9 +51,12 @@ export const OrdersPage = () => {
   const [destinations, setDestinations] = useState<Record<string, Terminal | Hub>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<"id" | "product" | "quantity" | "destination" | "driver" | "vehicle" | "deliveryDate" | "status">("id");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const toast = useToast();
+  const inputTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const selectTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
-  // Fetch all data on mount
   useEffect(() => {
     fetchAllData();
   }, []);
@@ -61,7 +65,6 @@ export const OrdersPage = () => {
     try {
       setLoading(true);
       
-      // Fetch all related data
       const [ordersData, productsData, driversData, vehiclesData, terminalsData, hubsData] = await Promise.all([
         getOrders(),
         getProducts(),
@@ -71,7 +74,6 @@ export const OrdersPage = () => {
         getHubs(),
       ]);
 
-      // Create lookup maps
       const productsMap = productsData.reduce((acc: Record<string, Product>, p: Product) => ({ ...acc, [p.id]: p }), {} as Record<string, Product>);
       const driversMap = driversData.reduce((acc: Record<string, Driver>, d: Driver) => ({ ...acc, [d.id]: d }), {} as Record<string, Driver>);
       const vehiclesMap = vehiclesData.reduce((acc: Record<string, Vehicle>, v: Vehicle) => ({ ...acc, [v.id]: v }), {} as Record<string, Vehicle>);
@@ -121,6 +123,15 @@ export const OrdersPage = () => {
     }
   };
 
+  const handleSort = (field: "id" | "product" | "quantity" | "destination" | "driver" | "vehicle" | "deliveryDate" | "status") => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "assigned":
@@ -136,7 +147,6 @@ export const OrdersPage = () => {
     }
   };
 
-  // Filter orders based on search query and status filter
   const filteredOrders = orders.filter((order) => {
     const query = searchQuery.toLowerCase();
     const productName = products[order.productId]?.name || "";
@@ -157,6 +167,53 @@ export const OrdersPage = () => {
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     
     return matchesSearch && matchesStatus;
+  });
+
+  const sortedOrders = [...filteredOrders].sort((a, b) => {
+    let aValue: string | number;
+    let bValue: string | number;
+
+    switch (sortField) {
+      case "id":
+        aValue = a.id.toLowerCase();
+        bValue = b.id.toLowerCase();
+        break;
+      case "product":
+        aValue = (products[a.productId]?.name || "").toLowerCase();
+        bValue = (products[b.productId]?.name || "").toLowerCase();
+        break;
+      case "quantity":
+        aValue = a.quantity;
+        bValue = b.quantity;
+        break;
+      case "destination":
+        aValue = (destinations[a.destinationId]?.name || "").toLowerCase();
+        bValue = (destinations[b.destinationId]?.name || "").toLowerCase();
+        break;
+      case "driver":
+        aValue = (drivers[a.assignedDriverId]?.name || "").toLowerCase();
+        bValue = (drivers[b.assignedDriverId]?.name || "").toLowerCase();
+        break;
+      case "vehicle":
+        aValue = (vehicles[a.vehicleId]?.registration || "").toLowerCase();
+        bValue = (vehicles[b.vehicleId]?.registration || "").toLowerCase();
+        break;
+      case "deliveryDate":
+        aValue = new Date(a.deliveryDate).getTime();
+        bValue = new Date(b.deliveryDate).getTime();
+        break;
+      case "status":
+        aValue = a.status.toLowerCase();
+        bValue = b.status.toLowerCase();
+        break;
+      default:
+        aValue = a.id.toLowerCase();
+        bValue = b.id.toLowerCase();
+    }
+
+    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+    return 0;
   });
 
   return (
@@ -189,6 +246,7 @@ export const OrdersPage = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               bg="bg.card"
               borderColor="border.default"
+              color={inputTextColor}
               _hover={{ borderColor: "purple.400" }}
               _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             />
@@ -198,6 +256,7 @@ export const OrdersPage = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
             bg="bg.card"
             borderColor="border.default"
+            color={selectTextColor}
             _hover={{ borderColor: "purple.400" }}
             _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             width="200px"
@@ -224,7 +283,7 @@ export const OrdersPage = () => {
             <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
               <Spinner size="xl" color="purple.500" />
             </Box>
-          ) : filteredOrders.length === 0 ? (
+          ) : sortedOrders.length === 0 ? (
             <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
               <Text color="text.secondary">
                 {searchQuery ? "No orders found matching your search." : "No orders found. Create your first order!"}
@@ -235,19 +294,115 @@ export const OrdersPage = () => {
               <Table variant="simple">
                 <Thead>
                   <Tr>
-                    <Th color="text.secondary">Order ID</Th>
-                    <Th color="text.secondary">Product</Th>
-                    <Th color="text.secondary">Quantity</Th>
-                    <Th color="text.secondary">Destination</Th>
-                    <Th color="text.secondary">Driver</Th>
-                    <Th color="text.secondary">Vehicle</Th>
-                    <Th color="text.secondary">Delivery Date</Th>
-                    <Th color="text.secondary">Status</Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("id")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Order ID</Text>
+                        {sortField === "id" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("product")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Product</Text>
+                        {sortField === "product" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("quantity")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Quantity</Text>
+                        {sortField === "quantity" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("destination")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Destination</Text>
+                        {sortField === "destination" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("driver")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Driver</Text>
+                        {sortField === "driver" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("vehicle")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Vehicle</Text>
+                        {sortField === "vehicle" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("deliveryDate")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Delivery Date</Text>
+                        {sortField === "deliveryDate" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
+                    <Th 
+                      color="text.secondary" 
+                      cursor="pointer" 
+                      onClick={() => handleSort("status")}
+                      _hover={{ color: "purple.400" }}
+                    >
+                      <HStack spacing={1}>
+                        <Text>Status</Text>
+                        {sortField === "status" && (
+                          sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                        )}
+                      </HStack>
+                    </Th>
                     <Th color="text.secondary">Actions</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {filteredOrders.map((order) => (
+                  {sortedOrders.map((order) => (
                     <Tr key={order.id}>
                       <Td color="text.primary" fontWeight="medium">{order.id}</Td>
                       <Td color="text.primary">{products[order.productId]?.name || "N/A"}</Td>

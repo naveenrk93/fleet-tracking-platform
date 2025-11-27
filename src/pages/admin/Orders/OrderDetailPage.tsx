@@ -58,7 +58,6 @@ export const OrderDetailPage = () => {
       const orderData = await getOrder(id);
       setOrder(orderData);
 
-      // Load related data
       const [productData, driverData, vehicleData] = await Promise.all([
         getProduct(orderData.productId).catch(() => null),
         orderData.assignedDriverId ? getDriver(orderData.assignedDriverId).catch(() => null) : null,
@@ -69,7 +68,6 @@ export const OrderDetailPage = () => {
       setDriver(driverData);
       setVehicle(vehicleData);
 
-      // Try to get destination (terminal or hub)
       try {
         const terminalData = await getTerminal(orderData.destinationId);
         setDestination(terminalData);

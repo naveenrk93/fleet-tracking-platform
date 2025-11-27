@@ -22,7 +22,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
 
-// Zod validation schema for Product
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required").min(3, "Product name must be at least 3 characters"),
   sku: z.string().min(1, "SKU is required").min(2, "SKU must be at least 2 characters"),
@@ -74,7 +73,6 @@ export const ProductModal = ({
     },
   });
 
-  // Reset form with initialData when modal opens or data changes
   useEffect(() => {
     if (isOpen && initialData) {
       reset({
@@ -101,18 +99,15 @@ export const ProductModal = ({
 
   const handleFormSubmit = async (data: ProductFormData) => {
     try {
-      // Generate ID for new products
       const productData: ProductData = {
         ...data,
         id: mode === "create" ? `product-${Date.now()}` : (initialData as any)?.id || `product-${Date.now()}`,
       };
       
-      // Call the onSubmit prop if provided
       if (onSubmit) {
         await onSubmit(productData);
       }
       
-      // Reset form and close modal
       reset();
       onClose();
     } catch (error) {
@@ -153,7 +148,6 @@ export const ProductModal = ({
           
           <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
             <VStack spacing={{ base: 3, md: 4 }} align="stretch">
-              {/* Product Name */}
               <FormControl isInvalid={!!errors.name}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Product Name
@@ -167,7 +161,6 @@ export const ProductModal = ({
                 <FormErrorMessage fontSize="sm">{errors.name?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* SKU */}
               <FormControl isInvalid={!!errors.sku}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   SKU (Stock Keeping Unit)
@@ -181,21 +174,36 @@ export const ProductModal = ({
                 <FormErrorMessage fontSize="sm">{errors.sku?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Category */}
               <FormControl isInvalid={!!errors.category}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Category
                 </FormLabel>
-                <Input
+                <Select
                   {...register("category")}
-                  placeholder="e.g., Fuel, Lubricants, Parts"
                   bg="bg.input"
+                  placeholder="Select category"
                   size={{ base: "md", md: "md" }}
-                />
+                  sx={{
+                    color: 'gray.900',
+                    '& option': {
+                      bg: 'bg.card',
+                      color: 'text.primary',
+                    }
+                  }}
+                >
+                  <option value="Fuel">Fuel</option>
+                  <option value="Lubricants">Lubricants</option>
+                  <option value="Parts">Parts</option>
+                  <option value="Tires">Tires</option>
+                  <option value="Batteries">Batteries</option>
+                  <option value="Filters">Filters</option>
+                  <option value="Accessories">Accessories</option>
+                  <option value="Consumables">Consumables</option>
+                  <option value="Other">Other</option>
+                </Select>
                 <FormErrorMessage fontSize="sm">{errors.category?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Price and Stock Quantity */}
               <HStack spacing={{ base: 2, md: 3 }} align="flex-start">
                 <FormControl isInvalid={!!errors.price} flex="1">
                   <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
@@ -229,7 +237,6 @@ export const ProductModal = ({
                 </FormControl>
               </HStack>
 
-              {/* Unit */}
               <FormControl isInvalid={!!errors.unit}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Unit
@@ -256,7 +263,6 @@ export const ProductModal = ({
                 <FormErrorMessage fontSize="sm">{errors.unit?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Description */}
               <FormControl isInvalid={!!errors.description}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Description

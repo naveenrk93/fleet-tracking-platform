@@ -58,7 +58,6 @@ export const AllocationModal = ({
   const [conflictingVehicleAllocation, setConflictingVehicleAllocation] = useState<Allocation | null>(null);
   const toast = useToast();
 
-  // Helper function to get local date string in YYYY-MM-DD format
   const getLocalDateString = (date: Date = new Date()): string => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -75,7 +74,6 @@ export const AllocationModal = ({
         status: allocation.status,
       });
     } else {
-      // Default to today's date in local timezone
       setFormData({
         date: getLocalDateString(),
         vehicleId: "",
@@ -93,7 +91,7 @@ export const AllocationModal = ({
         a.vehicleId === vehicleId && 
         a.date === date && 
         a.id !== currentAllocationId &&
-        a.status !== 'cancelled' // Don't consider cancelled allocations as conflicts
+        a.status !== 'cancelled'
     );
 
     if (conflict) {
@@ -110,7 +108,6 @@ export const AllocationModal = ({
     setFormData(newFormData);
     setValidationError("");
 
-    // Check for vehicle double booking when vehicle or date changes
     if ((field === 'vehicleId' || field === 'date') && newFormData.vehicleId && newFormData.date) {
       const hasVehicleConflict = checkVehicleDoubleBooking(newFormData.vehicleId, newFormData.date, allocation?.id);
       if (hasVehicleConflict) {
@@ -136,7 +133,6 @@ export const AllocationModal = ({
       return false;
     }
 
-    // Check for vehicle double booking
     if (checkVehicleDoubleBooking(formData.vehicleId, formData.date, allocation?.id)) {
       setValidationError("This vehicle is already allocated on this date. Please choose a different vehicle or date.");
       return false;
@@ -198,7 +194,7 @@ export const AllocationModal = ({
       isOpen={isOpen} 
       onClose={onClose} 
       size={{ base: "full", sm: "md" }}
-      scrollBehavior={{ base: "inside", md: "outside" }}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent
@@ -326,7 +322,6 @@ export const AllocationModal = ({
               </Select>
             </FormControl>
 
-            {/* Show available vehicles and drivers for selected date */}
             {formData.date && (
               <Alert status="info" borderRadius="md">
                 <AlertIcon />

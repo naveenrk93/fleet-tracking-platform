@@ -50,8 +50,6 @@ export const OrderForm = () => {
   const [availableProducts, setAvailableProducts] = useState<Array<{ id: string; name: string; availableQty: number }>>([]);
   const [maxQuantity, setMaxQuantity] = useState<number>(0);
   const [showNoVehicleWarning, setShowNoVehicleWarning] = useState<boolean>(false);
-  
-  // Form data
   const [formData, setFormData] = useState({
     destinationId: "",
     productId: "",
@@ -61,14 +59,10 @@ export const OrderForm = () => {
     vehicleId: "",
     status: "pending",
   });
-
-  // Master data lists
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [terminals, setTerminals] = useState<Terminal[]>([]);
   const [hubs, setHubs] = useState<Hub[]>([]);
-
-  // Load master data and existing order (if editing)
   useEffect(() => {
     loadData();
   }, [id]);
@@ -76,8 +70,6 @@ export const OrderForm = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      
-      // Load all master data
       const [driversData, vehiclesData, terminalsData, hubsData] = await Promise.all([
         getDrivers(),
         getVehicles(),
@@ -89,8 +81,6 @@ export const OrderForm = () => {
       setVehicles(vehiclesData);
       setTerminals(terminalsData);
       setHubs(hubsData);
-
-      // If editing, load the order data
       if (isEditMode && id) {
         const orderData = await getOrder(id);
         setFormData({
@@ -103,7 +93,6 @@ export const OrderForm = () => {
           status: orderData.status,
         });
       } else {
-        // Set default date to today for new orders
         const today = new Date().toISOString().split('T')[0];
         setFormData(prev => ({ ...prev, deliveryDate: today }));
       }
@@ -123,37 +112,26 @@ export const OrderForm = () => {
   const handleInputChange = async (field: string, value: string | number) => {
     const newFormData = { ...formData, [field]: value };
     setFormData(newFormData);
-    
-    // Update available products when destination changes
     if (field === 'destinationId') {
       updateAvailableProductsMemo(value as string);
-      // Reset product and quantity when destination changes
       setFormData(prev => ({ ...prev, productId: "", quantity: 0 }));
       setMaxQuantity(0);
     }
-    
-    // Update max quantity when product changes
     if (field === 'productId' && value) {
       const selectedProduct = availableProducts.find(p => p.id === value);
       setMaxQuantity(selectedProduct?.availableQty || 0);
     }
-    
-    // Check vehicle allocation when driver or delivery date changes
     if ((field === 'assignedDriverId' || field === 'deliveryDate') && newFormData.assignedDriverId && newFormData.deliveryDate) {
       await checkDriverVehicleAllocation(newFormData.assignedDriverId, newFormData.deliveryDate);
     } else if (field === 'assignedDriverId' && !value) {
-      // Clear warning if driver is unassigned
       setAllocationWarning("");
       setAllocatedVehicleId("");
       setShowNoVehicleWarning(false);
     }
-    
-    // Clear warnings if delivery date is cleared
     if (field === 'deliveryDate' && !value) {
       setAllocationWarning("");
       setAllocatedVehicleId("");
       setShowNoVehicleWarning(false);
-      // Also clear driver selection if date is removed
       setFormData(prev => ({ ...prev, assignedDriverId: "", vehicleId: "" }));
     }
   };
@@ -167,8 +145,6 @@ export const OrderForm = () => {
         setAllocationWarning("");
         setAllocatedVehicleId(allocation.vehicleId);
         setShowNoVehicleWarning(false);
-        
-        // Auto-populate vehicle field
         setFormData(prev => ({ ...prev, vehicleId: allocation.vehicleId }));
         
         toast({
@@ -255,8 +231,6 @@ export const OrderForm = () => {
       });
       return false;
     }
-
-    // Check if delivery date is not in the past
     const today = new Date().toISOString().split('T')[0];
     if (formData.deliveryDate < today) {
       toast({
@@ -328,21 +302,15 @@ export const OrderForm = () => {
         return "gray";
     }
   };
-
-  // Get all destinations (terminals + hubs)
   const allDestinations = [
     ...terminals.map(t => ({ ...t, type: 'Terminal' as const })),
     ...hubs.map(h => ({ ...h, type: 'Hub' as const })),
   ];
-  
-  // Memoize the update function to avoid unnecessary re-renders
   const updateAvailableProductsMemo = useCallback((destinationId: string) => {
     if (!destinationId) {
       setAvailableProducts([]);
       return;
     }
-    
-    // Find the selected destination (hub or terminal)
     const destination = allDestinations.find(d => d.id === destinationId);
     
     if (destination && destination.products && destination.products.length > 0) {
@@ -356,8 +324,6 @@ export const OrderForm = () => {
       setAvailableProducts([]);
     }
   }, [terminals, hubs]);
-  
-  // Update available products when destinations load or formData.destinationId is set
   useEffect(() => {
     if (formData.destinationId && (terminals.length > 0 || hubs.length > 0)) {
       updateAvailableProductsMemo(formData.destinationId);

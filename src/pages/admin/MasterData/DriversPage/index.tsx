@@ -21,8 +21,10 @@ import {
   InputGroup,
   InputLeftElement,
   Select,
+  Skeleton,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { MdAdd, MdEdit, MdDelete, MdSearch } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdSearch, MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { DriverModal, type DriverData } from "./DriverModal";
 import { useEffect, useState } from "react";
 import { getDrivers, createDriver, updateDriver, deleteDriver, type Driver } from "../../../../services/api";
@@ -35,9 +37,12 @@ export const DriversPage = () => {
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<"name" | "license" | "phone" | "email" | "status">("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const toast = useToast();
+  const inputTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const selectTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
-  // Fetch drivers on mount
   useEffect(() => {
     fetchDrivers();
   }, []);
@@ -60,7 +65,6 @@ export const DriversPage = () => {
     }
   };
 
-  // Handle form submission
   const handleDriverSubmit = async (data: DriverData) => {
     try {
       if (mode === "create") {
@@ -128,7 +132,15 @@ export const DriversPage = () => {
     onOpen();
   };
 
-  // Filter drivers based on search query and status filter
+  const handleSort = (field: "name" | "license" | "phone" | "email" | "status") => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
   const filteredDrivers = drivers.filter((driver) => {
     const query = searchQuery.toLowerCase();
     const driverStatus = driver.status || "active"; // Default to active if status is not set
@@ -144,6 +156,26 @@ export const DriversPage = () => {
     const matchesStatus = statusFilter === "all" || driverStatus === statusFilter;
     
     return matchesSearch && matchesStatus;
+  });
+
+  const sortedDrivers = [...filteredDrivers].sort((a, b) => {
+    let aValue: string;
+    let bValue: string;
+
+    if (sortField === "status") {
+      aValue = (a.status || "active").toLowerCase();
+      bValue = (b.status || "active").toLowerCase();
+    } else if (sortField === "email") {
+      aValue = (a.email || "").toLowerCase();
+      bValue = (b.email || "").toLowerCase();
+    } else {
+      aValue = a[sortField].toLowerCase();
+      bValue = b[sortField].toLowerCase();
+    }
+
+    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+    return 0;
   });
 
   return (
@@ -177,6 +209,7 @@ export const DriversPage = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               bg="bg.card"
               borderColor="border.default"
+              color={inputTextColor}
               _hover={{ borderColor: "purple.400" }}
               _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             />
@@ -186,6 +219,7 @@ export const DriversPage = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
             bg="bg.card"
             borderColor="border.default"
+            color={selectTextColor}
             _hover={{ borderColor: "purple.400" }}
             _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             width={{ base: "100%", md: "200px" }}
@@ -206,18 +240,8 @@ export const DriversPage = () => {
           minH="400px"
         >
           {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Spinner size="xl" color="purple.500" />
-            </Box>
-          ) : filteredDrivers.length === 0 ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Text color="text.secondary" textAlign="center" px={4}>
-                {searchQuery ? "No drivers found matching your search." : "No drivers found. Add your first driver!"}
-              </Text>
-            </Box>
-          ) : (
             <>
-              {/* Desktop Table View */}
+              {/* Desktop Skeleton View */}
               <Box display={{ base: "none", md: "block" }}>
                 <TableContainer>
                   <Table variant="simple">
@@ -232,7 +256,161 @@ export const DriversPage = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {filteredDrivers.map((driver) => (
+                      {[...Array(5)].map((_, index) => (
+                        <Tr key={index}>
+                          <Td>
+                            <Skeleton height="20px" width="130px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="100px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="120px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="150px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="70px" borderRadius="md" />
+                          </Td>
+                          <Td>
+                            <HStack spacing={2}>
+                              <Skeleton height="32px" width="32px" borderRadius="md" />
+                              <Skeleton height="32px" width="32px" borderRadius="md" />
+                            </HStack>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Box>
+
+              {/* Mobile Skeleton View */}
+              <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
+                {[...Array(3)].map((_, index) => (
+                  <Box
+                    key={index}
+                    p={4}
+                    borderRadius="md"
+                    border="1px solid"
+                    borderColor="border.default"
+                    bg="bg.surface"
+                  >
+                    <VStack align="stretch" spacing={3}>
+                      <HStack justify="space-between" align="flex-start">
+                        <Box flex="1">
+                          <HStack spacing={2} mb={1}>
+                            <Skeleton height="20px" width="120px" />
+                            <Skeleton height="20px" width="60px" borderRadius="md" />
+                          </HStack>
+                          <Skeleton height="16px" width="140px" />
+                        </Box>
+                        <HStack spacing={1}>
+                          <Skeleton height="32px" width="32px" borderRadius="md" />
+                          <Skeleton height="32px" width="32px" borderRadius="md" />
+                        </HStack>
+                      </HStack>
+                      
+                      <VStack align="stretch" spacing={1}>
+                        <HStack>
+                          <Skeleton height="14px" width="50px" />
+                          <Skeleton height="16px" width="110px" />
+                        </HStack>
+                        <HStack>
+                          <Skeleton height="14px" width="50px" />
+                          <Skeleton height="16px" width="140px" />
+                        </HStack>
+                      </VStack>
+                    </VStack>
+                  </Box>
+                ))}
+              </VStack>
+            </>
+          ) : sortedDrivers.length === 0 ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
+              <Text color="text.secondary" textAlign="center" px={4}>
+                {searchQuery ? "No drivers found matching your search." : "No drivers found. Add your first driver!"}
+              </Text>
+            </Box>
+          ) : (
+            <>
+              {/* Desktop Table View */}
+              <Box display={{ base: "none", md: "block" }}>
+                <TableContainer>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("name")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Name</Text>
+                            {sortField === "name" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("license")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>License</Text>
+                            {sortField === "license" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("phone")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Phone</Text>
+                            {sortField === "phone" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("email")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Email</Text>
+                            {sortField === "email" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("status")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Status</Text>
+                            {sortField === "status" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th color="text.secondary">Actions</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {sortedDrivers.map((driver) => (
                         <Tr key={driver.id}>
                           <Td color="text.primary" fontWeight="medium">{driver.name}</Td>
                           <Td color="text.primary">{driver.license}</Td>
@@ -272,7 +450,7 @@ export const DriversPage = () => {
 
               {/* Mobile Card View */}
               <VStack spacing={3} display={{ base: "flex", md: "none" }} align="stretch">
-                {filteredDrivers.map((driver) => (
+                {sortedDrivers.map((driver) => (
                   <Box
                     key={driver.id}
                     p={4}

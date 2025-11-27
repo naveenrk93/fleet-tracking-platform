@@ -20,7 +20,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
 
-// Zod validation schema for Vehicle
 const vehicleSchema = z.object({
   registration: z.string().min(1, "Registration number is required").min(3, "Registration must be at least 3 characters"),
   capacity: z.number().min(1, "Capacity must be at least 1 liter").positive("Capacity must be positive"),
@@ -64,7 +63,6 @@ export const VehicleModal = ({
     },
   });
 
-  // Reset form with initialData when modal opens or data changes
   useEffect(() => {
     if (isOpen && initialData) {
       reset({
@@ -83,18 +81,22 @@ export const VehicleModal = ({
 
   const handleFormSubmit = async (data: VehicleFormData) => {
     try {
-      // Generate ID for new vehicles
+      let vehicleId: string;
+      if (mode === "create") {
+        vehicleId = `vehicle-${Date.now()}`;
+      } else {
+        vehicleId = initialData?.id || `vehicle-${Date.now()}`;
+      }
+      
       const vehicleData: VehicleData = {
         ...data,
-        id: mode === "create" ? `vehicle-${Date.now()}` : (initialData as any)?.id || `vehicle-${Date.now()}`,
+        id: vehicleId,
       };
       
-      // Call the onSubmit prop if provided
       if (onSubmit) {
         await onSubmit(vehicleData);
       }
       
-      // Reset form and close modal
       reset();
       onClose();
     } catch (error) {
@@ -118,7 +120,7 @@ export const VehicleModal = ({
       isOpen={isOpen} 
       onClose={handleCancel} 
       size={{ base: "full", sm: "md", md: "xl" }}
-      scrollBehavior={{ base: "inside", md: "outside" }}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent 
@@ -135,7 +137,6 @@ export const VehicleModal = ({
           
           <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
             <VStack spacing={{ base: 3, md: 4 }} align="stretch">
-              {/* Registration Number */}
               <FormControl isInvalid={!!errors.registration}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Registration Number
@@ -149,7 +150,6 @@ export const VehicleModal = ({
                 <FormErrorMessage fontSize="sm">{errors.registration?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Capacity */}
               <FormControl isInvalid={!!errors.capacity}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Capacity (Liters)
@@ -165,7 +165,6 @@ export const VehicleModal = ({
                 <FormErrorMessage fontSize="sm">{errors.capacity?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Vehicle Type */}
               <FormControl isInvalid={!!errors.type}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Vehicle Type

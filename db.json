@@ -203,18 +203,42 @@
           "quantity": 3000
         }
       ]
+    },
+    {
+      "id": "bc98",
+      "name": "Nitrous Hub",
+      "type": "hub",
+      "address": "North First Street",
+      "coordinates": {
+        "lat": 41,
+        "lng": -80
+      },
+      "products": [
+        {
+          "productId": "product-2",
+          "productName": "Regular Petrol",
+          "quantity": 1000
+        }
+      ]
     }
   ],
   "terminals": [
     {
+      "id": "terminal-1",
+      "name": "Main Terminal",
+      "type": "terminal",
+      "address": "123 Main Street",
+      "coordinates": {
+        "lat": 40.715,
+        "lng": -74.008
+      },
       "products": [
         {
           "productId": "product-1",
           "productName": "Premium Diesel",
           "quantity": 5000
         }
-      ],
-      "id": "terminal-1"
+      ]
     },
     {
       "id": "terminal-1764104564485",

@@ -71,7 +71,6 @@ export const DeliveryManagementPage = () => {
   >(null);
   const [endingShift, setEndingShift] = useState(false);
 
-  // Fetch active shift and deliveries
   useEffect(() => {
     const fetchData = async () => {
       if (!userId) return;
@@ -79,7 +78,6 @@ export const DeliveryManagementPage = () => {
       try {
         dispatch(setDeliveriesLoading(true));
 
-        // Get all shifts for the current driver
         const shifts = await getShifts();
         const driverActiveShift = shifts.find(
           (shift) => shift.driverId === userId && shift.status === "active"
@@ -88,7 +86,6 @@ export const DeliveryManagementPage = () => {
         if (driverActiveShift) {
           setActiveShift(driverActiveShift);
 
-          // Fetch deliveries for this shift
           const deliveriesWithDetails = await getShiftDeliveriesWithDetails(
             driverActiveShift.id
           );
@@ -238,7 +235,6 @@ export const DeliveryManagementPage = () => {
         isClosable: true,
       });
 
-      // Navigate to shift view or history
       navigate("/driver/shift-view");
     } catch (err) {
       console.error("Error ending shift:", err);
@@ -271,17 +267,16 @@ export const DeliveryManagementPage = () => {
     }
   };
 
-  // If not in driver role, don't show anything (prevents flash of alerts when switching modes)
   if (userRole !== "driver") {
     return null;
   }
 
   if (loading) {
     return (
-      <Box p={6} display="flex" justifyContent="center" alignItems="center" minH="400px">
+      <Box p={{ base: 4, md: 6 }} display="flex" justifyContent="center" alignItems="center" minH="400px">
         <VStack spacing={4}>
           <Spinner size="xl" color="brand.500" />
-          <Text color="text.secondary">Loading deliveries...</Text>
+          <Text color="text.secondary" fontSize={{ base: "sm", md: "md" }}>Loading deliveries...</Text>
         </VStack>
       </Box>
     );
@@ -289,15 +284,15 @@ export const DeliveryManagementPage = () => {
 
   if (!activeShift) {
     return (
-      <Box p={6}>
-        <Heading size="lg" mb={4}>
+      <Box p={{ base: 4, md: 6 }}>
+        <Heading size={{ base: "md", md: "lg" }} mb={4}>
           Delivery Management
         </Heading>
         <Alert status="info" borderRadius="md">
           <AlertIcon />
           <Box>
-            <AlertTitle>No Active Shift</AlertTitle>
-            <AlertDescription>
+            <AlertTitle fontSize={{ base: "md", md: "lg" }}>No Active Shift</AlertTitle>
+            <AlertDescription fontSize={{ base: "sm", md: "md" }}>
               You don't have an active shift. Please start a shift from the Shift
               View page to manage deliveries.
             </AlertDescription>
@@ -314,231 +309,240 @@ export const DeliveryManagementPage = () => {
   ).length;
 
   return (
-    <Box p={6}>
-      <HStack justify="space-between" mb={6}>
-        <Box>
-          <Heading size="lg" mb={2}>
-            Delivery Management
-          </Heading>
-          <Text color="text.secondary">
-            Manage your assigned deliveries for today
-          </Text>
-        </Box>
-        <Button
-          colorScheme="red"
-          size="lg"
-          onClick={handleEndShift}
-          isLoading={endingShift}
-          loadingText="Ending Shift..."
-        >
-          End Shift
-        </Button>
-      </HStack>
-
-      {/* Statistics */}
-      <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4} mb={6}>
-        <Card>
-          <CardBody>
-            <VStack align="start" spacing={1}>
-              <Text fontSize="sm" color="text.secondary">
-                Total Deliveries
-              </Text>
-              <Text fontSize="3xl" fontWeight="bold" color="brand.500">
-                {deliveries.length}
-              </Text>
-            </VStack>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <VStack align="start" spacing={1}>
-              <Text fontSize="sm" color="text.secondary">
-                Completed
-              </Text>
-              <Text fontSize="3xl" fontWeight="bold" color="green.500">
-                {completedCount}
-              </Text>
-            </VStack>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <VStack align="start" spacing={1}>
-              <Text fontSize="sm" color="text.secondary">
-                Pending
-              </Text>
-              <Text fontSize="3xl" fontWeight="bold" color="orange.500">
-                {pendingCount}
-              </Text>
-            </VStack>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <VStack align="start" spacing={1}>
-              <Text fontSize="sm" color="text.secondary">
-                Failed
-              </Text>
-              <Text fontSize="3xl" fontWeight="bold" color="red.500">
-                {failedCount}
-              </Text>
-            </VStack>
-          </CardBody>
-        </Card>
-      </SimpleGrid>
-
-      {/* Deliveries List */}
-      {deliveries.length === 0 ? (
-        <Alert status="info" borderRadius="md">
-          <AlertIcon />
-          <Box>
-            <AlertTitle>No Deliveries</AlertTitle>
-            <AlertDescription>
-              You don't have any deliveries assigned for this shift.
-            </AlertDescription>
+    <Box p={{ base: 4, md: 6 }}>
+      <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+        <HStack justify="space-between" align="start" flexWrap="wrap" gap={4}>
+          <Box flex="1" minW={{ base: "full", md: "auto" }}>
+            <Heading size={{ base: "md", md: "lg" }} mb={2}>
+              Delivery Management
+            </Heading>
+            <Text color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
+              Manage your assigned deliveries for today
+            </Text>
           </Box>
-        </Alert>
-      ) : (
-        <VStack spacing={4} align="stretch">
-          {deliveries.map((delivery) => (
-            <Card key={delivery.id} boxShadow="md">
-              <CardBody>
-                <HStack justify="space-between" align="start" mb={4}>
-                  <VStack align="start" spacing={2} flex={1}>
-                    <HStack>
-                      <Badge colorScheme={getStatusColor(delivery.status)} fontSize="sm">
-                        {delivery.status.toUpperCase()}
-                      </Badge>
-                      {delivery.destination && (
-                        <Badge colorScheme="purple" fontSize="sm">
-                          {delivery.destination.type.toUpperCase()}
-                        </Badge>
+          <Button
+            colorScheme="red"
+            size={{ base: "md", md: "lg" }}
+            onClick={handleEndShift}
+            isLoading={endingShift}
+            loadingText="Ending Shift..."
+            width={{ base: "full", md: "auto" }}
+          >
+            End Shift
+          </Button>
+        </HStack>
+
+        <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4}>
+          <Card>
+            <CardBody>
+              <VStack align="start" spacing={1}>
+                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                  Total Deliveries
+                </Text>
+                <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" color="brand.500">
+                  {deliveries.length}
+                </Text>
+              </VStack>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody>
+              <VStack align="start" spacing={1}>
+                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                  Completed
+                </Text>
+                <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" color="green.500">
+                  {completedCount}
+                </Text>
+              </VStack>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody>
+              <VStack align="start" spacing={1}>
+                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                  Pending
+                </Text>
+                <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" color="orange.500">
+                  {pendingCount}
+                </Text>
+              </VStack>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody>
+              <VStack align="start" spacing={1}>
+                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                  Failed
+                </Text>
+                <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" color="red.500">
+                  {failedCount}
+                </Text>
+              </VStack>
+            </CardBody>
+          </Card>
+        </SimpleGrid>
+
+        {deliveries.length === 0 ? (
+          <Alert status="info" borderRadius="md">
+            <AlertIcon />
+            <Box>
+              <AlertTitle>No Deliveries</AlertTitle>
+              <AlertDescription>
+                You don't have any deliveries assigned for this shift.
+              </AlertDescription>
+            </Box>
+          </Alert>
+        ) : (
+          <VStack spacing={4} align="stretch">
+            {deliveries.map((delivery) => (
+              <Card key={delivery.id} boxShadow="md">
+                <CardBody>
+                  <VStack spacing={4} align="stretch">
+                    <HStack justify="space-between" align="start" flexWrap="wrap" gap={2}>
+                      <VStack align="start" spacing={2} flex={1} minW={{ base: "full", md: "auto" }}>
+                        <HStack flexWrap="wrap" gap={2}>
+                          <Badge colorScheme={getStatusColor(delivery.status)} fontSize="sm">
+                            {delivery.status.toUpperCase()}
+                          </Badge>
+                          {delivery.destination && (
+                            <Badge colorScheme="purple" fontSize="sm">
+                              {delivery.destination.type.toUpperCase()}
+                            </Badge>
+                          )}
+                        </HStack>
+                        <Heading size={{ base: "sm", md: "md" }}>
+                          {delivery.destination?.name || "Unknown Destination"}
+                        </Heading>
+                      </VStack>
+                      {(delivery.status === "pending" ||
+                        delivery.status === "in-progress") && (
+                        <VStack
+                          spacing={2}
+                          width={{ base: "full", md: "auto" }}
+                        >
+                          <Button
+                            colorScheme="green"
+                            leftIcon={<Icon as={FaCheck} />}
+                            onClick={() => handleCompleteDelivery(delivery)}
+                            isLoading={processingDeliveryId === delivery.id}
+                            loadingText="Processing..."
+                            size="sm"
+                            width="full"
+                          >
+                            Complete
+                          </Button>
+                          <Button
+                            colorScheme="red"
+                            leftIcon={<Icon as={FaTimes} />}
+                            onClick={() => handleOpenFailModal(delivery)}
+                            isDisabled={processingDeliveryId === delivery.id}
+                            size="sm"
+                            width="full"
+                          >
+                            Mark Failed
+                          </Button>
+                        </VStack>
                       )}
                     </HStack>
-                    <Heading size="md">{delivery.destination?.name || "Unknown Destination"}</Heading>
+
+                    <Divider />
+
+                    <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+                      <HStack>
+                        <Icon as={FaMapMarkerAlt} color="text.secondary" />
+                        <Box>
+                          <Text fontSize="xs" color="text.secondary">
+                            Destination
+                          </Text>
+                          <Text fontWeight="medium" fontSize={{ base: "sm", md: "md" }}>
+                            {delivery.destination?.address || "N/A"}
+                          </Text>
+                        </Box>
+                      </HStack>
+                      <HStack>
+                        <Icon as={FaBox} color="text.secondary" />
+                        <Box>
+                          <Text fontSize="xs" color="text.secondary">
+                            Product
+                          </Text>
+                          <Text fontWeight="medium" fontSize={{ base: "sm", md: "md" }}>
+                            {delivery.product?.name || "N/A"}
+                          </Text>
+                        </Box>
+                      </HStack>
+                      <HStack>
+                        <Icon as={FaCalendar} color="text.secondary" />
+                        <Box>
+                          <Text fontSize="xs" color="text.secondary">
+                            Quantity
+                          </Text>
+                          <Text fontWeight="medium" fontSize={{ base: "sm", md: "md" }}>
+                            {delivery.order?.quantity || 0} {delivery.product?.unit || "units"}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    </SimpleGrid>
+
+                    {delivery.failureReason && (
+                      <Alert status="error" borderRadius="md">
+                        <AlertIcon />
+                        <Box>
+                          <AlertTitle fontSize="sm">Failure Reason:</AlertTitle>
+                          <AlertDescription fontSize="sm">
+                            {delivery.failureReason}
+                          </AlertDescription>
+                        </Box>
+                      </Alert>
+                    )}
                   </VStack>
-                  {(delivery.status === "pending" ||
-                    delivery.status === "in-progress") && (
-                    <HStack>
-                      <Button
-                        colorScheme="green"
-                        leftIcon={<Icon as={FaCheck} />}
-                        onClick={() => handleCompleteDelivery(delivery)}
-                        isLoading={processingDeliveryId === delivery.id}
-                        loadingText="Processing..."
-                        size="sm"
-                      >
-                        Complete
-                      </Button>
-                      <Button
-                        colorScheme="red"
-                        leftIcon={<Icon as={FaTimes} />}
-                        onClick={() => handleOpenFailModal(delivery)}
-                        isDisabled={processingDeliveryId === delivery.id}
-                        size="sm"
-                      >
-                        Mark Failed
-                      </Button>
-                    </HStack>
-                  )}
-                </HStack>
+                </CardBody>
+              </Card>
+            ))}
+          </VStack>
+        )}
 
-                <Divider mb={4} />
-
-                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-                  <HStack>
-                    <Icon as={FaMapMarkerAlt} color="text.secondary" />
-                    <Box>
-                      <Text fontSize="xs" color="text.secondary">
-                        Destination
-                      </Text>
-                      <Text fontWeight="medium">
-                        {delivery.destination?.address || "N/A"}
-                      </Text>
-                    </Box>
-                  </HStack>
-                  <HStack>
-                    <Icon as={FaBox} color="text.secondary" />
-                    <Box>
-                      <Text fontSize="xs" color="text.secondary">
-                        Product
-                      </Text>
-                      <Text fontWeight="medium">
-                        {delivery.product?.name || "N/A"}
-                      </Text>
-                    </Box>
-                  </HStack>
-                  <HStack>
-                    <Icon as={FaCalendar} color="text.secondary" />
-                    <Box>
-                      <Text fontSize="xs" color="text.secondary">
-                        Quantity
-                      </Text>
-                      <Text fontWeight="medium">
-                        {delivery.order?.quantity || 0} {delivery.product?.unit || "units"}
-                      </Text>
-                    </Box>
-                  </HStack>
-                </SimpleGrid>
-
-                {delivery.failureReason && (
-                  <Alert status="error" mt={4} borderRadius="md">
-                    <AlertIcon />
-                    <Box>
-                      <AlertTitle fontSize="sm">Failure Reason:</AlertTitle>
-                      <AlertDescription fontSize="sm">
-                        {delivery.failureReason}
-                      </AlertDescription>
-                    </Box>
-                  </Alert>
-                )}
-              </CardBody>
-            </Card>
-          ))}
-        </VStack>
-      )}
-
-      {/* Failure Reason Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Mark Delivery as Failed</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack spacing={4} align="stretch">
-              <FormControl isRequired>
-                <FormLabel>Delivery</FormLabel>
-                <Input
-                  value={selectedDelivery?.destination?.name || ""}
-                  isReadOnly
-                  bg="gray.50"
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <FormLabel>Failure Reason</FormLabel>
-                <Textarea
-                  placeholder="Please provide the reason for failure..."
-                  value={failureReason}
-                  onChange={(e) => setFailureReason(e.target.value)}
-                  rows={4}
-                />
-              </FormControl>
-            </VStack>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              colorScheme="red"
-              onClick={handleFailDelivery}
-              isDisabled={!failureReason.trim()}
-            >
-              Mark as Failed
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Mark Delivery as Failed</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <VStack spacing={4} align="stretch">
+                <FormControl isRequired>
+                  <FormLabel>Delivery</FormLabel>
+                  <Input
+                    value={selectedDelivery?.destination?.name || ""}
+                    isReadOnly
+                    bg="gray.50"
+                  />
+                </FormControl>
+                <FormControl isRequired>
+                  <FormLabel>Failure Reason</FormLabel>
+                  <Textarea
+                    placeholder="Please provide the reason for failure..."
+                    value={failureReason}
+                    onChange={(e) => setFailureReason(e.target.value)}
+                    rows={4}
+                  />
+                </FormControl>
+              </VStack>
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="ghost" mr={3} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={handleFailDelivery}
+                isDisabled={!failureReason.trim()}
+              >
+                Mark as Failed
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </VStack>
     </Box>
   );
 };

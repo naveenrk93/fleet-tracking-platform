@@ -21,8 +21,10 @@ import {
   InputGroup,
   InputLeftElement,
   Select,
+  Skeleton,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { MdAdd, MdEdit, MdDelete, MdSearch } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdSearch, MdArrowUpward, MdArrowDownward } from "react-icons/md";
 import { ProductModal, type ProductData } from "./ProductModal";
 import { useEffect, useState } from "react";
 import { getProducts, createProduct, updateProduct, deleteProduct, type Product } from "../../../../services/api";
@@ -35,9 +37,12 @@ export const ProductsPage = () => {
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<"sku" | "name" | "category" | "price" | "stockQuantity">("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const toast = useToast();
+  const inputTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const selectTextColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
-  // Fetch products on mount
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -60,7 +65,6 @@ export const ProductsPage = () => {
     }
   };
 
-  // Handle form submission
   const handleProductSubmit = async (data: ProductData) => {
     try {
       if (mode === "create") {
@@ -128,10 +132,17 @@ export const ProductsPage = () => {
     onOpen();
   };
 
-  // Get unique categories for filter
+  const handleSort = (field: "sku" | "name" | "category" | "price" | "stockQuantity") => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
   const categories = Array.from(new Set(products.map(p => p.category)));
 
-  // Filter products based on search query and category filter
   const filteredProducts = products.filter((product) => {
     const query = searchQuery.toLowerCase();
     const matchesSearch = (
@@ -146,6 +157,23 @@ export const ProductsPage = () => {
     const matchesCategory = categoryFilter === "all" || product.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
+  });
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    let aValue: string | number;
+    let bValue: string | number;
+
+    if (sortField === "price" || sortField === "stockQuantity") {
+      aValue = a[sortField];
+      bValue = b[sortField];
+    } else {
+      aValue = a[sortField].toLowerCase();
+      bValue = b[sortField].toLowerCase();
+    }
+
+    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+    return 0;
   });
 
   return (
@@ -179,6 +207,7 @@ export const ProductsPage = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               bg="bg.card"
               borderColor="border.default"
+              color={inputTextColor}
               _hover={{ borderColor: "purple.400" }}
               _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             />
@@ -188,6 +217,7 @@ export const ProductsPage = () => {
             onChange={(e) => setCategoryFilter(e.target.value)}
             bg="bg.card"
             borderColor="border.default"
+            color={selectTextColor}
             _hover={{ borderColor: "purple.400" }}
             _focus={{ borderColor: "purple.500", boxShadow: "0 0 0 1px var(--chakra-colors-purple-500)" }}
             width={{ base: "100%", md: "200px" }}
@@ -209,18 +239,8 @@ export const ProductsPage = () => {
           minH="400px"
         >
           {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Spinner size="xl" color="purple.500" />
-            </Box>
-          ) : filteredProducts.length === 0 ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
-              <Text color="text.secondary" textAlign="center" px={4}>
-                {searchQuery ? "No products found matching your search." : "No products found. Add your first product!"}
-              </Text>
-            </Box>
-          ) : (
             <>
-              {/* Desktop Table View */}
+              {/* Desktop Skeleton View */}
               <Box display={{ base: "none", lg: "block" }}>
                 <TableContainer>
                   <Table variant="simple">
@@ -236,7 +256,169 @@ export const ProductsPage = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {filteredProducts.map((product) => (
+                      {[...Array(5)].map((_, index) => (
+                        <Tr key={index}>
+                          <Td>
+                            <Skeleton height="20px" width="100px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="150px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="80px" borderRadius="md" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="70px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="60px" />
+                          </Td>
+                          <Td>
+                            <Skeleton height="20px" width="70px" />
+                          </Td>
+                          <Td>
+                            <HStack spacing={2}>
+                              <Skeleton height="32px" width="32px" borderRadius="md" />
+                              <Skeleton height="32px" width="32px" borderRadius="md" />
+                            </HStack>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Box>
+
+              {/* Mobile Skeleton View */}
+              <VStack spacing={3} display={{ base: "flex", lg: "none" }} align="stretch">
+                {[...Array(3)].map((_, index) => (
+                  <Box
+                    key={index}
+                    p={4}
+                    borderRadius="md"
+                    border="1px solid"
+                    borderColor="border.default"
+                    bg="bg.surface"
+                  >
+                    <VStack align="stretch" spacing={3}>
+                      <HStack justify="space-between" align="flex-start">
+                        <Box flex="1">
+                          <HStack spacing={2} mb={1}>
+                            <Skeleton height="20px" width="130px" />
+                            <Skeleton height="20px" width="70px" borderRadius="md" />
+                          </HStack>
+                          <Skeleton height="16px" width="100px" />
+                        </Box>
+                        <HStack spacing={1}>
+                          <Skeleton height="32px" width="32px" borderRadius="md" />
+                          <Skeleton height="32px" width="32px" borderRadius="md" />
+                        </HStack>
+                      </HStack>
+                      
+                      <HStack spacing={4}>
+                        <Box>
+                          <Skeleton height="14px" width="40px" mb={1} />
+                          <Skeleton height="16px" width="60px" />
+                        </Box>
+                        <Box>
+                          <Skeleton height="14px" width="30px" mb={1} />
+                          <Skeleton height="16px" width="50px" />
+                        </Box>
+                        <Box>
+                          <Skeleton height="14px" width="40px" mb={1} />
+                          <Skeleton height="16px" width="60px" />
+                        </Box>
+                      </HStack>
+                    </VStack>
+                  </Box>
+                ))}
+              </VStack>
+            </>
+          ) : sortedProducts.length === 0 ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minH="300px">
+              <Text color="text.secondary" textAlign="center" px={4}>
+                {searchQuery ? "No products found matching your search." : "No products found. Add your first product!"}
+              </Text>
+            </Box>
+          ) : (
+            <>
+              {/* Desktop Table View */}
+              <Box display={{ base: "none", lg: "block" }}>
+                <TableContainer>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("sku")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>SKU</Text>
+                            {sortField === "sku" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("name")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Name</Text>
+                            {sortField === "name" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("category")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Category</Text>
+                            {sortField === "category" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("price")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Price</Text>
+                            {sortField === "price" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th color="text.secondary">Unit</Th>
+                        <Th 
+                          color="text.secondary" 
+                          cursor="pointer" 
+                          onClick={() => handleSort("stockQuantity")}
+                          _hover={{ color: "purple.400" }}
+                        >
+                          <HStack spacing={1}>
+                            <Text>Stock</Text>
+                            {sortField === "stockQuantity" && (
+                              sortDirection === "asc" ? <MdArrowUpward /> : <MdArrowDownward />
+                            )}
+                          </HStack>
+                        </Th>
+                        <Th color="text.secondary">Actions</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {sortedProducts.map((product) => (
                         <Tr key={product.id}>
                           <Td color="text.primary" fontWeight="medium">{product.sku}</Td>
                           <Td color="text.primary">{product.name}</Td>
@@ -275,7 +457,7 @@ export const ProductsPage = () => {
 
               {/* Mobile Card View */}
               <VStack spacing={3} display={{ base: "flex", lg: "none" }} align="stretch">
-                {filteredProducts.map((product) => (
+                {sortedProducts.map((product) => (
                   <Box
                     key={product.id}
                     p={4}

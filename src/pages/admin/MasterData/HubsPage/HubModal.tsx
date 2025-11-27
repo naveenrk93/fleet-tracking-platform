@@ -29,7 +29,6 @@ import { useState, useEffect } from "react";
 import { MdAdd, MdDelete } from "react-icons/md";
 import { getProducts, type Product, type HubProduct } from "../../../../services/api";
 
-// Zod validation schema for Hub
 const hubSchema = z.object({
   name: z.string().min(1, "Hub name is required").min(3, "Hub name must be at least 3 characters"),
   type: z.literal("hub"),
@@ -90,7 +89,6 @@ export const HubModal = ({
     },
   });
 
-  // Fetch products on mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -114,7 +112,6 @@ export const HubModal = ({
     }
   }, [isOpen, toast]);
 
-  // Reset form and initialize hub products when modal opens or data changes
   useEffect(() => {
     if (isOpen && initialData) {
       reset({
@@ -145,7 +142,6 @@ export const HubModal = ({
 
   const handleProductSelect = (index: number, productId: string) => {
     if (!productId) {
-      // If cleared, remove the product at this index if it exists
       if (index < hubProducts.length) {
         const updated = [...hubProducts];
         updated.splice(index, 1);
@@ -160,14 +156,12 @@ export const HubModal = ({
     const updated = [...hubProducts];
     
     if (index < hubProducts.length) {
-      // Update existing product
       updated[index] = {
         productId: product.id,
         productName: product.name,
         quantity: updated[index].quantity || 0,
       };
     } else {
-      // Add new product
       updated.push({
         productId: product.id,
         productName: product.name,
@@ -194,23 +188,19 @@ export const HubModal = ({
 
   const handleFormSubmit = async (data: HubFormData) => {
     try {
-      // Prepare hub data with products
       const hubData: any = {
         ...data,
         products: hubProducts,
       };
       
-      // Include ID only for edit mode
       if (mode === "edit" && initialData?.id) {
         hubData.id = initialData.id;
       }
       
-      // Call the onSubmit prop if provided
       if (onSubmit) {
         await onSubmit(hubData);
       }
       
-      // Reset form and close modal
       reset();
       setHubProducts([]);
       onClose();
@@ -253,7 +243,6 @@ export const HubModal = ({
           
           <ModalBody px={{ base: 4, md: 6 }} py={{ base: 4, md: 6 }}>
             <VStack spacing={{ base: 3, md: 4 }} align="stretch">
-              {/* Hub Name */}
               <FormControl isInvalid={!!errors.name}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Hub Name
@@ -267,10 +256,8 @@ export const HubModal = ({
                 <FormErrorMessage fontSize="sm">{errors.name?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Type - Hidden field, always "hub" */}
               <Input {...register("type")} type="hidden" value="hub" />
 
-              {/* Address */}
               <FormControl isInvalid={!!errors.address}>
                 <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                   Address
@@ -285,7 +272,6 @@ export const HubModal = ({
                 <FormErrorMessage fontSize="sm">{errors.address?.message}</FormErrorMessage>
               </FormControl>
 
-              {/* Coordinates */}
               <HStack spacing={{ base: 2, md: 3 }} align="flex-start">
                 <FormControl isInvalid={!!errors.coordinates?.lat} flex="1">
                   <FormLabel color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
@@ -318,7 +304,6 @@ export const HubModal = ({
                 </FormControl>
               </HStack>
 
-              {/* Products Section */}
               <Divider my={{ base: 2, md: 4 }} />
               
               <Heading size={{ base: "xs", md: "sm" }} color="text.primary" mb={{ base: 2, md: 3 }}>
@@ -343,118 +328,118 @@ export const HubModal = ({
                     );
 
                     return (
-                    <VStack key={index} spacing={2} align="stretch" display={{ base: "flex", sm: "none" }}>
-                      {/* Mobile: Stacked Layout */}
-                      <FormControl>
-                        {index === 0 && (
-                          <FormLabel color="text.secondary" fontSize="xs" mb={1}>
-                            Product
-                          </FormLabel>
-                        )}
-                        <Select
-                          placeholder="Select a product"
-                          value={product.productId}
-                          onChange={(e) => handleProductSelect(index, e.target.value)}
-                          bg="bg.input"
-                          isDisabled={loadingProducts}
-                          size="sm"
-                        >
-                          {availableProducts.map((p) => (
-                            <option key={p.id} value={p.id}>
-                              {p.name} ({p.sku})
-                            </option>
-                          ))}
-                        </Select>
-                      </FormControl>
+                      <Box key={index}>
+                        <VStack spacing={2} align="stretch" display={{ base: "flex", sm: "none" }}>
+                          <FormControl>
+                            {index === 0 && (
+                              <FormLabel color="text.secondary" fontSize="xs" mb={1}>
+                                Product
+                              </FormLabel>
+                            )}
+                            <Select
+                              placeholder="Select a product"
+                              value={product.productId}
+                              onChange={(e) => handleProductSelect(index, e.target.value)}
+                              bg="bg.input"
+                              isDisabled={loadingProducts}
+                              size="sm"
+                            >
+                              {availableProducts.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                  {p.name} ({p.sku})
+                                </option>
+                              ))}
+                            </Select>
+                          </FormControl>
 
-                      <HStack spacing={2}>
-                        <FormControl flex="1">
-                          {index === 0 && (
-                            <FormLabel color="text.secondary" fontSize="xs" mb={1}>
-                              Quantity
-                            </FormLabel>
-                          )}
-                          <Input
-                            type="number"
-                            min="0"
-                            value={product.quantity || ""}
-                            onChange={(e) => handleQuantityChange(index, Number(e.target.value))}
-                            placeholder="0"
-                            bg="bg.input"
-                            isDisabled={!product.productId}
-                            size="sm"
-                          />
-                        </FormControl>
-                        {!isLastRow && (
-                          <IconButton
-                            aria-label="Remove product"
-                            icon={<MdDelete />}
-                            size="sm"
-                            colorScheme="red"
-                            variant="ghost"
-                            onClick={() => handleRemoveProduct(index)}
-                            type="button"
-                            mt={index === 0 ? 5 : 0}
-                          />
-                        )}
-                      </HStack>
-                    </VStack>
-                    ) || (
-                    <HStack key={index} spacing={2} display={{ base: "none", sm: "flex" }}>
-                      {/* Desktop: Horizontal Layout */}
-                      <FormControl flex="2">
-                        {index === 0 && (
-                          <FormLabel color="text.secondary" fontSize="sm" mb={1}>
-                            Product
-                          </FormLabel>
-                        )}
-                        <Select
-                          placeholder="Select a product"
-                          value={product.productId}
-                          onChange={(e) => handleProductSelect(index, e.target.value)}
-                          bg="bg.input"
-                          isDisabled={loadingProducts}
-                        >
-                          {availableProducts.map((p) => (
-                            <option key={p.id} value={p.id}>
-                              {p.name} ({p.sku})
-                            </option>
-                          ))}
-                        </Select>
-                      </FormControl>
+                          <HStack spacing={2}>
+                            <FormControl flex="1">
+                              {index === 0 && (
+                                <FormLabel color="text.secondary" fontSize="xs" mb={1}>
+                                  Quantity
+                                </FormLabel>
+                              )}
+                              <Input
+                                type="number"
+                                min="0"
+                                value={product.quantity || ""}
+                                onChange={(e) => handleQuantityChange(index, Number(e.target.value))}
+                                placeholder="0"
+                                bg="bg.input"
+                                isDisabled={!product.productId}
+                                size="sm"
+                              />
+                            </FormControl>
+                            {!isLastRow && (
+                              <IconButton
+                                aria-label="Remove product"
+                                icon={<MdDelete />}
+                                size="sm"
+                                colorScheme="red"
+                                variant="ghost"
+                                onClick={() => handleRemoveProduct(index)}
+                                type="button"
+                                mt={index === 0 ? 5 : 0}
+                              />
+                            )}
+                          </HStack>
+                        </VStack>
 
-                      <FormControl flex="1">
-                        {index === 0 && (
-                          <FormLabel color="text.secondary" fontSize="sm" mb={1}>
-                            Quantity
-                          </FormLabel>
-                        )}
-                        <Input
-                          type="number"
-                          min="0"
-                          value={product.quantity || ""}
-                          onChange={(e) => handleQuantityChange(index, Number(e.target.value))}
-                          placeholder="0"
-                          bg="bg.input"
-                          isDisabled={!product.productId}
-                        />
-                      </FormControl>
+                        <HStack spacing={2} display={{ base: "none", sm: "flex" }}>
+                          <FormControl flex="2">
+                            {index === 0 && (
+                              <FormLabel color="text.secondary" fontSize="sm" mb={1}>
+                                Product
+                              </FormLabel>
+                            )}
+                            <Select
+                              placeholder="Select a product"
+                              value={product.productId}
+                              onChange={(e) => handleProductSelect(index, e.target.value)}
+                              bg="bg.input"
+                              isDisabled={loadingProducts}
+                            >
+                              {availableProducts.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                  {p.name} ({p.sku})
+                                </option>
+                              ))}
+                            </Select>
+                          </FormControl>
 
-                      <Box pt={index === 0 ? 7 : 0}>
-                        {!isLastRow && (
-                          <IconButton
-                            aria-label="Remove product"
-                            icon={<MdDelete />}
-                            size="sm"
-                            colorScheme="red"
-                            variant="ghost"
-                            onClick={() => handleRemoveProduct(index)}
-                            type="button"
-                          />
-                        )}
-                        {isLastRow && <Box w="40px" />}
+                          <FormControl flex="1">
+                            {index === 0 && (
+                              <FormLabel color="text.secondary" fontSize="sm" mb={1}>
+                                Quantity
+                              </FormLabel>
+                            )}
+                            <Input
+                              type="number"
+                              min="0"
+                              value={product.quantity || ""}
+                              onChange={(e) => handleQuantityChange(index, Number(e.target.value))}
+                              placeholder="0"
+                              bg="bg.input"
+                              isDisabled={!product.productId}
+                            />
+                          </FormControl>
+
+                          <Box pt={index === 0 ? 7 : 0}>
+                            {!isLastRow && (
+                              <IconButton
+                                aria-label="Remove product"
+                                icon={<MdDelete />}
+                                size="sm"
+                                colorScheme="red"
+                                variant="ghost"
+                                onClick={() => handleRemoveProduct(index)}
+                                type="button"
+                              />
+                            )}
+                            {isLastRow && <Box w="40px" />}
+                          </Box>
+                        </HStack>
                       </Box>
-                    </HStack>
                     );
                   });
                 })()}

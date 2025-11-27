@@ -29,7 +29,6 @@ import { useState, useEffect } from "react";
 import { MdAdd, MdDelete } from "react-icons/md";
 import { getProducts, type Product, type TerminalProduct } from "../../../../services/api";
 
-// Zod validation schema for Terminal
 const terminalSchema = z.object({
   name: z.string().min(1, "Terminal name is required").min(3, "Terminal name must be at least 3 characters"),
   type: z.literal("terminal"),
@@ -90,7 +89,6 @@ export const TerminalModal = ({
     },
   });
 
-  // Fetch products on mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -114,7 +112,6 @@ export const TerminalModal = ({
     }
   }, [isOpen, toast]);
 
-  // Reset form and initialize terminal products when modal opens or data changes
   useEffect(() => {
     if (isOpen && initialData) {
       reset({
@@ -145,7 +142,6 @@ export const TerminalModal = ({
 
   const handleProductSelect = (index: number, productId: string) => {
     if (!productId) {
-      // If cleared, remove the product at this index if it exists
       if (index < terminalProducts.length) {
         const updated = [...terminalProducts];
         updated.splice(index, 1);
@@ -160,14 +156,12 @@ export const TerminalModal = ({
     const updated = [...terminalProducts];
     
     if (index < terminalProducts.length) {
-      // Update existing product
       updated[index] = {
         productId: product.id,
         productName: product.name,
         quantity: updated[index].quantity || 0,
       };
     } else {
-      // Add new product
       updated.push({
         productId: product.id,
         productName: product.name,
@@ -194,23 +188,19 @@ export const TerminalModal = ({
 
   const handleFormSubmit = async (data: TerminalFormData) => {
     try {
-      // Prepare terminal data with products
       const terminalData: any = {
         ...data,
         products: terminalProducts,
       };
       
-      // Include ID only for edit mode
       if (mode === "edit" && initialData?.id) {
         terminalData.id = initialData.id;
       }
       
-      // Call the onSubmit prop if provided
       if (onSubmit) {
         await onSubmit(terminalData);
       }
       
-      // Reset form and close modal
       reset();
       setTerminalProducts([]);
       onClose();

@@ -17,7 +17,7 @@ import {
     Switch,
     FormControl,
     FormLabel,
-    Grid,
+    SimpleGrid,
 } from "@chakra-ui/react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -50,7 +50,6 @@ interface DeliveryWithDetails extends Delivery {
     terminal?: Terminal;
 }
 
-// Helper function to style popup close button
 const stylePopupCloseButton = (popup: mapboxgl.Popup) => {
     popup.on('open', () => {
         const closeButton = document.querySelector('.mapboxgl-popup-close-button') as HTMLElement;
@@ -122,9 +121,8 @@ export const DriverLiveMapPage = () => {
     const [autoRouteLoaded, setAutoRouteLoaded] = useState(false);
     const [gpsTrackingEnabled, setGpsTrackingEnabled] = useState(false);
     const gpsIntervalRef = useRef<number | null>(null);
-    const [mapKey, setMapKey] = useState(0); // Key to force map remount
+    const [mapKey, setMapKey] = useState(0);
 
-    // Get today's date
     const today = (() => {
         const date = new Date();
         const year = date.getFullYear();
@@ -133,16 +131,13 @@ export const DriverLiveMapPage = () => {
         return `${year}-${month}-${day}`;
     })();
 
-    // Fetch shift data and reset map when driver changes
     useEffect(() => {
-        // Stop GPS tracking if active
         if (gpsIntervalRef.current) {
             clearInterval(gpsIntervalRef.current);
             gpsIntervalRef.current = null;
         }
         setGpsTrackingEnabled(false);
 
-        // Reset map state when driver changes
         if (map.current) {
             map.current.remove();
             map.current = null;
@@ -174,7 +169,6 @@ export const DriverLiveMapPage = () => {
         try {
             setLoading(true);
 
-            // Fetch all data
             const [allShifts, allDeliveries, allTerminals, allOrders, allVehicles, allHubs] =
                 await Promise.all([
                     getShifts(),
@@ -185,7 +179,6 @@ export const DriverLiveMapPage = () => {
                     getHubs(),
                 ]);
 
-            // Find today's shift for current driver
             const shift = allShifts.find(
                 (s) => s.driverId === userId && s.date === today
             );
@@ -193,14 +186,11 @@ export const DriverLiveMapPage = () => {
             setTodayShift(shift || null);
 
             if (shift) {
-                // Fetch vehicle details
                 const vehicleData = allVehicles.find((v) => v.id === shift.vehicleId);
                 setVehicle(vehicleData || null);
 
-                // Fetch deliveries for this shift
                 const shiftDeliveries = allDeliveries.filter((d) => d.shiftId === shift.id);
 
-                // Enrich deliveries with order and terminal details
                 const enrichedDeliveries: DeliveryWithDetails[] = shiftDeliveries.map((delivery) => {
                     const order = allOrders.find((o) => o.id === delivery.orderId);
                     const terminal = order
@@ -216,7 +206,6 @@ export const DriverLiveMapPage = () => {
 
                 setDeliveries(enrichedDeliveries);
 
-                // Set initial driver location to first hub
                 if (allHubs.length > 0 && !driverLocation) {
                     const firstHub = allHubs[0];
                     if (firstHub.coordinates && typeof firstHub.coordinates.lng === 'number' && typeof firstHub.coordinates.lat === 'number') {
@@ -226,7 +215,6 @@ export const DriverLiveMapPage = () => {
                     }
                 }
 
-                // Auto-select first pending or in-progress delivery as current destination
                 const currentDelivery = enrichedDeliveries.find(
                     (d) => d.status === "in-progress" || d.status === "pending"
                 );
@@ -249,11 +237,9 @@ export const DriverLiveMapPage = () => {
         }
     };
 
-    // Initialize map with 3D features
     useEffect(() => {
         if (!mapContainer.current || !driverLocation) return;
 
-        // Don't initialize if map already exists for this key
         if (map.current) return;
 
         map.current = new mapboxgl.Map({
@@ -283,7 +269,6 @@ export const DriverLiveMapPage = () => {
         };
     }, [driverLocation, mapKey]);
 
-    // Apply 3D styling
     const apply3DStyling = () => {
         if (!map.current || !map.current.isStyleLoaded()) return;
 
@@ -335,7 +320,6 @@ export const DriverLiveMapPage = () => {
         }
     };
 
-    // Setup route layers
     const setupRouteLayers = () => {
         if (!map.current) return;
 
@@ -360,11 +344,9 @@ export const DriverLiveMapPage = () => {
         }
     };
 
-    // Re-center map when driver location changes (after initial load)
     useEffect(() => {
         if (!map.current || !mapLoaded || !driverLocation) return;
 
-        // Fly to new driver location
         map.current.flyTo({
             center: driverLocation,
             zoom: 13,
@@ -372,16 +354,13 @@ export const DriverLiveMapPage = () => {
         });
     }, [driverLocation, mapLoaded]);
 
-    // Add driver marker
     useEffect(() => {
         if (!map.current || !mapLoaded || !driverLocation) return;
 
-        // Remove old marker
         if (driverMarker.current) {
             driverMarker.current.remove();
         }
 
-        // Create driver car marker with 3D styling
         const el = document.createElement("div");
         el.style.width = "60px";
         el.style.height = "80px";
@@ -454,7 +433,6 @@ export const DriverLiveMapPage = () => {
       </div>
     `);
 
-        // Style the close button
         stylePopupCloseButton(popup);
 
         driverMarker.current = new mapboxgl.Marker(el, {anchor: "bottom"})
@@ -463,11 +441,9 @@ export const DriverLiveMapPage = () => {
             .addTo(map.current);
     }, [driverLocation, mapLoaded, vehicle]);
 
-    // Add terminal markers
     useEffect(() => {
         if (!map.current || !mapLoaded || deliveries.length === 0) return;
 
-        // Clear existing markers
         terminalMarkers.current.forEach((marker) => marker.remove());
         terminalMarkers.current = [];
 
@@ -476,7 +452,6 @@ export const DriverLiveMapPage = () => {
 
             const terminal = delivery.terminal;
 
-            // Skip terminals without valid coordinates
             if (!terminal.coordinates || typeof terminal.coordinates.lng !== 'number' || typeof terminal.coordinates.lat !== 'number') {
                 console.warn(`Terminal "${terminal.name}" is missing valid coordinates`);
                 return;
@@ -484,13 +459,11 @@ export const DriverLiveMapPage = () => {
 
             const isCurrentDestination = selectedDestination?.id === terminal.id;
 
-            // Create terminal marker with 3D styling
             const el = document.createElement("div");
             el.style.width = "50px";
             el.style.height = "70px";
             el.style.cursor = "pointer";
 
-            // Use different colors for current destination vs other terminals
             const markerColor = isCurrentDestination
                 ? "linear-gradient(135deg, #48BB78 0%, #38A169 100%)" // Green for current destination
                 : "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"; // Pink for other terminals
@@ -595,7 +568,6 @@ export const DriverLiveMapPage = () => {
                 }
             });
 
-            // Style the close button
             stylePopupCloseButton(popup);
 
             const marker = new mapboxgl.Marker(el, {anchor: "bottom"})
@@ -606,7 +578,6 @@ export const DriverLiveMapPage = () => {
             terminalMarkers.current.push(marker);
         });
 
-        // Open popup for current destination automatically
         if (selectedDestination && !autoRouteLoaded) {
             const currentMarker = terminalMarkers.current.find(
                 (_, idx) => deliveries[idx]?.terminal?.id === selectedDestination.id
@@ -618,7 +589,6 @@ export const DriverLiveMapPage = () => {
             }
         }
 
-        // Fit bounds to show all markers
         if (driverLocation && deliveries.length > 0) {
             const bounds = new mapboxgl.LngLatBounds();
             bounds.extend(driverLocation);
@@ -637,7 +607,6 @@ export const DriverLiveMapPage = () => {
         }
     }, [deliveries, mapLoaded, driverLocation]);
 
-    // Auto-load route when destination is selected and map is ready
     useEffect(() => {
         if (
             mapLoaded &&
@@ -646,7 +615,6 @@ export const DriverLiveMapPage = () => {
             !autoRouteLoaded &&
             routeCoordinates.length === 0
         ) {
-            // Small delay to ensure map is fully initialized
             const timer = setTimeout(() => {
                 showRouteToTerminal(selectedDestination);
                 setAutoRouteLoaded(true);
@@ -655,11 +623,9 @@ export const DriverLiveMapPage = () => {
         }
     }, [mapLoaded, selectedDestination, driverLocation, autoRouteLoaded]);
 
-    // Show route to terminal
     const showRouteToTerminal = async (terminal: Terminal, delivery?: DeliveryWithDetails) => {
         if (!map.current || !driverLocation) return;
 
-        // Check if terminal has valid coordinates
         if (!terminal.coordinates || typeof terminal.coordinates.lng !== 'number' || typeof terminal.coordinates.lat !== 'number') {
             console.warn(`Terminal "${terminal.name}" is missing valid coordinates`);
             toast({
@@ -692,7 +658,6 @@ export const DriverLiveMapPage = () => {
             if (route.length > 0) {
                 setRouteCoordinates(route);
 
-                // Draw the full route
                 const source = map.current.getSource("route-line") as mapboxgl.GeoJSONSource;
                 if (source) {
                     source.setData({
@@ -722,7 +687,6 @@ export const DriverLiveMapPage = () => {
         }
     };
 
-    // Send GPS Update - saves current location to backend
     const sendGPSUpdate = useCallback(async () => {
         if (!vehicle || !userId || !driverLocation) {
             toast({
@@ -736,10 +700,8 @@ export const DriverLiveMapPage = () => {
         }
 
         try {
-            // Get current driver location
             const [lng, lat] = driverLocation;
 
-            // **PERSIST TO DATABASE** - Save current location to backend
             await Promise.all([
                 updateVehicleLocation(vehicle.id, {lat, lng}),
                 addGPSTracking({
@@ -769,12 +731,10 @@ export const DriverLiveMapPage = () => {
 
     }, [vehicle, userId, driverLocation]);
 
-    // Toggle GPS tracking on/off
     const handleToggleGPSTracking = (enabled: boolean) => {
         setGpsTrackingEnabled(enabled);
 
         if (enabled) {
-            // Start GPS tracking
             if (!driverLocation) {
                 toast({
                     title: "Location Not Available",
@@ -795,15 +755,12 @@ export const DriverLiveMapPage = () => {
                 isClosable: true,
             });
 
-            // Send first update immediately
             sendGPSUpdate();
 
-            // Set up interval for automatic updates every 30 seconds
             gpsIntervalRef.current = setInterval(() => {
                 sendGPSUpdate();
             }, 30000);
         } else {
-            // Stop GPS tracking
             if (gpsIntervalRef.current) {
                 clearInterval(gpsIntervalRef.current);
                 gpsIntervalRef.current = null;
@@ -819,7 +776,6 @@ export const DriverLiveMapPage = () => {
         }
     };
 
-    // Cleanup interval on unmount or when route changes
     useEffect(() => {
         return () => {
             if (gpsIntervalRef.current) {
@@ -828,46 +784,39 @@ export const DriverLiveMapPage = () => {
         };
     }, []);
 
-    // Note: GPS tracking continues regardless of route status
-    // It just saves the current location every 30 seconds
-
-    // If not in driver role, don't show anything (prevents flash of alerts when switching modes)
     if (userRole !== "driver") {
         return null;
     }
 
-    // Loading state
     if (loading) {
         return (
-            <Box p={6} display="flex" justifyContent="center" alignItems="center" minH="400px">
+            <Box p={{ base: 4, md: 6 }} display="flex" justifyContent="center" alignItems="center" minH="400px">
                 <VStack spacing={4}>
                     <Spinner size="xl" color="blue.500" thickness="4px"/>
-                    <Text color="text.secondary">Loading map data...</Text>
+                    <Text color="text.secondary" fontSize={{ base: "sm", md: "md" }}>Loading map data...</Text>
                 </VStack>
             </Box>
         );
     }
 
-    // No user ID
     if (!userId) {
         return (
-            <Box p={6}>
+            <Box p={{ base: 4, md: 6 }}>
                 <Alert status="warning" borderRadius="md">
                     <AlertIcon/>
                     <Box>
-                        <AlertTitle>No Driver ID</AlertTitle>
-                        <AlertDescription>Please log in to view the live map.</AlertDescription>
+                        <AlertTitle fontSize={{ base: "md", md: "lg" }}>No Driver ID</AlertTitle>
+                        <AlertDescription fontSize={{ base: "sm", md: "md" }}>Please log in to view the live map.</AlertDescription>
                     </Box>
                 </Alert>
             </Box>
         );
     }
 
-    // No shift allocated
     if (!todayShift) {
         return (
-            <Box p={6}>
-                <Heading size="lg" mb={4}>
+            <Box p={{ base: 4, md: 6 }}>
+                <Heading size={{ base: "md", md: "lg" }} mb={4}>
                     Live Map
                 </Heading>
                 <Alert
@@ -880,11 +829,11 @@ export const DriverLiveMapPage = () => {
                     minH="200px"
                     borderRadius="md"
                 >
-                    <AlertIcon boxSize="40px" mr={0}/>
-                    <AlertTitle mt={4} mb={1} fontSize="lg">
+                    <AlertIcon boxSize={{ base: "32px", md: "40px" }} mr={0}/>
+                    <AlertTitle mt={4} mb={1} fontSize={{ base: "md", md: "lg" }}>
                         No Shift Allocated
                     </AlertTitle>
-                    <AlertDescription maxWidth="sm">
+                    <AlertDescription maxWidth="sm" fontSize={{ base: "sm", md: "md" }}>
                         You don't have a shift allocated for today ({today}). The live map is only
                         available when you have an active shift.
                     </AlertDescription>
@@ -893,11 +842,10 @@ export const DriverLiveMapPage = () => {
         );
     }
 
-    // Shift not started
     if (todayShift.status !== "active") {
         return (
-            <Box p={6}>
-                <Heading size="lg" mb={4}>
+            <Box p={{ base: 4, md: 6 }}>
+                <Heading size={{ base: "md", md: "lg" }} mb={4}>
                     Live Map
                 </Heading>
                 <Alert
@@ -910,11 +858,11 @@ export const DriverLiveMapPage = () => {
                     minH="200px"
                     borderRadius="md"
                 >
-                    <AlertIcon boxSize="40px" mr={0}/>
-                    <AlertTitle mt={4} mb={1} fontSize="lg">
+                    <AlertIcon boxSize={{ base: "32px", md: "40px" }} mr={0}/>
+                    <AlertTitle mt={4} mb={1} fontSize={{ base: "md", md: "lg" }}>
                         Shift Not Started
                     </AlertTitle>
-                    <AlertDescription maxWidth="sm">
+                    <AlertDescription maxWidth="sm" fontSize={{ base: "sm", md: "md" }}>
                         Please start your shift first to access the live map. Go to the Shift View
                         page and click "Start Shift".
                     </AlertDescription>
@@ -924,77 +872,79 @@ export const DriverLiveMapPage = () => {
     }
 
     return (
-        <Box>
-            <VStack align="stretch" spacing={6}>
+        <Box p={{ base: 4, md: 6 }}>
+            <VStack align="stretch" spacing={{ base: 4, md: 6 }}>
                 {/* Page Header */}
-                <HStack justify="space-between" flexWrap="wrap" gap={4}>
-                    <Box>
-                        <Heading size="lg" color="text.primary">
-                            🗺️ Live Map (3D Mode)
-                        </Heading>
-                        <Text color="text.secondary" mt={1}>
+                <VStack align="stretch" spacing={3}>
+                    <Heading size={{ base: "md", md: "lg" }} color="text.primary">
+                        🗺️ Live Map (3D Mode)
+                    </Heading>
+                    <HStack justify="space-between" align="start" flexWrap="wrap" gap={2}>
+                        <Text color="text.secondary" fontSize={{ base: "sm", md: "md" }}>
                             Track your deliveries and navigate to destinations
                         </Text>
-                    </Box>
-                    <Badge colorScheme="green" fontSize="lg" px={4} py={2}>
-                        Shift Active
-                    </Badge>
-                </HStack>
+                        <Badge colorScheme="green" fontSize={{ base: "sm", md: "md" }} px={{ base: 3, md: 4 }} py={2}>
+                            Shift Active
+                        </Badge>
+                    </HStack>
+                </VStack>
 
                 {/* Info Card */}
                 <Card>
                     <CardBody>
-                        <Grid gridTemplateColumns={"1fr 1fr 1fr 1fr"} alignItems={"center"}>
-                            <VStack align="start" spacing={1}>
-                                <Text fontSize="sm" color="text.secondary">
-                                    Vehicle
-                                </Text>
-                                <Text fontSize="lg" fontWeight="bold">
-                                    {vehicle?.registration || "N/A"}
-                                </Text>
-                            </VStack>
-                            <VStack align="start" spacing={1}>
-                                <Text fontSize="sm" color="text.secondary">
-                                    Deliveries
-                                </Text>
-                                <Text fontSize="lg" fontWeight="bold" color="blue.500">
-                                    {deliveries.length} total
-                                </Text>
-                            </VStack>
-                            <VStack align="start" spacing={1}>
-                                <Text fontSize="sm" color="text.secondary">
-                                    Current Destination
-                                </Text>
-                                <Text fontSize="lg" fontWeight="bold" color="purple.500">
-                                    {selectedDestination?.name || "No active delivery"}
-                                </Text>
-                                {selectedDelivery && (
-                                    <Badge colorScheme={selectedDelivery.status === "in-progress" ? "blue" : "yellow"}
-                                           fontSize="xs">
-                                        {selectedDelivery.status.toUpperCase()}
-                                    </Badge>
-                                )}
-                            </VStack>
-                            <VStack align="stretch" spacing={2} marginLeft={"auto"}>
-                                <FormControl display="flex" alignItems="center" justifyContent="center">
-                                    <FormLabel htmlFor="gps-tracking" mb="0" mr={3} fontWeight="bold">
-                                        {gpsTrackingEnabled ? "📡 GPS Tracking ON" : "📍 GPS Tracking OFF"}
-                                    </FormLabel>
-                                    <Switch
-                                        id="gps-tracking"
-                                        size="lg"
-                                        colorScheme="green"
-                                        isChecked={gpsTrackingEnabled}
-                                        onChange={(e) => handleToggleGPSTracking(e.target.checked)}
-                                    />
-                                </FormControl>
-                                {gpsTrackingEnabled && (
-                                    <Badge colorScheme="green" fontSize="sm" textAlign="center" py={1}>
-                                        Saving location every 30 seconds
-                                    </Badge>
-                                )}
-                            </VStack>
-                        </Grid>
+                        <VStack spacing={4} align="stretch">
+                            <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
+                                <VStack align="start" spacing={1}>
+                                    <Text fontSize="sm" color="text.secondary">
+                                        Vehicle
+                                    </Text>
+                                    <Text fontSize={{ base: "md", md: "lg" }} fontWeight="bold">
+                                        {vehicle?.registration || "N/A"}
+                                    </Text>
+                                </VStack>
+                                <VStack align="start" spacing={1}>
+                                    <Text fontSize="sm" color="text.secondary">
+                                        Deliveries
+                                    </Text>
+                                    <Text fontSize={{ base: "md", md: "lg" }} fontWeight="bold" color="blue.500">
+                                        {deliveries.length} total
+                                    </Text>
+                                </VStack>
+                                <VStack align="start" spacing={1}>
+                                    <Text fontSize="sm" color="text.secondary">
+                                        Current Destination
+                                    </Text>
+                                    <Text fontSize={{ base: "md", md: "lg" }} fontWeight="bold" color="purple.500" noOfLines={1}>
+                                        {selectedDestination?.name || "No active delivery"}
+                                    </Text>
+                                    {selectedDelivery && (
+                                        <Badge colorScheme={selectedDelivery.status === "in-progress" ? "blue" : "yellow"}
+                                               fontSize="xs">
+                                            {selectedDelivery.status.toUpperCase()}
+                                        </Badge>
+                                    )}
+                                </VStack>
+                                <VStack align="stretch" spacing={2}>
+                                    <FormControl display="flex" alignItems="center" justifyContent={{ base: "space-between", lg: "center" }}>
+                                        <FormLabel htmlFor="gps-tracking" mb="0" mr={3} fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>
+                                            {gpsTrackingEnabled ? "📡 GPS ON" : "📍 GPS OFF"}
+                                        </FormLabel>
+                                        <Switch
+                                            id="gps-tracking"
+                                            size={{ base: "md", md: "lg" }}
+                                            colorScheme="green"
+                                            isChecked={gpsTrackingEnabled}
+                                            onChange={(e) => handleToggleGPSTracking(e.target.checked)}
+                                        />
+                                    </FormControl>
+                                    {gpsTrackingEnabled && (
+                                        <Badge colorScheme="green" fontSize="xs" textAlign="center" py={1}>
+                                            Saving every 30s
+                                        </Badge>
+                                    )}
+                                </VStack>
+                            </SimpleGrid>
+                        </VStack>
                     </CardBody>
                 </Card>
 
@@ -1002,12 +952,12 @@ export const DriverLiveMapPage = () => {
                 <Alert status="info" borderRadius="md">
                     <AlertIcon/>
                     <Box flex="1">
-                        <AlertTitle>Your current delivery route:</AlertTitle>
-                        <AlertDescription>
+                        <AlertTitle fontSize={{ base: "sm", md: "md" }}>Your current delivery route:</AlertTitle>
+                        <AlertDescription fontSize={{ base: "xs", md: "sm" }}>
                             • The route to your next destination is automatically loaded<br/>
-                            • Toggle "GPS Tracking" ON to save your current location to the system every 30 seconds<br/>
+                            • Toggle "GPS Tracking" ON to save your current location every 30 seconds<br/>
                             • Your location will be visible to admin on the Live Fleet Map<br/>
-                            • Click on terminal markers (⛽) to view delivery details or switch destination
+                            • Click on terminal markers (⛽) to view details or switch destination
                         </AlertDescription>
                     </Box>
                 </Alert>
@@ -1026,7 +976,7 @@ export const DriverLiveMapPage = () => {
                             key={mapKey}
                             ref={mapContainer}
                             style={{
-                                height: "700px",
+                                height: window.innerWidth < 768 ? "500px" : "700px",
                                 width: "100%",
                             }}
                         />
@@ -1043,7 +993,7 @@ export const DriverLiveMapPage = () => {
                                 bg="bg.card"
                             >
                                 <VStack spacing={4}>
-                                    <Text fontSize="xl" color="text.primary">
+                                    <Text fontSize={{ base: "lg", md: "xl" }} color="text.primary">
                                         🗺️ Loading 3D Map...
                                     </Text>
                                     <Text fontSize="sm" color="text.secondary">
@@ -1061,37 +1011,39 @@ export const DriverLiveMapPage = () => {
                     borderRadius="lg"
                     border="1px solid"
                     borderColor="border.default"
-                    p={4}
+                    p={{ base: 3, md: 4 }}
                 >
-                    <HStack spacing={6} flexWrap="wrap">
-                        <Text fontWeight="600" color="text.primary">
+                    <VStack align="start" spacing={3}>
+                        <Text fontWeight="600" color="text.primary" fontSize={{ base: "sm", md: "md" }}>
                             Map Legend:
                         </Text>
-                        <HStack>
-                            <Box w="12px" h="12px" bg="#48BB78" borderRadius="full"/>
-                            <Text fontSize="sm" color="text.secondary">
-                                Your Vehicle
-                            </Text>
-                        </HStack>
-                        <HStack>
-                            <Box w="12px" h="12px" bg="#48BB78" borderRadius="full"/>
-                            <Text fontSize="sm" color="text.secondary">
-                                Current Destination
-                            </Text>
-                        </HStack>
-                        <HStack>
-                            <Box w="12px" h="12px" bg="#f5576c" borderRadius="full"/>
-                            <Text fontSize="sm" color="text.secondary">
-                                Other Deliveries
-                            </Text>
-                        </HStack>
-                        <HStack>
-                            <Box w="20px" h="3px" bg={ROUTE_COLOR}/>
-                            <Text fontSize="sm" color="text.secondary">
-                                Route
-                            </Text>
-                        </HStack>
-                    </HStack>
+                        <SimpleGrid columns={{ base: 2, md: 4 }} spacing={{ base: 3, md: 6 }} width="full">
+                            <HStack>
+                                <Box w="12px" h="12px" bg="#48BB78" borderRadius="full" flexShrink={0}/>
+                                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                                    Your Vehicle
+                                </Text>
+                            </HStack>
+                            <HStack>
+                                <Box w="12px" h="12px" bg="#48BB78" borderRadius="full" flexShrink={0}/>
+                                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                                    Current Destination
+                                </Text>
+                            </HStack>
+                            <HStack>
+                                <Box w="12px" h="12px" bg="#f5576c" borderRadius="full" flexShrink={0}/>
+                                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                                    Other Deliveries
+                                </Text>
+                            </HStack>
+                            <HStack>
+                                <Box w="20px" h="3px" bg={ROUTE_COLOR} flexShrink={0}/>
+                                <Text fontSize={{ base: "xs", md: "sm" }} color="text.secondary">
+                                    Route
+                                </Text>
+                            </HStack>
+                        </SimpleGrid>
+                    </VStack>
                 </Box>
             </VStack>
         </Box>
