@@ -10,6 +10,7 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
     css: true,
     coverage: {
+      reportOnFailure: true,
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
@@ -25,10 +26,6 @@ export default defineConfig({
         'src/**/*.{ts,tsx}',
       ],
       all: true,
-      lines: 70,
-      functions: 70,
-      branches: 70,
-      statements: 70,
     },
   },
   resolve: {

@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'https://json-server-fleet.onrender.com';
 
 export const handlers = [
   // Vehicles
@@ -188,6 +188,26 @@ export const handlers = [
         name: 'Product 1',
         price: 100,
         sku: 'PROD-001',
+      },
+    ]);
+  }),
+
+  // Shifts
+  http.get(`${API_BASE}/shifts`, ({ request }) => {
+    const url = new URL(request.url);
+    const driverId = url.searchParams.get('driverId');
+    const vehicleId = url.searchParams.get('vehicleId');
+    const date = url.searchParams.get('date');
+    
+    return HttpResponse.json([
+      {
+        id: '1',
+        driverId: driverId || '1',
+        vehicleId: vehicleId || '1',
+        date: date || new Date().toISOString().split('T')[0],
+        status: 'active',
+        startTime: '08:00',
+        endTime: '17:00',
       },
     ]);
   }),
